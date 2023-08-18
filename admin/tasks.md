@@ -5,15 +5,15 @@ Use the entries below as an example.
 
 ## Week 4
 
-Everyone: create application skeleton - meeting 14:00 19 Mar
+Everyone: create application skeleton - meeting 14:00 19 Aug
 
 ## Week 5
 
-Zhang San: Task 3 isPlayerStateWellFormed - 23 Mar
+Zhuiqi Lin: Task 3 isPlayerStateWellFormed - 23 Aug
 
-Jane Bloggs: Task 5 drawTileFromBag - 23 Mar
+Qiutong Zeng: Task 5 drawTileFromBag - 23 Aug
 
-Erika Mustermann: Task 6 refillFactories - 25 Mar (depends on Task 5)
+Ruize Luo: Task 6 refillFactories - 25 Aug (depends on Task 5)
 
 ## Week 6
 
