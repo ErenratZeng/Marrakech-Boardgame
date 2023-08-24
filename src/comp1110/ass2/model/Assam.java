@@ -1,4 +1,4 @@
-package comp1110.ass2.module;
+package comp1110.ass2.model;
 
 public class Assam {
     private int x;

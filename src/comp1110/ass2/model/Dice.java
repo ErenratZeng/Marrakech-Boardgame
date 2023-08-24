@@ -1,4 +1,4 @@
-package comp1110.ass2.module;
+package comp1110.ass2.model;
 import java.util.Random;
 
 public class Dice {
