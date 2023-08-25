@@ -9,11 +9,11 @@ Everyone: create application skeleton - meeting 14:00 19 Aug
 
 ## Week 5
 
-Zhuiqi Lin: Task 3 - 12 Sep
+Zhuiqi Lin: draw a sketch of design - 23 Aug
 
-Qiutong Zeng: Task 5- 12 Sep
+Qiutong Zeng: design skeleton with key field and method declarations- 23 Aug
 
-Ruize Luo: Task 4&6 - 15 Sep (depends on Task 5)
+Ruize Luo: design skeleton with key field and method declarations - 23 Aug
 
 ## Week 6
 
