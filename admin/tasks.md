@@ -17,13 +17,19 @@ Ruize Luo: Task 4&6 - 15 Sep (depends on Task 5)
 
 ## Week 6
 
-Zhuiqi Lin: Task 3 isPlayerStateWellFormed - 19 Sep
+Zhuiqi Lin: Task 3 Part1 - 7 Sep
 
-Qiutong Zeng: Task 5 drawTileFromBag - 19 Sep
+Qiutong Zeng: Task 5 Part1 - 7 Sep
 
-Ruize Luo: Task 6 refillFactories - 21 Sep (depends on Task 5)...
+Ruize Luo: Task 6 Part1 - 7 Sep
 
 ## Mid-Semester Break
+
+Zhuiqi Lin: Task 3 isPlayerStateWellFormed - 14 Sep
+
+Qiutong Zeng: Task 5 drawTileFromBag - 14 Sep
+
+Ruize Luo: Task 6 refillFactories - 14 Sep
 
 ## Week 7
 
