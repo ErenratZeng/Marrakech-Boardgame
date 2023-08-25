@@ -9,15 +9,19 @@ Everyone: create application skeleton - meeting 14:00 19 Aug
 
 ## Week 5
 
-Zhuiqi Lin: Task 3 isPlayerStateWellFormed - 23 Aug
+Zhuiqi Lin: Task 3 - 12 Sep
 
-Qiutong Zeng: Task 5 drawTileFromBag - 23 Aug
+Qiutong Zeng: Task 5- 12 Sep
 
-Ruize Luo: Task 6 refillFactories - 25 Aug (depends on Task 5)
+Ruize Luo: Task 4&6 - 15 Sep (depends on Task 5)
 
 ## Week 6
 
-...
+Zhuiqi Lin: Task 3 isPlayerStateWellFormed - 19 Sep
+
+Qiutong Zeng: Task 5 drawTileFromBag - 19 Sep
+
+Ruize Luo: Task 6 refillFactories - 21 Sep (depends on Task 5)...
 
 ## Mid-Semester Break
 
