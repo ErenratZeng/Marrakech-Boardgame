@@ -8,15 +8,32 @@ public class State {
 
     // a minimum of 2 and a maximum of 4 players
     private final ArrayList<Player> players;
-    private final Rug rug;
 
-    public State(Builder builder) {
-        this.assam = builder.assam;
-        this.board = builder.board;
-        this.players = builder.players;
-        this.rug = builder.rug;
+    // A Game string is the concatenation of one player string for each player, followed by one Assam string, followed by one board string.
+    public State(ArrayList<Player> players, Assam assam, Board board) {
+        this.players = players;
+        this.assam = assam;
+        this.board = board;
         if (players.size() > 4 || players.size() < 2)
             throw new RuntimeException("players.size() should be 2~4, but now is: " + players.size());
+    }
+
+    public State(String string) {
+        players = new ArrayList<>();
+        int i = 0;
+        while (string.charAt(i) == 'P'){
+            players.add(new Player(string.substring(i, i + 8)));
+            i += 8;
+        }
+        if (players.size() > 4 || players.size() < 2)
+            throw new RuntimeException("players.size() should be 2~4, but now is: " + players.size());
+        if (string.charAt(i) == 'A'){
+            assam = new Assam(string.substring(i, i + 4));
+            i += 4;
+        } else throw new RuntimeException("AssamString is wrong, String: " + string + ", at: " + i);
+        if (string.charAt(i) == 'B'){
+            board = new Board(string.substring(i));
+        } else throw new RuntimeException("BoardString is wrong, String: " + string + ", at: " + i);
     }
 
     public Assam getAssam() {
@@ -31,10 +48,6 @@ public class State {
         return players;
     }
 
-    public Rug getRug() {
-        return rug;
-    }
-
     public String getString() {
         StringBuilder sb = new StringBuilder();
 
@@ -45,40 +58,5 @@ public class State {
         sb.append(board.getString());
 
         return sb.toString();
-    }
-
-    public static class Builder {
-        private Assam assam;
-        private Board board;
-        private final ArrayList<Player> players = new ArrayList<>();
-        private Rug rug;
-
-        public Builder() {
-
-        }
-
-        public Builder setAssam(Assam assam) {
-            this.assam = assam;
-            return this;
-        }
-
-        public Builder setBoard(Board board) {
-            this.board = board;
-            return this;
-        }
-
-        public Builder setPlayer(Player player) {
-            players.add(player);
-            return this;
-        }
-
-        public Builder setRug(Rug rug) {
-            this.rug = rug;
-            return this;
-        }
-
-        public State build() {
-            return new State(this);
-        }
     }
 }

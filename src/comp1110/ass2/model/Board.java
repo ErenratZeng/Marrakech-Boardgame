@@ -21,6 +21,16 @@ public class Board implements IBean {
         }
     }
 
+    public Board(String string) {
+        int k = 1;
+        for (int i = 0; i < BOARD_HEIGHT; i++) {
+            for (int j = 0; j < BOARD_WIDTH; j++) {
+                rugs[i][j] = new Rug(string.substring(k, k + 3));
+                k += 3;
+            }
+        }
+    }
+
     public Rug getRug(int x, int y) {
         return rugs[x][y];
     }
@@ -34,6 +44,7 @@ public class Board implements IBean {
     public String getString() {
         StringBuilder sb = new StringBuilder();
 
+        sb.append("B");
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
                 sb.append(rugs[i][j].getAbbreviatedString());

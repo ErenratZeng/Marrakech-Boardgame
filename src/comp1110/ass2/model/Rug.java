@@ -40,6 +40,7 @@ public class Rug implements IBean {
             case 'y' -> color = Color.YELLOW;
             case 'r' -> color = Color.RED;
             case 'p' -> color = Color.PURPLE;
+            case 'n' -> color = null;
             default -> throw new RuntimeException(
                     "Color? string is: " +
                             string +
