@@ -46,7 +46,6 @@ public class Marrakech {
         }
 
         // The next two characters represent a 2-digit ID number
-        // FIXME: checkRugValidBadPlayer HERE！
         Rug currentRug = new Rug(rug);
         if (currentRug.getID() < 0 || currentRug.getID() > 99) {
             return false;
@@ -106,7 +105,6 @@ public class Marrakech {
             }
         }
 
-        // FIXME: checkRugValid HERE！ Marrakech.isRugValid("Pc03015iPy03015iPp03015iPr03015iA31NBn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00", "c004131");
         if (startY == endY) {
             int startXDiff = Math.abs(startX - endX);
             if (!(startXDiff == 1)) {
