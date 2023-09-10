@@ -46,6 +46,7 @@ public class Marrakech {
         }
 
         // The next two characters represent a 2-digit ID number
+        // FIXME: checkRugValidBadPlayer HERE！
         Rug currentRug = new Rug(rug);
         if (currentRug.getID() < 0 || currentRug.getID() > 99) {
             return false;
@@ -54,8 +55,7 @@ public class Marrakech {
         // There's something wrong here
         // The first character in the String corresponds to the colour character of a player present in the game
         State currentState = new State(gameString);
-        ArrayList<Player> playerArrays = new ArrayList<>();
-        playerArrays = currentState.getPlayers();
+        ArrayList<Player> playerArrays = currentState.getPlayers();
 
         Color[] playersColor = new Color[playerArrays.size()];
 
@@ -68,7 +68,7 @@ public class Marrakech {
 
         boolean hasRug = false;
         for (Color color : playersColor) {
-            if (color == currentRug.getColor()) {
+            if (color.equals(currentRug.getColor())) {
                 hasRug = true;
                 break;
             }
@@ -79,10 +79,11 @@ public class Marrakech {
 
 
         // The next 4 characters represent coordinates that are on the board
-        Rug rugObj = new Rug(Color.CYAN, 1, new Point(1, 3));
+        Rug rugObj = new Rug(rug);
         ;
-        Point startPosition = rugObj.getPoint();
-        Point endPosition = rugObj.getPoint();
+        Point[] positions = rugObj.getPoints();
+        Point startPosition = positions[0];
+        Point endPosition = positions[1];
 
         int startX = startPosition.getX();
         int startY = startPosition.getY();
@@ -105,6 +106,7 @@ public class Marrakech {
             }
         }
 
+        // FIXME: checkRugValid HERE！ Marrakech.isRugValid("Pc03015iPy03015iPp03015iPr03015iA31NBn00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00n00", "c004131");
         if (startY == endY) {
             int startXDiff = Math.abs(startX - endX);
             if (!(startXDiff == 1)) {
