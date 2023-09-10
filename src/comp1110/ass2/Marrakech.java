@@ -1,5 +1,17 @@
 package comp1110.ass2;
 
+import comp1110.ass2.gui.Game;
+import comp1110.ass2.model.Player;
+import comp1110.ass2.model.State;
+import javafx.scene.paint.Color;
+import comp1110.ass2.model.base.Point;
+import comp1110.ass2.model.base.Dice;
+import comp1110.ass2.model.Rug;
+
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Stack;
+
 public class Marrakech {
 
     /**
@@ -22,9 +34,87 @@ public class Marrakech {
      * @param rug A String representing the rug you are checking
      * @return true if the rug is valid, and false otherwise.
      */
+
+
+
     public static boolean isRugValid(String gameString, String rug) {
         // FIXME: Task 4
-        return false;
+
+        // The String is 7 characters long
+        if (!(rug.length() == 7)) {
+            return false;
+        }
+        try{
+            Rug currentRug = new Rug(rug);
+            if (currentRug.getID() < 0 || currentRug.getID() > 99) {
+                return false;
+            }
+
+            // There's something wrong here
+            // The first character in the String corresponds to the colour character of a player present in the game
+            State currentState = new State(gameString);
+            ArrayList<Player> playerArrays = currentState.getPlayers();
+
+            Color[] playersColor = new Color[playerArrays.size()];
+
+
+            int count = 0;
+            for (Player player : playerArrays) {
+                playersColor[count] = player.getColor();
+                count++;
+            }
+
+            boolean hasRug = false;
+            for (Color color : playersColor) {
+                if (color.equals(currentRug.getColor())) {
+                    hasRug = true;
+                    break;
+                }
+            }
+            if (!hasRug) {
+                return false;
+            }
+
+
+            // The next 4 characters represent coordinates that are on the board
+            Rug rugObj = new Rug(rug);
+            ;
+            Point[] positions = rugObj.getPoints();
+            Point startPosition = positions[0];
+            Point endPosition = positions[1];
+
+            int startX = startPosition.getX();
+            int startY = startPosition.getY();
+            int endX = endPosition.getX();
+            int endY = endPosition.getY();
+
+            boolean isStartXInRange = startX >= 0 && startX < 7;
+            boolean isStartYInRange = startY >= 0 && startY < 7;
+            boolean isEndXInRange = endX >= 0 && endX < 7;
+            boolean isEndYInRange = endY >= 0 && endY < 7;
+
+            if (!(isStartXInRange && isStartYInRange && isEndXInRange && isEndYInRange)) {
+                return false;
+            }
+
+            if (startX == endX) {
+                int startYDiff = Math.abs(startY - endY);
+                if (!(startYDiff == 1)) {
+                    return false;
+                }
+            }
+
+            if (startY == endY) {
+                int startXDiff = Math.abs(startX - endX);
+                if (!(startXDiff == 1)) {
+                    return false;
+                }
+            }
+        } catch (Exception e){
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -43,7 +133,8 @@ public class Marrakech {
      */
     public static int rollDie() {
         // FIXME: Task 6
-        return -1;
+        Dice playerDice = new Dice();
+        return playerDice.roll();
     }
 
     /**
