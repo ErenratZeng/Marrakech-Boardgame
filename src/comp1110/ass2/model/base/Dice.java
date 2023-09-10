@@ -9,21 +9,20 @@ public class Dice {
      * Constructor to create an instance of Dice
      */
     public Dice() {
-//        this.sides = new int[]{1, 2, 2, 3, 3, 4};
-//        this.random = new Random();
+        this.sides = new int[]{1, 2, 2, 3, 3, 4};
+        this.random = new Random();
     }
 
     /**
      * Determine the number of moving steps by generating random numbers
      */
     public int roll(){
-//        return sides[random.nextInt(sides.length)];
-        return roll();
+        return sides[random.nextInt(sides.length)];
     }
 
     public static void main(String[] args) {
-//        Dice playerDice = new Dice();
-//        System.out.println("");
+        Dice playerDice = new Dice();
+        System.out.println("");
     }
 
 }
