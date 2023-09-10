@@ -47,7 +47,7 @@ public class Rug implements IBean {
                             ", case is " +
                             string.charAt(0)
             );
-//            default -> color = Color.WHITE;
+
         }
         ID = subStr2int(string, 1, 3);
 
