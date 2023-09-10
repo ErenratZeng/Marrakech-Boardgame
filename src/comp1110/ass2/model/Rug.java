@@ -41,13 +41,13 @@ public class Rug implements IBean {
             case 'r' -> color = Color.RED;
             case 'p' -> color = Color.PURPLE;
             case 'n' -> color = null;
-//            default -> throw new RuntimeException(
-//                    "Color? string is: " +
-//                            string +
-//                            ", case is " +
-//                            string.charAt(0)
-//            );
-            default -> color = Color.WHITE;
+            default -> throw new RuntimeException(
+                    "Color? string is: " +
+                            string +
+                            ", case is " +
+                            string.charAt(0)
+            );
+//            default -> color = Color.WHITE;
         }
         ID = subStr2int(string, 1, 3);
 
