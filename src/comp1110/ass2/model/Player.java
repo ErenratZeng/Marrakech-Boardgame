@@ -10,8 +10,8 @@ public class Player implements IBean {
     // number of coins, start with 30.
     private int coins = 30;
 
-    // number of remaining rugs, start with 15.
-    private int rugs = 15;
+    // number of remaining rugNum, start with 15.
+    private int rugNum = 15;
 
     // player's color
     private final Color color;
@@ -37,7 +37,7 @@ public class Player implements IBean {
             );
         }
         coins = subStr2int(string, 2, 5);
-        rugs = subStr2int(string, 5, 7);
+        rugNum = subStr2int(string, 5, 7);
         switch (string.charAt(7)) {
             case 'i' -> alive = true;
             case 'o' -> alive = false;
@@ -64,14 +64,14 @@ public class Player implements IBean {
     }
 
     /**
-     * Get the number of remaining rugs for players.
+     * Get the number of remaining rugNum for players.
      */
-    public int getRugs() {
-        return rugs;
+    public int getrugNum() {
+        return rugNum;
     }
 
-    public Player setRugs(int rugs) {
-        this.rugs = rugs;
+    public Player setrugNum(int rugNum) {
+        this.rugNum = rugNum;
         return this;
     }
 
@@ -95,7 +95,7 @@ public class Player implements IBean {
         else if (color == Color.RED) sb.append("r");
         else if (color == Color.PURPLE) sb.append("p");
         sb.append(String.format("%03d", coins));
-        sb.append(String.format("%02d", rugs));
+        sb.append(String.format("%02d", rugNum));
         if (alive) sb.append("i");
         else sb.append("o");
 
