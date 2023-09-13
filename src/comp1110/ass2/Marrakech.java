@@ -1,16 +1,13 @@
 package comp1110.ass2;
 
-import comp1110.ass2.gui.Game;
 import comp1110.ass2.model.Player;
+import comp1110.ass2.model.TwoRug;
 import comp1110.ass2.model.State;
 import javafx.scene.paint.Color;
 import comp1110.ass2.model.base.Point;
 import comp1110.ass2.model.base.Dice;
-import comp1110.ass2.model.Rug;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.Stack;
 
 public class Marrakech {
 
@@ -45,7 +42,7 @@ public class Marrakech {
             return false;
         }
         try{
-            Rug currentRug = new Rug(rug);
+            TwoRug currentRug = new TwoRug(rug);
             if (currentRug.getID() < 0 || currentRug.getID() > 99) {
                 return false;
             }
@@ -77,7 +74,7 @@ public class Marrakech {
 
 
             // The next 4 characters represent coordinates that are on the board
-            Rug rugObj = new Rug(rug);
+            TwoRug rugObj = new TwoRug(rug);
             ;
             Point[] positions = rugObj.getPoints();
             Point startPosition = positions[0];
