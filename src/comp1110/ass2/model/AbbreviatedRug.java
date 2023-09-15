@@ -63,6 +63,7 @@ public class AbbreviatedRug implements IBean {
         else if (color == Color.YELLOW) sb.append("y");
         else if (color == Color.RED) sb.append("r");
         else if (color == Color.PURPLE) sb.append("p");
+        else if (color == null) sb.append("n");
         sb.append(String.format("%02d", ID));
 
         return sb.toString();
