@@ -41,7 +41,7 @@ class:
   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/Marrakech.java
 
 # I wish to submit the following methods as entirely my own (remove this if
-# you want to just submit classes):
+# you want to just submit classes)
 method:
   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/model/base/utils.java#L4-6
 
