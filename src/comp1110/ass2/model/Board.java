@@ -8,7 +8,7 @@ public class Board implements IBean {
     public final static int BOARD_HEIGHT = 7;
 
     // each rug on the board.
-    private final Rug[][] rugs = new Rug[BOARD_HEIGHT][BOARD_WIDTH];
+    private final AbbreviatedRug[][] rugs = new AbbreviatedRug[BOARD_HEIGHT][BOARD_WIDTH];
 
     /**
      * Record the existing Rugs on the Board
@@ -16,7 +16,7 @@ public class Board implements IBean {
     public Board() {
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                rugs[i][j] = new Rug();
+                rugs[i][j] = new AbbreviatedRug();
             }
         }
     }
@@ -25,17 +25,17 @@ public class Board implements IBean {
         int k = 1;
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                rugs[i][j] = new Rug(string.substring(k, k + 3));
+                rugs[i][j] = new AbbreviatedRug(string.substring(k, k + 3));
                 k += 3;
             }
         }
     }
 
-    public Rug getRug(int x, int y) {
+    public AbbreviatedRug getRug(int x, int y) {
         return rugs[x][y];
     }
 
-    public Board setRug(Rug rug, int x, int y) {
+    public Board setRug(AbbreviatedRug rug, int x, int y) {
         rugs[x][y] = rug;
         return this;
     }
@@ -47,7 +47,7 @@ public class Board implements IBean {
         sb.append("B");
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
-                sb.append(rugs[i][j].getAbbreviatedString());
+                sb.append(rugs[i][j].getString());
             }
         }
 

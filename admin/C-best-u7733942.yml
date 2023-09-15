@@ -18,9 +18,9 @@ declaration: >-
 #
 # Add as many "name+comment" entries as necessary
 # (or remove it altogether if you haven't collaborated with anyone)
-collaboration:
-  - name:
-    comment: >-
+#collaboration:
+#  - name:
+#    comment: >-
 
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment
@@ -29,23 +29,23 @@ collaboration:
 #
 # Add as many "url+licence+comment" entries as necessary
 # (or remove it altogether if you haven't used any external code)
-code:
-  - comment:
-    url:
-    licence:
+#code:
+#  - comment:
+#    url:
+#    licence:
 
 # I wish to submit the following classes as entirely my own (remove this if
 # you want to just submit methods):
 class:
-   - 
-   - 
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/model/TwoRug.java
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/model/State.java
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/model/base/IBean.java
 
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
 method:
-   - 
-   - 
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/model/base/utils.java#L4-6
 
 # sign *your* name and uid here
-name:
-uid:
+name: Zhuiqi Lin
+uid: u7733924

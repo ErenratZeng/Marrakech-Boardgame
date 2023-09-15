@@ -2,8 +2,8 @@ package comp1110.ass2.model.base;
 import java.util.Random;
 
 public class Dice {
-    private int[] sides;
-    private Random random;
+    private final int[] sides;
+    private final Random random;
 
     /**
      * Constructor to create an instance of Dice
@@ -18,11 +18,6 @@ public class Dice {
      */
     public int roll(){
         return sides[random.nextInt(sides.length)];
-    }
-
-    public static void main(String[] args) {
-        Dice playerDice = new Dice();
-        System.out.println("");
     }
 
 }
