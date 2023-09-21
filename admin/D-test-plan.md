@@ -11,3 +11,13 @@
 
 Do **not** include in your test plan the `Marrakech` class or the predefined
 static methods for which we have already provided unit tests.
+
+- AbbreviatedRug.java
+- Assam.java
+- Board.java
+- Player.java
+- State.java
+- TwoRug.java
+- Dice.java
+- Point.java
+- utils.java
