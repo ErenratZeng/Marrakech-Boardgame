@@ -1,6 +1,8 @@
 package comp1110.ass2;
 
+import comp1110.ass2.model.Player;
 import comp1110.ass2.model.base.Dice;
+import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -31,8 +33,69 @@ public class ModelTest {
 
     @Test
     public void checkPlayer() {
-        // TODO
-        Assertions.assertTrue(true);
+        // Test constructor with Color
+        Player playerCyan = new Player(Color.CYAN);
+        Assertions.assertEquals(Color.CYAN, playerCyan.getColor(), "Expected color to be CYAN");
+        Assertions.assertEquals(30, playerCyan.getCoins(), "Expected initial coins to be 30");
+        Assertions.assertEquals(15, playerCyan.getrugNum(), "Expected initial rugNum to be 15");
+        Assertions.assertTrue(playerCyan.getAlive(), "Expected player to be alive initially");
+
+        Player playerYellow = new Player(Color.YELLOW);
+        Assertions.assertEquals(Color.YELLOW, playerYellow.getColor(), "Expected color to be YELLOW");
+
+        Player playerRed = new Player(Color.RED);
+        Assertions.assertEquals(Color.RED, playerRed.getColor(), "Expected color to be RED");
+
+        Player playerPurple = new Player(Color.PURPLE);
+        Assertions.assertEquals(Color.PURPLE, playerPurple.getColor(), "Expected color to be PURPLE");
+
+
+        // Test constructor with String for CYAN
+        Player playerCyanFromString = new Player("Pc03015i");
+        Assertions.assertEquals(Color.CYAN, playerCyanFromString.getColor(), "Expected color to be CYAN from string constructor");
+
+        // Test constructor with String for YELLOW
+        Player playerYellowFromString = new Player("Py03015i");
+        Assertions.assertEquals(Color.YELLOW, playerYellowFromString.getColor(), "Expected color to be YELLOW from string constructor");
+
+        // Test constructor with String for RED
+        Player playerRedFromString = new Player("Pr03015i");
+        Assertions.assertEquals(Color.RED, playerRedFromString.getColor(), "Expected color to be RED from string constructor");
+
+        // Test constructor with String for PURPLE
+        Player playerPurpleFromString = new Player("Pp03015i");
+        Assertions.assertEquals(Color.PURPLE, playerPurpleFromString.getColor(), "Expected color to be PURPLE from string constructor");
+
+
+        // Test set and get methods
+        playerCyan.setCoins(25);
+        Assertions.assertEquals(25, playerCyan.getCoins(), "Expected coins to be set to 25");
+
+        playerCyan.setrugNum(10);
+        Assertions.assertEquals(10, playerCyan.getrugNum(), "Expected rugNum to be set to 10");
+
+        playerCyan.setAlive(false);
+        Assertions.assertFalse(playerCyan.getAlive(), "Expected player to be set to not alive");
+
+
+        // Test getString method
+        String expectedString = "Pc02510o";
+        Assertions.assertEquals(expectedString, playerCyan.getString(), "Expected string representation to match");
+
+        // Test Player constructor with invalid string input
+        Assertions.assertThrows(RuntimeException.class, () -> new Player("Px03015i"), "Expected RuntimeException for invalid color character");
+        Assertions.assertThrows(RuntimeException.class, () -> new Player("Pc03015x"), "Expected RuntimeException for invalid alive character");
+
+        playerCyan = new Player(Color.CYAN);
+        playerYellow = new Player(Color.YELLOW);
+        playerRed = new Player(Color.RED);
+        playerPurple = new Player(Color.PURPLE);
+
+        // Test getString method for all colors
+        Assertions.assertEquals("Pc03015i", playerCyan.getString(), "Expected string representation for CYAN to match");
+        Assertions.assertEquals("Py03015i", playerYellow.getString(), "Expected string representation for YELLOW to match");
+        Assertions.assertEquals("Pr03015i", playerRed.getString(), "Expected string representation for RED to match");
+        Assertions.assertEquals("Pp03015i", playerPurple.getString(), "Expected string representation for PURPLE to match");
     }
 
     @Test
