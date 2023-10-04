@@ -22,9 +22,17 @@ public class Assam implements IBean {
     // Assam may be facing in any direction. Suppose N.
     private Orientation orientation = Orientation.N;
 
+
     public Assam() {
     }
 
+    /**
+     * @param string: A string where the first character is 'A' (indicating Assam),
+     *              followed by two characters representing the x and y positions,
+     *              and the last character representing the orientation (N, E, S, or W).
+     * @description The constructor parses the input string to initialize the position and orientation of Assam.
+     * If the orientation character isn't valid, a RuntimeException is thrown.
+     */
     public Assam(String string) {
         point.setX(subStr2int(string, 1, 2))
                 .setY(subStr2int(string, 2, 3));
@@ -42,24 +50,47 @@ public class Assam implements IBean {
         }
     }
 
+    /**
+     * @return  Returns an instanc e of Point which represents Assam's position.
+     * @description Retrieves the current position of Assam.
+     */
     public Point getPoint() {
         return point;
     }
 
+    /**
+     * @param point: An instance of Point representing Assam's desired position.
+     * @return Returns the current instance of the Assam object (useful for method chaining).
+     * @description Updates the position of Assam.
+     */
     public Assam setPoint(Point point) {
         this.point = point;
         return this;
     }
 
+    /**
+     * @return Returns the current orientation of Assam
+     * which can be one of the values in the Orientation enum.
+     * @description Retrieves Assam's facing direction.
+     */
     public Orientation getOrientation() {
         return orientation;
     }
 
+    /**
+     * @param orientation: A value from the Orientation enum indicating Assam's desired direction.
+     * @return  Returns the current instance of the Assam object (useful for method chaining).
+     * @description Updates the direction Assam is facing.
+     */
     public Assam setOrientation(Orientation orientation) {
         this.orientation = orientation;
         return this;
     }
 
+    /**
+     * @return  Returns the current instance of the Assam object (useful for method chaining).
+     * @description Rotates Assam's orientation 90 degrees to the right.
+     */
     public Assam setOrientationRight90() {
         switch (orientation) {
             case N -> orientation = Orientation.E;
@@ -70,6 +101,10 @@ public class Assam implements IBean {
         return this;
     }
 
+    /**
+     * @return Returns the current instance of the Assam object (useful for method chaining).
+     * @description Rotates Assam's orientation 90 degrees to the left.
+     */
     public Assam setOrientationLeft90() {
         switch (orientation) {
             case N -> orientation = Orientation.W;
@@ -80,6 +115,10 @@ public class Assam implements IBean {
         return this;
     }
 
+    /**
+     * @return Returns the current instance of the Assam object (useful for method chaining).
+     * @description Rotates Assam's orientation 180 degrees (makes him face the opposite direction).
+     */
     public Assam setOrientationBack() {
         switch (orientation) {
             case N -> orientation = Orientation.S;
@@ -90,6 +129,12 @@ public class Assam implements IBean {
         return this;
     }
 
+    /**
+     * @param
+     * @return Returns a string representation of the Assam object, starting with an 'A',
+     * followed by x and y position, and the orientation.
+     * @description Converts Assam's position and orientation to a string format.
+     */
     @Override
     public String getString() {
         StringBuilder sb = new StringBuilder();

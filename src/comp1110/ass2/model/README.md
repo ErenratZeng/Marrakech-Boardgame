@@ -31,8 +31,8 @@ Assam is a Java class that represents an entity on a two-dimensional board with 
 - Orientation getOrientation(): Returns the current orientation of the entity.
 - Assam setOrientation(Orientation orientation): Set the orientation of the entity.
 - Assam setOrientationRight90(): Rotates the entity's orientation 90 degrees to the right.
-- Assam setOrientationLeft90(): Rotates the entity's orientation 90 degrees to the left. 
-- Assam setOrientationBack(): Rotates the entity's orientation 180 degrees. 
+- Assam setOrientationLeft90(): Rotates the entity's orientation 90 degrees to the left.
+- Assam setOrientationBack(): Rotates the entity's orientation 180 degrees.
 - String getString(): Returns the string representation of the entity.
 ---
 
@@ -115,7 +115,7 @@ The Point class is a fundamental component in the comp1110.ass2.model.base packa
 The State class is a core component that encapsulates the entire state of a game, including the players, the Assam, and the board. It provides a comprehensive view of the game's current status, offering methods to access and manipulate the game state effectively.
 ### Constructor
 - The class contains two constructors: Accepts an ArrayList of players, an Assam object, and a Board object to initialize the game state.
-Accepts a String that represents the game state and parses it to initialize the players, Assam, and board.
+  Accepts a String that represents the game state and parses it to initialize the players, Assam, and board.
 ### Methods
 - getAssam(): Retrieves the Assam object representing the current state of Assam in the game.
 - Return: The Assam object.
