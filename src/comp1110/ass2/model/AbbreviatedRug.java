@@ -13,16 +13,33 @@ public class AbbreviatedRug implements IBean {
     // ID of each rug should be unique.
     private final int ID;
 
+    /**
+     * @description The constructor initializes an
+     * AbbreviatedRug object with a null color and an ID of 0.
+     */
     public AbbreviatedRug() {
         this.color = null;
         this.ID = 0;
     }
 
+    /**
+     * @param color: An instance of javafx.scene.paint.Color, representing the color of the rug.
+     * @param ID: An integer representing the unique ID of the rug.
+     * @return
+     * @description  The constructor initializes an
+     * AbbreviatedRug object with the provided color and ID.
+     */
     public AbbreviatedRug(Color color, int ID) {
         this.color = color;
         this.ID = ID;
     }
 
+    /**
+     * @param string: A string of length 3, where the first character
+     * indicates the color and the next two characters represent the ID of the rug.
+     * @description The constructor parses the input string to initialize the color and ID of the rug.
+     * If the string is not of length 3, a RuntimeException is thrown.
+     */
     public AbbreviatedRug(String string) {
         if (string.length() != 3)
             throw new RuntimeException(
@@ -46,14 +63,27 @@ public class AbbreviatedRug implements IBean {
         ID = subStr2int(string, 1, 3);
     }
 
+    /**
+     * @return  Returns an instance of javafx.scene.paint.Color indicating the color of the rug.
+     * @description Retrieves the color of the AbbreviatedRug object.
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * @return Returns an integer indicating the unique ID of the rug.
+     * @description  Retrieves the ID of the AbbreviatedRug object.
+     */
     public int getID() {
         return ID;
     }
 
+    /**
+     * @return  Returns a string representation of the AbbreviatedRug object,
+     * where the first character indicates the color and the following two characters indicate the ID.
+     * @description Converts the color and ID of the rug to a string format.
+     */
     @Override
     public String getString() {
         StringBuilder sb = new StringBuilder();
