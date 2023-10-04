@@ -31,9 +31,6 @@ public class Marrakech {
      * @param rug A String representing the rug you are checking
      * @return true if the rug is valid, and false otherwise.
      */
-
-
-
     public static boolean isRugValid(String gameString, String rug) {
         // FIXME: Task 4
 

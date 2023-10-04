@@ -19,10 +19,20 @@ public class Player implements IBean {
     // whether player is out of the game, start with alive.
     private Boolean alive = true;
 
+    /**
+     * @param color: A Color object indicating the player's color.
+     * @description Initializes a new Player instance with the specified color.
+     * The player starts with 30 coins, 15 rugs, and is alive.
+     */
     public Player(Color color) {
         this.color = color;
     }
 
+    /**
+     * @param string: A string representing the player's information including
+     *              color, coins, rug number, and alive status.
+     * @description Initializes a new Player instance using the given string.
+     */
     public Player(String string) {
         switch (string.charAt(1)) {
             case 'c' -> color = Color.CYAN;
@@ -50,40 +60,75 @@ public class Player implements IBean {
         }
     }
 
+    /**
+     * @return  Returns the player's Color.
+     * @description Retrieves the player's color.
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * @param
+     * @return Returns the number of coins the player has.
+     * @description Retrieves the player's coin count.
+     */
     public int getCoins() {
         return coins;
     }
 
+    /**
+     * @param coins: An integer indicating the number of coins to set for the player.
+     * @return  Returns the current instance of the Player object (useful for method chaining).
+     * @description Updates the player's coin count.
+     */
     public Player setCoins(int coins) {
         this.coins = coins;
         return this;
     }
 
     /**
-     * Get the number of remaining rugNum for players.
+     * @return  Returns the number of rugs the player has.
+     * @description Retrieves the player's rug count.
      */
     public int getrugNum() {
         return rugNum;
     }
 
+    /**
+     * @param rugNum: An integer indicating the number of rugs to set for the player.
+     * @return Returns the current instance of the Player object (useful for method chaining).
+     * @description Updates the player's rug count.
+     */
     public Player setrugNum(int rugNum) {
         this.rugNum = rugNum;
         return this;
     }
 
+    /**
+     * @return Returns a boolean indicating if the player is alive or not.
+     * @description Checks if the player is currently alive.
+     */
     public boolean getAlive() {
         return alive;
     }
 
+    /**
+     * @param alive: A boolean value indicating whether the player is alive (true) or not (false).
+     * @return Returns the current instance of the Player object (useful for method chaining).
+     * @description Updates the player's alive status.
+     */
     public Player setAlive(Boolean alive) {
         this.alive = alive;
         return this;
     }
 
+    /**
+     * @param
+     * @return Returns a string representing the player's current state.
+     * @description  Converts the player's state into a string format,
+     * including color, coins, rug number, and alive status.
+     */
     @Override
     public String getString() {
         StringBuilder sb = new StringBuilder();
