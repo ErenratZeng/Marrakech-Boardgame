@@ -1,5 +1,7 @@
 package comp1110.ass2;
-
+import comp1110.ass2.model.AbbreviatedRug;
+import comp1110.ass2.model.Assam;
+import comp1110.ass2.model.Board;
 import comp1110.ass2.model.Player;
 import comp1110.ass2.model.TwoRug;
 import comp1110.ass2.model.State;
@@ -7,7 +9,8 @@ import javafx.scene.paint.Color;
 import comp1110.ass2.model.base.Point;
 import comp1110.ass2.model.base.Dice;
 
-import java.util.ArrayList;
+import java.util.*;
+
 
 public class Marrakech {
 
@@ -141,7 +144,15 @@ public class Marrakech {
      */
     public static boolean isGameOver(String currentGame) {
         // FIXME: Task 8
-        return false;
+        for (int i = 0; i < 4; i++) {
+            int startIndex = i * 8;
+            if (currentGame.charAt(startIndex + 7) == 'i' &&
+                    (currentGame.charAt(startIndex + 5) != '0' ||
+                            currentGame.charAt(startIndex + 6) != '0')) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -159,8 +170,22 @@ public class Marrakech {
      */
     public static String rotateAssam(String currentAssam, int rotation) {
         // FIXME: Task 9
-        return "";
+        if (rotation % 90 != 0 || rotation % 180 == 0) {
+            return currentAssam;
+        }
+
+        Assam assam = new Assam(currentAssam);
+
+        if (rotation == 90) { // rotate right
+            assam.setOrientationRight90();
+        } else if (rotation == 270) { // rotate left
+            assam.setOrientationLeft90();
+        }
+
+        return assam.getString();
     }
+
+
 
     /**
      * Determine whether a potential new placement is valid (i.e that it describes a legal way to place a rug).
@@ -169,14 +194,59 @@ public class Marrakech {
      *   1. A new rug must have one edge adjacent to Assam (not counting diagonals)
      *   2. A new rug must not completely cover another rug. It is legal to partially cover an already placed rug, but
      *      the new rug must not cover the entirety of another rug that's already on the board.
-     * @param gameState A game string representing the current state of the game
-     * @param rug A rug string representing the candidate rug which you must check the validity of.
+     * //@param gameState A game string representing the current state of the game
+     * //@param rug A rug string representing the candidate rug which you must check the validity of.
      * @return true if the placement is valid, and false otherwise.
      */
+
+
     public static boolean isPlacementValid(String gameState, String rug) {
         // FIXME: Task 10
-        return false;
+        // Get Assam's position from gameState
+        State state = new State(gameState);
+        Point assamPosition = state.getAssam().getPoint();
+        int assamX = assamPosition.getX();
+        int assamY = assamPosition.getY();
+
+        TwoRug twoRug = new TwoRug(rug);
+        Point[] currentRug = twoRug.getPoints();
+        int rugSide1X = currentRug[0].getX();
+        int rugSide1Y = currentRug[0].getY();
+        int rugSide2X = currentRug[1].getX();
+        int rugSide2Y = currentRug[1].getY();
+
+        Board board = state.getBoard();
+
+        AbbreviatedRug rugSide1Rug = board.getRug(rugSide1X, rugSide1Y);
+        Color rugSide1Color = rugSide1Rug.getColor();
+        int rugSide1ID = rugSide1Rug.getID();
+
+        AbbreviatedRug rugSide2Rug = board.getRug(rugSide2X, rugSide2Y);
+        Color rugSide2Color = rugSide2Rug.getColor();
+        int rugSide2ID = rugSide2Rug.getID();
+
+        // Check if rug is adjacent to Assam
+        boolean isAdjacent = (Math.abs(rugSide1X - assamX) <= 1 && Math.abs(rugSide1Y - assamY) <= 1) ||
+                (Math.abs(rugSide2X - assamX) <= 1 && Math.abs(rugSide2Y - assamY) <= 1);
+
+        if (!isAdjacent) {
+            return false;
+        }
+
+        // Check if the rug is placed on the Assam position
+        if ((rugSide1X == assamX &&  rugSide1Y == assamY) || (rugSide2X == assamX && rugSide2Y == assamY)) {
+            return false;
+        }
+
+        // Check if the rug cover the other rug though check color
+        if (rugSide2Color == null || rugSide1Color != rugSide2Color) {
+            return true;
+        }
+
+        // Check if the rug cover the other rug though check ID
+        return rugSide1ID != rugSide2ID;
     }
+
 
     /**
      * Determine the amount of payment required should another player land on a square.
@@ -190,7 +260,54 @@ public class Marrakech {
      */
     public static int getPaymentAmount(String gameString) {
         // FIXME: Task 11
-        return -1;
+        State state = new State(gameString);
+        Point assam = state.getAssam().getPoint();
+        Board board = state.getBoard();
+        int assamX = assam.getX();
+        int assamY = assam.getY();
+
+        // Wrap the x and y coordinates into a list for easier manipulation.
+        List<Integer> assamPosition = Arrays.asList(assamX, assamY);
+
+        // Extract the color of the rug Assam has landed on.
+        AbbreviatedRug currentAssamRug = board.getRug(assamX, assamY);
+        Color currentAssamRugColor = currentAssamRug.getColor();
+
+        // If there's no rug under Assam, return 0 payment.
+        if (currentAssamRugColor == null) {
+            return 0;
+        }
+
+        // Use BFS to explore all connected rugs of the same color as Assam landed on.
+        Set<List<Integer>> visited = new HashSet<>(); // Keeps track of visited squares.
+        Queue<List<Integer>> queue = new LinkedList<>(); // BFS queue.
+        queue.add(assamPosition);
+        visited.add(assamPosition);
+
+        while (!queue.isEmpty()) {
+            List<Integer> currentRugPosition = queue.poll();
+            int x = currentRugPosition.get(0);
+            int y = currentRugPosition.get(1);
+
+            // Generate the adjacent positions.
+            List<List<Integer>> adjacent = new ArrayList<>();
+            if (x > 0) adjacent.add(Arrays.asList(x - 1, y));
+            if (x < 6) adjacent.add(Arrays.asList(x + 1, y));
+            if (y > 0) adjacent.add(Arrays.asList(x, y - 1));
+            if (y < 6) adjacent.add(Arrays.asList(x, y + 1));
+
+            // If the adjacentRug is of the same color and hasn't been visited, add it to the queue.
+            for (List<Integer> adjacentRugs : adjacent) {
+                AbbreviatedRug adjacentRug = board.getRug(adjacentRugs.get(0), adjacentRugs.get(1));
+                Color adjacentRugColor = adjacentRug.getColor();
+
+                if (!visited.contains(adjacentRugs) && adjacentRugColor == currentAssamRugColor) {
+                    queue.add(adjacentRugs);
+                    visited.add(adjacentRugs);
+                }
+            }
+        }
+        return visited.size();
     }
 
     /**
@@ -209,7 +326,9 @@ public class Marrakech {
      */
     public static char getWinner(String gameState) {
         // FIXME: Task 12
-        return '\0';
+        // calculate each score of player(coins + color on board)
+        return 'n';
+
     }
 
     /**
