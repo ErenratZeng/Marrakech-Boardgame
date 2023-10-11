@@ -108,9 +108,9 @@ public class Assam implements IBean {
     public Assam setOrientationLeft90() {
         switch (orientation) {
             case N -> orientation = Orientation.W;
-            case E -> orientation = Orientation.S;
+            case E -> orientation = Orientation.N;
             case S -> orientation = Orientation.E;
-            case W -> orientation = Orientation.N;
+            case W -> orientation = Orientation.S;
         }
         return this;
     }
@@ -144,7 +144,6 @@ public class Assam implements IBean {
         sb.append(point.getX());
         sb.append(point.getY());
         sb.append(orientation);
-
         return sb.toString();
     }
 }
