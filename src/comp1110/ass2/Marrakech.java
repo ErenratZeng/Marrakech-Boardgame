@@ -36,83 +36,36 @@ public class Marrakech {
      */
     public static boolean isRugValid(String gameString, String rug) {
         // FIXME: Task 4
-
-        // The String is 7 characters long
-        if (!(rug.length() == 7)) {
+        // Check if the rug color are valid
+        char rugColor = rug.charAt(0);
+        if (!(rugColor == 'c' || rugColor == 'y' || rugColor == 'r' || rugColor == 'p')) {
             return false;
         }
-        try{
-            TwoRug currentRug = new TwoRug(rug);
-            if (currentRug.getID() < 0 || currentRug.getID() > 99) {
+        TwoRug twoRug = new TwoRug(rug);
+        Point[] currentRug = twoRug.getPoints();
+
+        // Check if the coordinates are valid
+        for (Point point : currentRug) {
+            if (point.getX() < 0 || point.getX() > 6 || point.getY() < 0 || point.getY() > 6) {
                 return false;
             }
-
-            // There's something wrong here
-            // The first character in the String corresponds to the colour character of a player present in the game
-            State currentState = new State(gameString);
-            ArrayList<Player> playerArrays = currentState.getPlayers();
-
-            Color[] playersColor = new Color[playerArrays.size()];
-
-
-            int count = 0;
-            for (Player player : playerArrays) {
-                playersColor[count] = player.getColor();
-                count++;
-            }
-
-            boolean hasRug = false;
-            for (Color color : playersColor) {
-                if (color.equals(currentRug.getColor())) {
-                    hasRug = true;
-                    break;
-                }
-            }
-            if (!hasRug) {
-                return false;
-            }
-
-
-            // The next 4 characters represent coordinates that are on the board
-            TwoRug rugObj = new TwoRug(rug);
-            ;
-            Point[] positions = rugObj.getPoints();
-            Point startPosition = positions[0];
-            Point endPosition = positions[1];
-
-            int startX = startPosition.getX();
-            int startY = startPosition.getY();
-            int endX = endPosition.getX();
-            int endY = endPosition.getY();
-
-            boolean isStartXInRange = startX >= 0 && startX < 7;
-            boolean isStartYInRange = startY >= 0 && startY < 7;
-            boolean isEndXInRange = endX >= 0 && endX < 7;
-            boolean isEndYInRange = endY >= 0 && endY < 7;
-
-            if (!(isStartXInRange && isStartYInRange && isEndXInRange && isEndYInRange)) {
-                return false;
-            }
-
-            if (startX == endX) {
-                int startYDiff = Math.abs(startY - endY);
-                if (!(startYDiff == 1)) {
-                    return false;
-                }
-            }
-
-            if (startY == endY) {
-                int startXDiff = Math.abs(startX - endX);
-                if (!(startXDiff == 1)) {
-                    return false;
-                }
-            }
-        } catch (Exception e){
-            return false;
         }
 
-        return true;
+        // Using a HashSet to store rugID for the same color
+        HashSet<String> rugIDs = new HashSet<>();
+        for (int i = 37; i < 37 + 3 * 49; i += 3) {
+            char color = gameString.charAt(i);
+            if (color == rugColor) {
+                String currentID = gameString.substring(i+1, i+3); // getting the rug ID
+                rugIDs.add(currentID);
+            }
+        }
+
+        // Check if the rug IDs are unique
+        String rugID = rug.substring(1, 3);
+        return !rugIDs.contains(rugID); // Rug with the same ID exists
     }
+
 
     /**
      * Roll the special Marrakech die and return the result.
@@ -144,6 +97,7 @@ public class Marrakech {
      */
     public static boolean isGameOver(String currentGame) {
         // FIXME: Task 8
+        System.out.println("currentGame="+ currentGame);
         for (int i = 0; i < 4; i++) {
             int startIndex = i * 8;
             if (currentGame.charAt(startIndex + 7) == 'i' &&
@@ -310,6 +264,7 @@ public class Marrakech {
         return visited.size();
     }
 
+
     /**
      * Determine the winner of a game of Marrakech.
      * For this task, you will be provided with a game state string and have to return a char representing the colour
@@ -321,14 +276,72 @@ public class Marrakech {
      * board that are of their colour, and that a player who is out of the game cannot win. If multiple players have the
      * same total score, the player with the largest number of dirhams wins. If multiple players have the same total
      * score and number of dirhams, then the game is a tie.
-     * @param gameState A String representation of the current state of the game
+     * //@param gameState A String representation of the current state of the game
      * @return A char representing the winner of the game as described above.
      */
     public static char getWinner(String gameState) {
         // FIXME: Task 12
         // calculate each score of player(coins + color on board)
-        return 'n';
+        State state = new State(gameState);
+        Board board = state.getBoard();
+        ArrayList<Player> playerArray = state.getPlayers();
 
+        // Create a map that stores player scores for each color (coins + color on board)
+        Map<Color, Integer> scores = new HashMap<>();
+        scores.put(Color.CYAN, 0);
+        scores.put(Color.YELLOW, 0);
+        scores.put(Color.PURPLE, 0);
+        scores.put(Color.RED, 0);
+
+        // Traverse the player list and store each player's coins (i.e. dirhams) into the mapping
+        for (Player player : playerArray) {
+            scores.put(player.getColor(), player.getCoins());
+        }
+
+        // Create a new mapping to store only the coins of each player
+        // to determine the winner when the total score is the same
+        Map<Color, Integer> originalScores = new HashMap<>(scores);
+
+        // Traverse the entire board, count the number of blocks of each color,
+        // and add that value to the score of the player of that color
+        for (int x = 0; x < 7; x++) {
+            for (int y = 0; y < 7; y++) {
+                AbbreviatedRug rug = board.getRug(x, y);
+                Color color = rug.getColor();
+                if (color != null) {
+                    scores.put(color, scores.get(color) + 1);
+                }
+            }
+        }
+
+        // Convert the map that stores the total score into a list
+        // and sort it in descending order by the player's total score
+        List<Map.Entry<Color, Integer>> sortedScores = new ArrayList<>(scores.entrySet());
+        sortedScores.sort(Map.Entry.<Color, Integer>comparingByValue().reversed());
+
+        // Define a color variable to store the color of the winner
+        Color WinnerColor;
+
+        // If the two players with the highest scores have the same score,
+        // the winner is determined based on their coins
+        if (Objects.equals(sortedScores.get(0).getValue(), sortedScores.get(1).getValue())) {
+            WinnerColor = Collections.max(originalScores.entrySet(), Map.Entry.comparingByValue()).getKey();
+        } else {
+            // Otherwise the player with the highest score is the winner
+            WinnerColor = sortedScores.get(0).getKey();
+        }
+
+        // Check if the game has ended, return 'n' if not
+        if (!isGameOver(gameState)) return 'n';
+
+        // Return the corresponding character based on the color of the winner
+        if (WinnerColor.equals(Color.CYAN)) return 'c';
+        if (WinnerColor.equals(Color.YELLOW)) return 'y';
+        if (WinnerColor.equals(Color.PURPLE)) return 'p';
+        if (WinnerColor.equals(Color.RED)) return 'r';
+
+        // The remaining situation is a tie, return 't'
+        return 't';
     }
 
     /**
@@ -345,6 +358,7 @@ public class Marrakech {
     public static String moveAssam(String currentAssam, int dieResult){
         // FIXME: Task 13
         return "";
+
     }
 
     /**
