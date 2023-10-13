@@ -357,9 +357,123 @@ public class Marrakech {
      */
     public static String moveAssam(String currentAssam, int dieResult){
         // FIXME: Task 13
-        return "";
+        Assam assam = new Assam(currentAssam);
+        Point assamPosition = assam.getPoint();
+        Assam.Orientation currentOrientation = assam.getOrientation();
+        Assam.Orientation targetOrientation = assam.getOrientation();
+        int currentX = assamPosition.getX();
+        int currentY = assamPosition.getY();
+        int targetX = 0;
+        int targetY = 0;
+
+
+        //原本朝向北方向的情况
+        if (currentOrientation == Assam.Orientation.N) {
+            //未出界
+            if (currentY >= dieResult) {
+                targetOrientation = currentOrientation;
+                targetX = currentX;
+                targetY = currentY - dieResult;
+            }
+
+            else {
+                //出界转西
+                if (currentX == 6) {
+                    targetOrientation = Assam.Orientation.W;
+                    targetX = currentY - dieResult + 7;
+                    targetY = 0;
+                }
+
+                else {
+                    //出界转南
+                    targetOrientation = Assam.Orientation.S;
+                    targetX = currentX == 1 || currentX == 3 || currentX == 5 ? currentX - 1 : currentX + 1;
+                    targetY = - currentY + dieResult - 1;
+                }
+            }
+        }
+
+        //原本朝向南方向的情况
+        else if (currentOrientation == Assam.Orientation.S) {
+            if (currentY  < 7 - dieResult) {
+                //未出界
+                targetOrientation = currentOrientation;
+                targetX = currentX;
+                targetY = currentY + dieResult;
+            }
+
+            else {
+                //出界转东
+                targetOrientation = Assam.Orientation.E;
+                if (currentX == 0) {
+                    targetX = currentY + dieResult - 7;
+                    targetY = 6;
+                }
+
+                else {
+                    //出界转北
+                    targetOrientation = Assam.Orientation.N;
+                    targetX = currentX == 1 || currentX == 3 || currentX == 5 ? currentX + 1 : currentX - 1;
+                    targetY =  -currentY - dieResult + 13;
+                }
+            }
+        }
+
+        //原本朝向东方向的情况
+        else if (currentOrientation == Assam.Orientation.E) {
+            if (currentX  < 7 - dieResult) {
+                targetOrientation = currentOrientation;
+                targetX = currentX + dieResult;
+                targetY = currentY;
+            }
+
+            else {
+                if (currentY == 0) {
+                    //出界转南
+                    targetOrientation = Assam.Orientation.S;
+                    targetX = 6;
+                    targetY = currentX + dieResult - 7;
+                }
+
+                else {
+                    //出界转西
+                    targetOrientation = Assam.Orientation.W;
+                    targetX = -currentX - dieResult + 13;
+                    targetY = currentY == 1 || currentY == 3 || currentY == 5 ? currentY + 1 : currentY - 1;
+                }
+            }
+        }
+
+        //原本朝向西方向的情况
+        else if (currentOrientation == Assam.Orientation.W) {
+            // 未出界情况
+            if (currentX >= dieResult) {
+                targetOrientation = currentOrientation;
+                targetX = currentX - dieResult;
+                targetY = currentY;
+            }
+
+            else {
+                if (currentY == 6) {
+                    //出界转北
+                    targetOrientation = Assam.Orientation.N;
+                    targetX = 0;
+                    targetY = currentX - dieResult + 7;
+                }
+
+                else {
+                    // 出界转东
+                    targetOrientation = Assam.Orientation.E;
+                    targetX = -currentX + dieResult - 1;
+                    targetY = currentY == 1 || currentY == 3 || currentY == 5 ? currentY - 1 : currentY + 1;
+                }
+            }
+        }
+
+        return "A" + targetX + targetY + targetOrientation ;
 
     }
+
 
     /**
      * Place a rug on the board
