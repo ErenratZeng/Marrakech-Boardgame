@@ -40,6 +40,7 @@ public class Viewer extends Application {
      * @param state an array of two strings, representing the current game state
      */
     void displayState(String state) {
+        // FIXME Task 5: implement the simple state viewer
         this.recentState = state;
         int scoreLabelY = 10;
 
@@ -56,23 +57,23 @@ public class Viewer extends Application {
             return;
         }
 
-        //Text bar
-        TextField stateInput = new TextField();
-        stateInput.setText(state);
-        stateInput.setLayoutX(10);
-        stateInput.setLayoutY(650);
-        stateInput.setPrefWidth(700);
-        root.getChildren().add(stateInput);
+//        //Text bar
+//        TextField stateInput = new TextField();
+//        stateInput.setText(state);
+//        stateInput.setLayoutX(10);
+//        stateInput.setLayoutY(650);
+//        stateInput.setPrefWidth(700);
+//        root.getChildren().add(stateInput);
 
-        //Update button
-        Button updateButton = new Button("Update State");
-        updateButton.setLayoutX(720);
-        updateButton.setLayoutY(650);
-        updateButton.setOnAction(e -> {
-            String newState = stateInput.getText();
-            displayState(newState);
-        });
-        root.getChildren().add(updateButton);
+//        //Update button
+//        Button updateButton = new Button("Update State");
+//        updateButton.setLayoutX(720);
+//        updateButton.setLayoutY(650);
+//        updateButton.setOnAction(e -> {
+//            String newState = stateInput.getText();
+//            displayState(newState);
+//        });
+//        root.getChildren().add(updateButton);
 
         // Constants
         final int TILE_SIZE = 71;
@@ -218,6 +219,10 @@ public class Viewer extends Application {
         hb.setLayoutX(50);
         hb.setLayoutY(VIEWER_HEIGHT - 50);
         controls.getChildren().add(hb);
+    }
+
+    public Group getViewerRoot() {
+        return root;
     }
 
     @Override
