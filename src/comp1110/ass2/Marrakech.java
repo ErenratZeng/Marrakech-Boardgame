@@ -36,34 +36,53 @@ public class Marrakech {
      */
     public static boolean isRugValid(String gameString, String rug) {
         // FIXME: Task 4
-        // Check if the rug color are valid
+
+        // The String is 7 characters long
+        if(rug.length() != 7){
+            return false;
+        }
+
+
+        // The first character in the String corresponds to the colour character of a player present in the game
         char rugColor = rug.charAt(0);
         if (!(rugColor == 'c' || rugColor == 'y' || rugColor == 'r' || rugColor == 'p')) {
             return false;
         }
-        TwoRug twoRug = new TwoRug(rug);
-        Point[] currentRug = twoRug.getPoints();
 
-        // Check if the coordinates are valid
-        for (Point point : currentRug) {
+        // The next two characters represent a 2-digit ID number
+        int rugID = Integer.parseInt(rug.substring(1,2));
+        if(!(rugID >= 0 && rugID < 100)){
+            return false;
+        }
+
+        // The next 4 characters represent coordinates that are on the board
+        // Check if the coordinates of rug are valid
+        TwoRug twoRug = new TwoRug(rug);
+        Point[] newRug = twoRug.getPoints();
+        for (Point point : newRug) {
             if (point.getX() < 0 || point.getX() > 6 || point.getY() < 0 || point.getY() > 6) {
                 return false;
             }
         }
 
-        // Using a HashSet to store rugID for the same color
-        HashSet<String> rugIDs = new HashSet<>();
-        for (int i = 37; i < 37 + 3 * 49; i += 3) {
-            char color = gameString.charAt(i);
-            if (color == rugColor) {
-                String currentID = gameString.substring(i+1, i+3); // getting the rug ID
-                rugIDs.add(currentID);
-            }
+        // The combination of that ID number and colour is unique
+        // Using a HashSet to store rug color and ID String
+        HashSet<String> rugColorAndIDs = new HashSet<>();
+
+        // Find each placed rug though board String
+        // 0-35 means PlayerString and AssamString
+        // 36 is "B" means BoardString start
+        // 37 to the end, each 3 char means the information of one rug
+        // 3 * 7 * 7 means the remained board string char, the board is 7 * 7
+        for (int i = 37; i < 37 + 3 * 7 * 7; i += 3) {
+            // Get the rug color and ID of all rugs
+            String currentID = gameString.substring(i, i+3);
+            rugColorAndIDs.add(currentID);
         }
 
         // Check if the rug IDs are unique
-        String rugID = rug.substring(1, 3);
-        return !rugIDs.contains(rugID); // Rug with the same ID exists
+        String newRugColorAndID = rug.substring(0, 3);
+        return !rugColorAndIDs.contains(newRugColorAndID);
     }
 
 
@@ -97,12 +116,13 @@ public class Marrakech {
      */
     public static boolean isGameOver(String currentGame) {
         // FIXME: Task 8
-        System.out.println("currentGame="+ currentGame);
-        for (int i = 0; i < 4; i++) {
-            int startIndex = i * 8;
-            if (currentGame.charAt(startIndex + 7) == 'i' &&
-                    (currentGame.charAt(startIndex + 5) != '0' ||
-                            currentGame.charAt(startIndex + 6) != '0')) {
+        State currentState = new State(currentGame);
+        ArrayList<Player> playerArray = currentState.getPlayers();
+
+        // Check if each player are alive and have rugs left.
+        // if there are anyone is alive and has rugs left, the game should continue
+        for (Player player : playerArray) {
+            if (player.getAlive() && player.getrugNum() > 0) {
                 return false;
             }
         }
@@ -124,15 +144,15 @@ public class Marrakech {
      */
     public static String rotateAssam(String currentAssam, int rotation) {
         // FIXME: Task 9
+        Assam assam = new Assam(currentAssam);
         if (rotation % 90 != 0 || rotation % 180 == 0) {
             return currentAssam;
         }
 
-        Assam assam = new Assam(currentAssam);
-
-        if (rotation == 90) { // rotate right
+        if (rotation == 90) {
             assam.setOrientationRight90();
-        } else if (rotation == 270) { // rotate left
+
+        } else if (rotation == 270) {
             assam.setOrientationLeft90();
         }
 
@@ -172,11 +192,10 @@ public class Marrakech {
         Board board = state.getBoard();
 
         AbbreviatedRug rugSide1Rug = board.getRug(rugSide1X, rugSide1Y);
-        Color rugSide1Color = rugSide1Rug.getColor();
-        int rugSide1ID = rugSide1Rug.getID();
-
         AbbreviatedRug rugSide2Rug = board.getRug(rugSide2X, rugSide2Y);
+        Color rugSide1Color = rugSide1Rug.getColor();
         Color rugSide2Color = rugSide2Rug.getColor();
+        int rugSide1ID = rugSide1Rug.getID();
         int rugSide2ID = rugSide2Rug.getID();
 
         // Check if rug is adjacent to Assam
@@ -220,47 +239,54 @@ public class Marrakech {
         int assamX = assam.getX();
         int assamY = assam.getY();
 
-        // Wrap the x and y coordinates into a list for easier manipulation.
         List<Integer> assamPosition = Arrays.asList(assamX, assamY);
 
-        // Extract the color of the rug Assam has landed on.
         AbbreviatedRug currentAssamRug = board.getRug(assamX, assamY);
         Color currentAssamRugColor = currentAssamRug.getColor();
 
-        // If there's no rug under Assam, return 0 payment.
+        // If there's no rug under Assam, payment is 0
         if (currentAssamRugColor == null) {
             return 0;
         }
 
-        // Use BFS to explore all connected rugs of the same color as Assam landed on.
-        Set<List<Integer>> visited = new HashSet<>(); // Keeps track of visited squares.
-        Queue<List<Integer>> queue = new LinkedList<>(); // BFS queue.
+        // Use BFS to explore all connected rugs of the same color as Assam landed on
+        // Create a set to track visited rug positions.
+        Set<List<Integer>> visited = new HashSet<>();
+        // Create a queue for BFS
+        Queue<List<Integer>> queue = new LinkedList<>();
         queue.add(assamPosition);
         visited.add(assamPosition);
 
+        // Continue looping while the BFS queue isn't empty
         while (!queue.isEmpty()) {
+            // Retrieve the current rug position from the queue
             List<Integer> currentRugPosition = queue.poll();
             int x = currentRugPosition.get(0);
             int y = currentRugPosition.get(1);
 
-            // Generate the adjacent positions.
+            // Create a list to hold adjacent positions of the current rug
             List<List<Integer>> adjacent = new ArrayList<>();
             if (x > 0) adjacent.add(Arrays.asList(x - 1, y));
             if (x < 6) adjacent.add(Arrays.asList(x + 1, y));
             if (y > 0) adjacent.add(Arrays.asList(x, y - 1));
             if (y < 6) adjacent.add(Arrays.asList(x, y + 1));
 
-            // If the adjacentRug is of the same color and hasn't been visited, add it to the queue.
+            // Traverse through all adjacent positions of the current rug
             for (List<Integer> adjacentRugs : adjacent) {
+                // Get the color of the rug at the adjacent position
                 AbbreviatedRug adjacentRug = board.getRug(adjacentRugs.get(0), adjacentRugs.get(1));
                 Color adjacentRugColor = adjacentRug.getColor();
 
+                // Check if this adjacent position has been visited
+                // and its rug color matches the color where Assam is
                 if (!visited.contains(adjacentRugs) && adjacentRugColor == currentAssamRugColor) {
                     queue.add(adjacentRugs);
                     visited.add(adjacentRugs);
                 }
             }
         }
+        // Return the calculated amount owed,
+        // which is the number of rugs adjacent to Assam's position with the same color.
         return visited.size();
     }
 
@@ -281,35 +307,34 @@ public class Marrakech {
      */
     public static char getWinner(String gameState) {
         // FIXME: Task 12
-        // calculate each score of player(coins + color on board)
         State state = new State(gameState);
         Board board = state.getBoard();
         ArrayList<Player> playerArray = state.getPlayers();
 
-        // Create a map that stores player scores for each color (coins + color on board)
+        // Create a map that stores total scores for each player (coins + rugs on board)
         Map<Color, Integer> scores = new HashMap<>();
         scores.put(Color.CYAN, 0);
         scores.put(Color.YELLOW, 0);
         scores.put(Color.PURPLE, 0);
         scores.put(Color.RED, 0);
 
-        // Traverse the player list and store each player's coins (i.e. dirhams) into the mapping
+        // Traverse the player list and store each player's coins (i.e. dirhams) into the map
         for (Player player : playerArray) {
             scores.put(player.getColor(), player.getCoins());
         }
 
-        // Create a new mapping to store only the coins of each player
+        // Create a new map to store only the coins of each player
         // to determine the winner when the total score is the same
-        Map<Color, Integer> originalScores = new HashMap<>(scores);
+        Map<Color, Integer> rugScores = new HashMap<>(scores);
 
-        // Traverse the entire board, count the number of blocks of each color,
+        // Traverse the entire board, count the number of rugs of each color,
         // and add that value to the score of the player of that color
         for (int x = 0; x < 7; x++) {
             for (int y = 0; y < 7; y++) {
                 AbbreviatedRug rug = board.getRug(x, y);
-                Color color = rug.getColor();
-                if (color != null) {
-                    scores.put(color, scores.get(color) + 1);
+                Color rugColor = rug.getColor();
+                if (rugColor != null) {
+                    scores.put(rugColor, scores.get(rugColor) + 1);
                 }
             }
         }
@@ -317,18 +342,18 @@ public class Marrakech {
         // Convert the map that stores the total score into a list
         // and sort it in descending order by the player's total score
         List<Map.Entry<Color, Integer>> sortedScores = new ArrayList<>(scores.entrySet());
-        sortedScores.sort(Map.Entry.<Color, Integer>comparingByValue().reversed());
+        sortedScores.sort(Map.Entry.comparingByValue());
 
         // Define a color variable to store the color of the winner
         Color WinnerColor;
 
-        // If the two players with the highest scores have the same score,
+        // If the two players with the highest scores have the same total score,
         // the winner is determined based on their coins
-        if (Objects.equals(sortedScores.get(0).getValue(), sortedScores.get(1).getValue())) {
-            WinnerColor = Collections.max(originalScores.entrySet(), Map.Entry.comparingByValue()).getKey();
+        if (Objects.equals(sortedScores.get(2).getValue(), sortedScores.get(3).getValue())) {
+            WinnerColor = Collections.max(rugScores.entrySet(), Map.Entry.comparingByValue()).getKey();
         } else {
-            // Otherwise the player with the highest score is the winner
-            WinnerColor = sortedScores.get(0).getKey();
+            // Otherwise the player with the highest total score is the winner
+            WinnerColor = sortedScores.get(3).getKey();
         }
 
         // Check if the game has ended, return 'n' if not
@@ -367,9 +392,9 @@ public class Marrakech {
         int targetY = 0;
 
 
-        //原本朝向北方向的情况
+        // Current facing direction is North
         if (currentOrientation == Assam.Orientation.N) {
-            //未出界
+            // Within boundary case
             if (currentY >= dieResult) {
                 targetOrientation = currentOrientation;
                 targetX = currentX;
@@ -377,33 +402,36 @@ public class Marrakech {
             }
 
             else {
-                //出界转西
+                // Out of bounds, turning West
                 if (currentX == 6) {
                     targetOrientation = Assam.Orientation.W;
+                    // 7 - (dieResult - currentY)
                     targetX = currentY - dieResult + 7;
                     targetY = 0;
                 }
 
                 else {
-                    //出界转南
+                    // Out of bounds, turning South
                     targetOrientation = Assam.Orientation.S;
+                    // After going out of bounds, move to different positions in different rows/columns.
                     targetX = currentX == 1 || currentX == 3 || currentX == 5 ? currentX - 1 : currentX + 1;
+                    // dieResult - currentY - 1;
                     targetY = - currentY + dieResult - 1;
                 }
             }
         }
 
-        //原本朝向南方向的情况
+        // Current facing direction is South
         else if (currentOrientation == Assam.Orientation.S) {
             if (currentY  < 7 - dieResult) {
-                //未出界
+                // Within boundary case
                 targetOrientation = currentOrientation;
                 targetX = currentX;
                 targetY = currentY + dieResult;
             }
 
             else {
-                //出界转东
+                // Out of bounds, turning East
                 targetOrientation = Assam.Orientation.E;
                 if (currentX == 0) {
                     targetX = currentY + dieResult - 7;
@@ -411,15 +439,17 @@ public class Marrakech {
                 }
 
                 else {
-                    //出界转北
+                    // Out of bounds, turning North
                     targetOrientation = Assam.Orientation.N;
+                    // After going out of bounds, move to different positions in different rows/columns.
                     targetX = currentX == 1 || currentX == 3 || currentX == 5 ? currentX + 1 : currentX - 1;
+                    // (7 - dieResult) + (6 - currentY)
                     targetY =  -currentY - dieResult + 13;
                 }
             }
         }
 
-        //原本朝向东方向的情况
+        // Current facing direction is East
         else if (currentOrientation == Assam.Orientation.E) {
             if (currentX  < 7 - dieResult) {
                 targetOrientation = currentOrientation;
@@ -429,24 +459,27 @@ public class Marrakech {
 
             else {
                 if (currentY == 0) {
-                    //出界转南
+                    // Out of bounds, turning South
                     targetOrientation = Assam.Orientation.S;
                     targetX = 6;
+                    // dieResult - (6 - currentX) - 1
                     targetY = currentX + dieResult - 7;
                 }
 
                 else {
-                    //出界转西
+                    // Out of bounds, turning West
                     targetOrientation = Assam.Orientation.W;
+                    // 6 - (dieResult - (6 - currentX)) + 1
                     targetX = -currentX - dieResult + 13;
+                    // After going out of bounds, move to different positions in different rows/columns.
                     targetY = currentY == 1 || currentY == 3 || currentY == 5 ? currentY + 1 : currentY - 1;
                 }
             }
         }
 
-        //原本朝向西方向的情况
+        // Current facing direction is West
         else if (currentOrientation == Assam.Orientation.W) {
-            // 未出界情况
+            // Within boundary case
             if (currentX >= dieResult) {
                 targetOrientation = currentOrientation;
                 targetX = currentX - dieResult;
@@ -455,16 +488,19 @@ public class Marrakech {
 
             else {
                 if (currentY == 6) {
-                    //出界转北
+                    // Out of bounds, turning North
                     targetOrientation = Assam.Orientation.N;
                     targetX = 0;
+                    // 7 - (dieResult - currentX) + 1
                     targetY = currentX - dieResult + 7;
                 }
 
                 else {
-                    // 出界转东
+                    // Out of bounds, turning East
                     targetOrientation = Assam.Orientation.E;
+                    // dieResult - currentX - 1
                     targetX = -currentX + dieResult - 1;
+                    // After going out of bounds, move to different positions in different rows/columns.
                     targetY = currentY == 1 || currentY == 3 || currentY == 5 ? currentY - 1 : currentY + 1;
                 }
             }
@@ -488,7 +524,85 @@ public class Marrakech {
      */
     public static String makePlacement(String currentGame, String rug) {
         // FIXME: Task 14
-        return "";
+        if (!isRugValid(currentGame,rug)){
+            return currentGame;
+        }
+
+        if (isPlacementValid(currentGame,rug)){
+
+            // Structure new PlayerArray String
+            State currentState = new State(currentGame);
+            ArrayList<Player> playerArray = currentState.getPlayers();
+
+            // Define a mapping from rug color to index
+            Map<Character, Integer> newRugColorIndex = Map.of('c', 0, 'y', 1, 'p', 2, 'r', 3);
+
+            // Array to store the current player strings
+            String[] currentString = new String[4];
+            // Array to store new rug numbers after placement
+            int[] newRugNum = new int[4];
+            // Array to store the new rug numbers as strings
+            String[] newRugNumString = new String[4];
+
+            // Iterate over each player and update relevant data
+            for (int i = 0; i < 4; i++) {
+                // Find player information before placement
+                currentString[i] = playerArray.get(i).getString();
+                // Decrease the player's rug number by one after placing a rug
+                newRugNum[i] = playerArray.get(i).getrugNum() - 1;
+                // After placement, if a player's remaining rug count is a single digit
+                // append '0' to create correct string form
+                newRugNumString[i] = (newRugNum[i] < 10) ? "0" + newRugNum[i] : Integer.toString(newRugNum[i]);
+            }
+
+            // Check the color of the placed rug and update the respective player's information
+            char rugColor = rug.charAt(0);
+
+            // Find the player index using the rug color mapping
+            int playerIndex = newRugColorIndex.get(rugColor);
+
+            // Post-placement, the player's string should
+            // keep the color, coins count, and living status (alive or out) unchanged,
+            // only update the number of unplaced rugs
+            currentString[playerIndex] = currentString[playerIndex].substring(0, 5) + newRugNumString[playerIndex] + currentString[playerIndex].charAt(7);
+
+            // Concatenate the updated player string with other unchanged player strings
+            String newPlayerArrayString = String.join("", currentString);
+
+
+            // Find Assam String
+            Assam assam = currentState.getAssam();
+            String assamString = assam.getString();
+
+            // Structure new Board String
+            TwoRug twoRug = new TwoRug(rug);
+            Point[] newRug = twoRug.getPoints();
+            String newRugColorAndID = rug.substring(0, 3);
+            int newRugX1 = newRug[0].getX();
+            int newRugY1 = newRug[0].getY();
+            int newRugX2 = newRug[1].getX();
+            int newRugY2 = newRug[1].getY();
+
+            Board currentBoard = currentState.getBoard();
+            String currentBoardString = currentBoard.getString();
+            // Use StringBuilder to modify the board string
+            StringBuilder newBoardString = new StringBuilder(currentBoardString);
+
+            // Find the index of the chars changed by placing the new rug
+            int index1 = 7 * 3 * newRugX1 + 3 * newRugY1 + 1;
+            int index2 = 7 * 3 * newRugX2 + 3 * newRugY2 + 1;
+
+            // Replaced original rug color and ID by new rug ID and color
+            newBoardString.replace(index1, index1 + 3, newRugColorAndID);
+            newBoardString.replace(index2, index2 + 3, newRugColorAndID);
+
+            // Return the new game state string
+            return newPlayerArrayString + assamString + newBoardString;
+
+        } else {
+            return currentGame;
+        }
     }
 
 }
+
