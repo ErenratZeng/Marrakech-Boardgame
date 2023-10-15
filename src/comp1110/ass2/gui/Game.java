@@ -37,15 +37,12 @@ public class Game extends Application {
     private Viewer viewer;
     private final Text diceFace = new Text("0");
     private State gameState;
-    private boolean directionSelected = false;
     private int currentPlayer = 0;  // track current player
     private final Text currentPlayerLabel = new Text();
-    private Button turnRightButton;
-    private Button turnLeftButton;
-    private Button turn180DegreeButton;
+    private Button eastButton;
+    private Button westButton;
+    private Button southButton;
     private Button northButton;
-    // A flag to indicate if the game has started
-    private boolean gameStarted = false;
     private final Point[] selectedRugPoints = new Point[2];
 
     private int putTwoRugCounter = 0;
@@ -58,8 +55,6 @@ public class Game extends Application {
         playersList.add(new Player(Color.PURPLE));
         this.players = playersList.toArray(new Player[0]);
         gameState = new State(playersList);
-        // Reset the game started flag
-        gameStarted = false;
     }
 
     /**
@@ -102,85 +97,61 @@ public class Game extends Application {
         rollButton.setLayoutY(650);
         rollButton.setOnAction(e -> rollDice());
 
-        turnRightButton = new Button("→");
-        turnLeftButton = new Button("←");
-        turn180DegreeButton = new Button("↓");
+        eastButton = new Button("→");
+        westButton = new Button("←");
+        southButton = new Button("↓");
         northButton = new Button("↑");
 
         // Rotate Assam 90 degrees to the Right when clicked
-        turnRightButton.setLayoutX(1000);
-        turnRightButton.setLayoutY(600);
-        turnRightButton.setOnAction(e -> {
-            if (!directionSelected) {
-                String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "E");
-                if (!newAssamState.equals(gameState.getAssam().getString())) {
-                    gameState.getAssam().setOrientation(Assam.Orientation.valueOf(newAssamState.substring(3, 4)));
-                    refreshGameView(gameState);
-                    if (!directionSelected) {
-                        directionSelected = true;
-                        disableDirectionButtons(turnRightButton, turnLeftButton, turn180DegreeButton, northButton);
-                        updateDirectionButtons();
-                    }
-                }
+        eastButton.setLayoutX(1000);
+        eastButton.setLayoutY(600);
+        eastButton.setOnAction(e -> {
+            String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "E");
+            if (!newAssamState.equals(gameState.getAssam().getString())) {
+                gameState.getAssam().setOrientation(Assam.Orientation.valueOf(newAssamState.substring(3, 4)));
+                refreshGameView(gameState);
+                disableDirectionButtons();
             }
         });
 
-        turnLeftButton.setLayoutX(900);
-        turnLeftButton.setLayoutY(600);
-        turnLeftButton.setOnAction(e -> {
-            if (!directionSelected) {
-                String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "W");
-                if (!newAssamState.equals(gameState.getAssam().getString())) {
-                    gameState.getAssam().setOrientation(Assam.Orientation.valueOf(newAssamState.substring(3, 4)));
-                    refreshGameView(gameState);
-                    if (!directionSelected) {
-                        directionSelected = true;
-                        disableDirectionButtons(turnRightButton, turnLeftButton, turn180DegreeButton, northButton);
-                        updateDirectionButtons();
-                    }
-                }
+        westButton.setLayoutX(900);
+        westButton.setLayoutY(600);
+        westButton.setOnAction(e -> {
+            String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "W");
+            if (!newAssamState.equals(gameState.getAssam().getString())) {
+                gameState.getAssam().setOrientation(Assam.Orientation.valueOf(newAssamState.substring(3, 4)));
+                refreshGameView(gameState);
+                disableDirectionButtons();
             }
         });
 
-        turn180DegreeButton.setLayoutX(950);
-        turn180DegreeButton.setLayoutY(650);
-        turn180DegreeButton.setOnAction(e -> {
-            if (!directionSelected) {
-                String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "S");
-                if (!newAssamState.equals(gameState.getAssam().getString())) {
-                    gameState.getAssam().setOrientation(Assam.Orientation.valueOf(newAssamState.substring(3, 4)));
-                    refreshGameView(gameState);
-                    if (!directionSelected) {
-                        directionSelected = true;
-                        disableDirectionButtons(turnRightButton, turnLeftButton, turn180DegreeButton, northButton);
-                        updateDirectionButtons();
-                    }
-                }
+        southButton.setLayoutX(950);
+        southButton.setLayoutY(650);
+        southButton.setOnAction(e -> {
+            String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "S");
+            if (!newAssamState.equals(gameState.getAssam().getString())) {
+                gameState.getAssam().setOrientation(Assam.Orientation.valueOf(newAssamState.substring(3, 4)));
+                refreshGameView(gameState);
+                disableDirectionButtons();
             }
         });
 
         northButton.setLayoutX(950);
         northButton.setLayoutY(550);
         northButton.setOnAction(e -> {
-            if (!directionSelected) {
-                String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "N");
-                if (!newAssamState.equals(gameState.getAssam().getString())) {
-                    gameState.getAssam().setOrientation(Assam.Orientation.valueOf(newAssamState.substring(3, 4)));
-                    refreshGameView(gameState);
-                    if (!directionSelected) {
-                        directionSelected = true;
-                        disableDirectionButtons(turnRightButton, turnLeftButton, turn180DegreeButton, northButton);
-                        updateDirectionButtons();
-                    }
-                }
+            String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "N");
+            if (!newAssamState.equals(gameState.getAssam().getString())) {
+                gameState.getAssam().setOrientation(Assam.Orientation.valueOf(newAssamState.substring(3, 4)));
+                refreshGameView(gameState);
+                disableDirectionButtons();
             }
         });
 
-        root.getChildren().addAll(square, diceFace, rollButton, turnRightButton, turnLeftButton, turn180DegreeButton, northButton, currentPlayerLabel);
-        updateDirectionButtons();
+        root.getChildren().addAll(square, diceFace, rollButton, eastButton, westButton, southButton, northButton, currentPlayerLabel);
     }
 
     private void rollDice() {
+        disableDirectionButtons();
         Timeline timeline = new Timeline();
         diceFace.setX(1000);
         diceFace.setY(100);
@@ -195,21 +166,13 @@ public class Game extends Application {
         }
 
         timeline.setOnFinished(e -> {
-            gameStarted = true;
-            // Enable all direction buttons after rolling the dice
-            turnRightButton.setDisable(false);
-            turnLeftButton.setDisable(false);
-            turn180DegreeButton.setDisable(false);
-            northButton.setDisable(false);
-            directionSelected = false;
-
-            //updateCurrentPlayerLabel();  // Update player label
+            disableDirectionButtons();
             int dieResult = Integer.parseInt(diceFace.getText());  // Get the die result from the diceFace Text node
             moveAssamAfterRoll(dieResult);  // Move Assam based on the die result
-            putTwoRug();
+            // TODO：增加放地毯的提示
+            root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
         });
         timeline.play(); //Play the dice
-        updateDirectionButtons();
     }
 
     /**
@@ -217,11 +180,7 @@ public class Game extends Application {
      */
     private void updateCurrentPlayerLabel() {
         // Cycle through players after each turn
-        directionSelected = false;
-        turnRightButton.setDisable(false);  // Enable the direction buttons
-        turnLeftButton.setDisable(false);
-        turn180DegreeButton.setDisable(false);
-        northButton.setDisable(false);
+        updateDirectionButtons();
         currentPlayer = (currentPlayer + 1) % players.length;
         currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
     }
@@ -229,10 +188,10 @@ public class Game extends Application {
     /**
      * Disables the direction buttons after Assam's direction has been selected.
      */
-    private void disableDirectionButtons(Button turnRightButton, Button turnLeftButton, Button turn180DegreeButton, Button northButton) {
-        turnRightButton.setDisable(true);
-        turnLeftButton.setDisable(true);
-        turn180DegreeButton.setDisable(true);
+    private void disableDirectionButtons() {
+        eastButton.setDisable(true);
+        westButton.setDisable(true);
+        southButton.setDisable(true);
         northButton.setDisable(true);
     }
 
@@ -248,7 +207,6 @@ public class Game extends Application {
             Assam newAssam = new Assam(newAssamState);
             gameState = new State(gameState.getPlayers(), newAssam, gameState.getBoard());
             refreshGameView(gameState);  // Refresh the game view to reflect Assam's new position
-            updateDirectionButtons();
         }
     }
 
@@ -305,37 +263,20 @@ public class Game extends Application {
      * Update the state of the direction buttons based on Assam's current orientation and the game state.
      */
     private void updateDirectionButtons() {
-        // Enable all direction buttons if the game has not started yet
-        if (!gameStarted) {
-            turnRightButton.setDisable(false);
-            turnLeftButton.setDisable(false);
-            turn180DegreeButton.setDisable(false);
-            northButton.setDisable(false);
-            return;
-        }
         // Get Assam's current orientation from the game state
         Assam.Orientation orientation = gameState.getAssam().getOrientation();
         // Enable or disable buttons based on Assam's orientation to indicate valid directions for movement
         switch (orientation) {
             case N, S -> {
-                turn180DegreeButton.setDisable(true);
-                northButton.setDisable(true);
+                westButton.setDisable(false);
+                eastButton.setDisable(false);
             }
             case E, W -> {
-                turnLeftButton.setDisable(true);
-                turnRightButton.setDisable(true);
-            }
-            default -> throw new IllegalArgumentException("Invalid orientation");
-        }
-    }
 
-    private void putTwoRug() {
-        turnRightButton.setDisable(false);  // Enable the direction buttons
-        turnLeftButton.setDisable(false);
-        turn180DegreeButton.setDisable(false);
-        northButton.setDisable(false);
-        // TODO：提示放地毯
-        root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
+                southButton.setDisable(false);
+                northButton.setDisable(false);
+            }
+        }
     }
 
     EventHandler<MouseEvent> handleMouseClick = new EventHandler<>() {
@@ -369,15 +310,14 @@ public class Game extends Application {
                         (colRug == colAssam && rowRug == rowAssam - 1)
                 ) {
                     selectedRugPoints[0] = new Point(colRug, rowRug);
-                    System.out.println(putTwoRugCounter+","+colRug+","+rowRug);
+                    System.out.println(putTwoRugCounter + "," + colRug + "," + rowRug);
                     putTwoRugCounter++;
                 }
 
 
-            }
-            else if (putTwoRugCounter == 1) {
+            } else if (putTwoRugCounter == 1) {
                 selectedRugPoints[1] = new Point(colRug, rowRug);
-                System.out.println(putTwoRugCounter+","+colRug+","+rowRug);
+                System.out.println(putTwoRugCounter + "," + colRug + "," + rowRug);
                 // Get the current player and their color
                 Player current = players[currentPlayer];
                 Color currentPlayerColor = current.getColor();
