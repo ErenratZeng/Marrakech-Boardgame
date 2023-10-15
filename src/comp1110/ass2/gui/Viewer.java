@@ -57,24 +57,6 @@ public class Viewer extends Application {
             return;
         }
 
-//        //Text bar
-//        TextField stateInput = new TextField();
-//        stateInput.setText(state);
-//        stateInput.setLayoutX(10);
-//        stateInput.setLayoutY(650);
-//        stateInput.setPrefWidth(700);
-//        root.getChildren().add(stateInput);
-
-//        //Update button
-//        Button updateButton = new Button("Update State");
-//        updateButton.setLayoutX(720);
-//        updateButton.setLayoutY(650);
-//        updateButton.setOnAction(e -> {
-//            String newState = stateInput.getText();
-//            displayState(newState);
-//        });
-//        root.getChildren().add(updateButton);
-
         // Constants
         final int TILE_SIZE = 71;
         final int BOARD_SIZE = 7;

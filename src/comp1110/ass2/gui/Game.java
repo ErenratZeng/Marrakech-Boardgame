@@ -3,6 +3,7 @@ package comp1110.ass2.gui;
 import comp1110.ass2.Marrakech;
 import comp1110.ass2.model.*;
 import comp1110.ass2.model.base.Dice;
+import comp1110.ass2.model.base.Point;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -15,8 +16,9 @@ import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.input.MouseEvent;
 
-import static comp1110.ass2.Marrakech.rotateAssam;
+import static comp1110.ass2.Marrakech.*;
 
 public class Game extends Application {
 
@@ -100,26 +102,12 @@ public class Game extends Application {
     private Button northButton;
     // A flag to indicate if the game has started
     private boolean gameStarted = false;
+    private ArrayList<Point> selectedTiles = new ArrayList<>();
+    private int nextRugID = 1;  // 用于分配新的地毯ID
+
+
+
     Assam newAssam = new Assam();
-
-
-    /**
-     * Creates the board for the application.
-     */
-    private void makeBoard() {
-        gameBoard = new Board();  // Create a new Board object
-
-        // Initialize an empty game board
-        for (int i = 0; i < Board.BOARD_WIDTH; i++) {
-            for (int j = 0; j < Board.BOARD_HEIGHT; j++) {
-                gameBoard.setRug(new AbbreviatedRug(null, 0), i, j);  // Set each position on the board with a rug color of null and ID of 0
-            }
-        }
-
-        // Update GUI to display the empty game board
-        State initialState = new State(playersList, newAssam, gameBoard);  // Create a new game state using the empty game board
-        refreshGameView(initialState);  // Refresh the game view to display the empty game board
-    }
 
     private void newGame() {
         this.playersList = new ArrayList<>();
@@ -144,7 +132,7 @@ public class Game extends Application {
     private void refreshGameView(State gameState) {
         // Use the getString() method of the State class to get the string representation of the current game state
         String currentState = gameState.getString();
-        System.out.println(currentState);
+//        System.out.println(currentState);
         // Use the displayState() method of the Viewer class to display the current game state
         if (currentState == null || currentState.isEmpty()) {
             System.err.println("Error: Game state string is empty or null.");
@@ -160,7 +148,7 @@ public class Game extends Application {
      */
 
     public void makeControls() {
-        System.out.println("makeControls called");
+//        System.out.println("makeControls called");
         Rectangle square = new Rectangle(965, 25, TILE_SIZE + 100, TILE_SIZE + 100);
         square.setFill(Color.GREY);
 
@@ -275,6 +263,7 @@ public class Game extends Application {
             turn180DegreeButton.setDisable(false);
             northButton.setDisable(false);
             directionSelected = false;
+
             updateCurrentPlayerLabel();  // Update player label
             int dieResult = Integer.parseInt(diceFace.getText());  // Get the die result from the diceFace Text node
             moveAssamAfterRoll(dieResult);  // Move Assam based on the die result
@@ -322,6 +311,8 @@ public class Game extends Application {
             updateDirectionButtons();
         }
     }
+
+
 
     /**
      * Rotate Assam to face the specified direction.
@@ -403,16 +394,91 @@ public class Game extends Application {
         }
     }
 
+
+    private void handleMouseClick(MouseEvent e) {
+        System.out.println("Mouse Clicked at: X = " + e.getX() + ", Y = " + e.getY());
+        System.out.println("gameStarted: " + gameStarted);
+        System.out.println("directionSelected: " + directionSelected);
+        System.out.println("START_X: " + START_X + ", START_Y: " + START_Y);
+
+        // Check if the game has started and a direction has been selected
+        if (gameStarted && directionSelected) {
+            double x = e.getX();
+            double y = e.getY();
+
+            // Check if the mouse click is within the board boundaries
+            if (x >= START_X && x <= START_X + Board.BOARD_WIDTH * Tile_Size &&
+                    y >= START_Y && y <= START_Y + Board.BOARD_HEIGHT * Tile_Size) {
+
+                // Convert the mouse click coordinates to board column and row indices
+                int col = (int) ((x - START_X) / Tile_Size);
+                int row = (int) ((y - START_Y) / Tile_Size);
+                System.out.println("11111");
+
+                // Check if the converted column and row indices are valid
+                if (col >= 0 && row >= 0 && col < Board.BOARD_WIDTH && row < Board.BOARD_HEIGHT) {
+                    // Add the selected tile to the list of selected tiles
+                    selectedTiles.add(new Point(col, row));
+                    System.out.println("Selected Tiles: " + selectedTiles);
+
+                    // Check if two tiles have been selected to place a rug
+                    if (selectedTiles.size() == 2) {
+                        // Get the current player and their color
+                        Player current = players[currentPlayer];
+                        Color currentPlayerColor = current.getColor();
+
+                        // Generate a new rug ID and create a new rug with the current player's color
+                        int newRugID = nextRugID++;
+                        AbbreviatedRug newRug = new AbbreviatedRug(currentPlayerColor, newRugID);
+
+                        // Create a string representation of the rug placement
+                        String rugString = newRug.getString() +
+                                selectedTiles.get(0).getX() +
+                                selectedTiles.get(0).getY() +
+                                selectedTiles.get(1).getX() +
+                                selectedTiles.get(1).getY();
+                        System.out.println("Rug String Before Placement: " + rugString);
+
+                        // Check if the rug and its placement are valid
+                        if (isRugValid(gameState.getString(), rugString) &&
+                                isPlacementValid(gameState.getString(), rugString)) {
+
+                            // Make the rug placement and get the new game state
+                            String newGameState = makePlacement(gameState.getString(), rugString);
+                            System.out.println("Old Game State: " + gameState.getString());
+                            System.out.println("New Game State: " + newGameState);
+                            System.out.println("New Game State After Placement: " + newGameState);
+
+                            // Update the game state and refresh the game view if the game state has changed
+                            if (newGameState != null && !newGameState.equals(gameState.getString())) {
+                                gameState = new State(newGameState);
+                                refreshGameView(gameState);
+                            }
+                        } else {
+                            // Print an error message if the rug or its placement is invalid
+                            System.out.println("Invalid rug or placement");
+                            System.out.println("isRugValid: " + isRugValid(gameState.getString(), rugString));
+                            System.out.println("isPlacementValid: " + isPlacementValid(gameState.getString(), rugString));
+                        }
+
+                        // Clear the selected tiles after attempting to place a rug
+                        selectedTiles.clear();
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
         newGame();
         makeControls();
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleMouseClick(e));
         // Print number of root
-        System.out.println("Number of children in root: " + root.getChildren().size());
-
-        root.getChildren().forEach(child -> System.out.println(child.toString()));
+//        System.out.println("Number of children in root: " + root.getChildren().size());
+//        root.getChildren().forEach(child -> System.out.println(child.toString()));
         stage.setScene(scene);
         stage.show();
     }
