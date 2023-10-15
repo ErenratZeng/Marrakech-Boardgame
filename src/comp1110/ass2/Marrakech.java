@@ -211,7 +211,8 @@ public class Marrakech {
             return false;
         }
 
-        if (!(rugSide1X != rugSide2X && rugSide1Y == rugSide2Y || rugSide1X == rugSide2X && rugSide1Y != rugSide2Y)) {
+        // Additional conditions to prevent rugs from being placed diagonally or at intervals
+        if (!(rugSide1X == rugSide2X && Math.abs(rugSide1Y - rugSide2Y) == 1 || Math.abs(rugSide1X - rugSide2X) == 1 && rugSide1Y == rugSide2Y)) {
             return false;
         }
 
