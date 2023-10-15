@@ -211,6 +211,10 @@ public class Marrakech {
             return false;
         }
 
+        if (!(rugSide1X != rugSide2X && rugSide1Y == rugSide2Y || rugSide1X == rugSide2X && rugSide1Y != rugSide2Y)) {
+            return false;
+        }
+
         // Check if the rug cover the other rug though check color
         if (rugSide2Color == null || rugSide1Color != rugSide2Color) {
             return true;
