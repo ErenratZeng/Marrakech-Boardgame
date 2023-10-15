@@ -5,6 +5,7 @@ import comp1110.ass2.model.*;
 import comp1110.ass2.model.base.Dice;
 import comp1110.ass2.model.base.Point;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -105,9 +106,9 @@ public class Game extends Application {
     private ArrayList<Point> selectedTiles = new ArrayList<>();
     private int nextRugID = 1;  // 用于分配新的地毯ID
 
-
-
     Assam newAssam = new Assam();
+
+    private int putTwoRugCounter = 0;
 
     private void newGame() {
         this.playersList = new ArrayList<>();
@@ -264,9 +265,10 @@ public class Game extends Application {
             northButton.setDisable(false);
             directionSelected = false;
 
-            updateCurrentPlayerLabel();  // Update player label
+            //updateCurrentPlayerLabel();  // Update player label
             int dieResult = Integer.parseInt(diceFace.getText());  // Get the die result from the diceFace Text node
             moveAssamAfterRoll(dieResult);  // Move Assam based on the die result
+            putTwoRug();
         });
         timeline.play(); //Play the dice
         updateDirectionButtons();
@@ -394,15 +396,24 @@ public class Game extends Application {
         }
     }
 
+    private void putTwoRug() {
+        turnRightButton.setDisable(false);  // Enable the direction buttons
+        turnLeftButton.setDisable(false);
+        turn180DegreeButton.setDisable(false);
+        northButton.setDisable(false);
+        // TODO：提示放地毯
+        root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
+    }
 
-    private void handleMouseClick(MouseEvent e) {
-        System.out.println("Mouse Clicked at: X = " + e.getX() + ", Y = " + e.getY());
-        System.out.println("gameStarted: " + gameStarted);
-        System.out.println("directionSelected: " + directionSelected);
-        System.out.println("START_X: " + START_X + ", START_Y: " + START_Y);
+    EventHandler<MouseEvent> handleMouseClick = new EventHandler<>() {
+        @Override
+        public void handle(MouseEvent e) {
+            // TODO：放地毯的逻辑有问题，设置flag记录第一次点击和第二次点击，点击完以后跳出
 
-        // Check if the game has started and a direction has been selected
-        if (gameStarted && directionSelected) {
+            System.out.println("Mouse Clicked at: X = " + e.getX() + ", Y = " + e.getY());
+            System.out.println("START_X: " + START_X + ", START_Y: " + START_Y);
+
+            // Check if the game has started and a direction has been selected
             double x = e.getX();
             double y = e.getY();
 
@@ -466,8 +477,13 @@ public class Game extends Application {
                     }
                 }
             }
+            if (putTwoRugCounter++ == 1) {
+                updateCurrentPlayerLabel();
+                root.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
+                putTwoRugCounter = 0;
+            }
         }
-    }
+    };
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -475,7 +491,6 @@ public class Game extends Application {
         newGame();
         makeControls();
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
-        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> handleMouseClick(e));
         // Print number of root
 //        System.out.println("Number of children in root: " + root.getChildren().size());
 //        root.getChildren().forEach(child -> System.out.println(child.toString()));
