@@ -49,10 +49,10 @@ public class Game extends Application {
 
     private void newGame() {
         ArrayList<Player> playersList = new ArrayList<>();
-        playersList.add(new Player(Color.RED));
-        playersList.add(new Player(Color.YELLOW));
         playersList.add(new Player(Color.CYAN));
+        playersList.add(new Player(Color.YELLOW));
         playersList.add(new Player(Color.PURPLE));
+        playersList.add(new Player(Color.RED));
         this.players = playersList.toArray(new Player[0]);
         gameState = new State(playersList);
     }
@@ -347,6 +347,12 @@ public class Game extends Application {
         }
     };
 
+    private void paidCoins(){
+        //TODO 完成移动后判断玩家是否需要支付coins给其他玩家(Task 11)
+    }
+
+
+
     @Override
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
@@ -360,9 +366,14 @@ public class Game extends Application {
 /**
  * 逻辑：
  * 游戏开始，第一个移动的玩家可以选择assam的任何方向，后续的玩家只能向左或者向右旋转90度
- * 先选择Assam旋转的(Task 9)方向，然后投骰子，然后Assam移动(Task 13),在完成移动后，使用Task 11判断玩家是否需要支付coins给其他玩家
+ * 先选择Assam旋转的(Task 9)方向，
+ * 然后投骰子(Task 6)
+ * 然后Assam移动(Task 13)
+ * 完成移动后判断玩家是否需要支付coins给其他玩家(Task 11)
  * 然后玩家选择放置一张地毯在Assam的W,E,N,S方向(Task 14)
- * 一张rug占据的格子数量是两格,判断放置是否合法(Task 10)，当合法后，其他玩家依次移动assam放rug，当当前回合结束后，判断玩家是否over(Task 8)
+ * 一张rug占据的格子数量是两格,判断放置是否合法(Task 10)
+ * 当合法后地毯被放置，其他玩家依次移动assam放rug
+ * 当当前回合结束后，判断玩家是否over(Task 8)
  * 以及每回合都判断游戏是否结束，以及胜者是谁(Task 12)
  */
 
