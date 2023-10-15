@@ -47,6 +47,7 @@ public class Game extends Application {
 
     private int putTwoRugCounter = 0;
 
+
     private void newGame() {
         ArrayList<Player> playersList = new ArrayList<>();
         playersList.add(new Player(Color.CYAN));
@@ -347,9 +348,26 @@ public class Game extends Application {
         }
     };
 
-    private void paidCoins(){
-        //TODO 完成移动后判断玩家是否需要支付coins给其他玩家(Task 11)
+    private void selectPlayer(){
+        //TODO 选择Player数量(2~4),以及是否加入AI
     }
+
+    private void selectDifficult(){
+        //TODO 选择ai难度
+    }
+
+    private void paidCoins(){
+        //TODO Assam完成移动后判断玩家是否需要支付coins给其他玩家(Task 11)
+    }
+
+    private void areYouOver(){
+        //TODO 玩家当前回合结束后，判断玩家是否over(Task 8)
+    }
+
+    private void isGameOver(){
+        //TODO 每回合都判断游戏是否结束(Task 8)，以及胜者是谁(Task 12)
+    }
+
 
 
 
@@ -365,15 +383,17 @@ public class Game extends Application {
 }
 /**
  * 逻辑：
- * 游戏开始，第一个移动的玩家可以选择assam的任何方向，后续的玩家只能向左或者向右旋转90度
- * 先选择Assam旋转的(Task 9)方向，
- * 然后投骰子(Task 6)
- * 然后Assam移动(Task 13)
+ * 选择Player数量(2~4),以及是否加入AI
+ * 若加入AI，选择ai难度
+ * 游戏开始，第一个移动的玩家可以选择assam的任何方向，后续的玩家只能向左或者向右旋转90度（Finished）
+ * 先选择Assam旋转的(Task 9)方向（Finished）
+ * 然后投骰子(Task 6)（Finished）
+ * 然后Assam移动(Task 13)（Finished）
  * 完成移动后判断玩家是否需要支付coins给其他玩家(Task 11)
  * 然后玩家选择放置一张地毯在Assam的W,E,N,S方向(Task 14)
  * 一张rug占据的格子数量是两格,判断放置是否合法(Task 10)
  * 当合法后地毯被放置，其他玩家依次移动assam放rug
- * 当当前回合结束后，判断玩家是否over(Task 8)
+ * 玩家当前回合结束后，判断玩家是否over(Task 8)
  * 以及每回合都判断游戏是否结束，以及胜者是谁(Task 12)
  */
 
