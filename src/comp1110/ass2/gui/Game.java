@@ -33,7 +33,6 @@ public class Game extends Application {
     private static final int WINDOW_HEIGHT = 700;
 
     private final Dice dice = new Dice();
-    private Player[] players;
     private Viewer viewer;
     private final Text diceFace = new Text("0");
     private State gameState;
@@ -43,6 +42,7 @@ public class Game extends Application {
     private Button westButton;
     private Button southButton;
     private Button northButton;
+    private Button rollButton;
     private final Point[] selectedRugPoints = new Point[2];
 
     private int putTwoRugCounter = 0;
@@ -54,7 +54,6 @@ public class Game extends Application {
         playersList.add(new Player(Color.YELLOW));
         playersList.add(new Player(Color.PURPLE));
         playersList.add(new Player(Color.RED));
-        this.players = playersList.toArray(new Player[0]);
         gameState = new State(playersList);
     }
 
@@ -66,7 +65,6 @@ public class Game extends Application {
     private void refreshGameView(State gameState) {
         // Use the getString() method of the State class to get the string representation of the current game state
         String currentState = gameState.getString();
-//        System.out.println(currentState);
         // Use the displayState() method of the Viewer class to display the current game state
         if (currentState == null || currentState.isEmpty()) {
             System.err.println("Error: Game state string is empty or null.");
@@ -83,7 +81,6 @@ public class Game extends Application {
         viewer = new Viewer();
         root.getChildren().add(viewer.getViewerRoot()); //Add root to viewer
         refreshGameView(gameState);
-//        System.out.println("makeControls called");
         Rectangle square = new Rectangle(965, 25, 110, 110);
         square.setFill(Color.GREY);
 
@@ -93,7 +90,7 @@ public class Game extends Application {
         currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
 
         // Create a button to roll the dice and set its position
-        Button rollButton = new Button("Roll Dice");
+        rollButton = new Button("Roll Dice");
         rollButton.setLayoutX(720);
         rollButton.setLayoutY(650);
         rollButton.setOnAction(e -> rollDice());
@@ -152,6 +149,7 @@ public class Game extends Application {
     }
 
     private void rollDice() {
+        rollButton.setDisable(true);
         disableDirectionButtons();
         Timeline timeline = new Timeline();
         diceFace.setX(1000);
@@ -175,6 +173,7 @@ public class Game extends Application {
             for (Player player : gameState.getPlayers()) {
                 if (player.getColor() == color) {
                     player.gainCoins(current.payCoins(getPaymentAmount(gameState.getString())));
+                    refreshGameView(gameState);
                 }
             }
 
@@ -190,8 +189,33 @@ public class Game extends Application {
     private void updateCurrentPlayerLabel() {
         // Cycle through players after each turn
         updateDirectionButtons();
-        currentPlayer = (currentPlayer + 1) % players.length;
-        currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
+        rollButton.setDisable(false);
+        currentPlayer = (currentPlayer + 1) % gameState.getPlayers().size();
+        // Determine the winner of a game of Marrakech.
+        switch (getWinner(gameState.getString())) {
+            case 'n' -> currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
+            case 't' -> {
+                currentPlayerLabel.setText("Game is a tie");
+                rollButton.setDisable(false);
+            }
+            case 'c' -> {
+                currentPlayerLabel.setText("Winner is Cyan");
+                rollButton.setDisable(false);
+            }
+            case 'y' -> {
+                currentPlayerLabel.setText("Winner is Yellow");
+                rollButton.setDisable(false);
+            }
+            case 'r' -> {
+                currentPlayerLabel.setText("Winner is Red");
+                rollButton.setDisable(false);
+            }
+            case 'p' -> {
+                currentPlayerLabel.setText("Winner is Purple");
+                rollButton.setDisable(false);
+            }
+        }
+//        currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
     }
 
     /**
@@ -328,7 +352,6 @@ public class Game extends Application {
 
                 // Create a string representation of the rug placement
                 String rugString = new TwoRug(currentPlayerColor, current.getrugNum(), selectedRugPoints).getString();
-                System.out.println(current.getrugNum());
                 // Check if the rug and its placement are valid
                 if (isRugValid(gameState.getString(), rugString) &&
                         isPlacementValid(gameState.getString(), rugString)) {
@@ -357,14 +380,6 @@ public class Game extends Application {
 
     private void selectDifficult() {
         //TODO 选择ai难度
-    }
-
-    private void paidCoins() {
-        //TODO Assam完成移动后判断玩家是否需要支付coins给其他玩家(Task 11)
-    }
-
-    private void areYouOver() {
-        //TODO 玩家当前回合结束后，判断玩家是否over(Task 8)
     }
 
     private void isGameOver() {
