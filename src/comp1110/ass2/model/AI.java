@@ -50,7 +50,7 @@ public class AI extends Player {
                 List<Point[]> pointsList = getAllPoints(point);
                 TwoRug twoRug;
                 for (Point[] twoPoints : pointsList) {
-                    twoRug = new TwoRug(getColor(), getCoins(), twoPoints);
+                    twoRug = new TwoRug(getColor(), getrugNum(), twoPoints);
                     if (isPlacementValid(state.getString(), twoRug.getString())) return twoRug;
                 }
                 throw new RuntimeException(
