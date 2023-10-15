@@ -81,6 +81,10 @@ public class State {
         return players;
     }
 
+    public Player getPlayer(int num) {
+        return players.get(num);
+    }
+
     /**
      * @return Returns a string representation of the current game state.
      * @description Converts the current game state,

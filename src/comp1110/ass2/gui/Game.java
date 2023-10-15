@@ -4,27 +4,25 @@ import comp1110.ass2.Marrakech;
 import comp1110.ass2.model.*;
 import comp1110.ass2.model.base.Dice;
 import comp1110.ass2.model.base.Point;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
-
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.control.Button;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.input.MouseEvent;
+import java.util.Stack;
 
 import static comp1110.ass2.Marrakech.*;
-import static comp1110.ass2.gui.Viewer.offsetX;
-import static comp1110.ass2.gui.Viewer.offsetY;
-import static comp1110.ass2.gui.Viewer.TILE_SIZE;
+import static comp1110.ass2.gui.Viewer.*;
 
 public class Game extends Application {
 
@@ -37,6 +35,8 @@ public class Game extends Application {
     private final Text diceFace = new Text("0");
     private State gameState;
     private int currentPlayer = 0;  // track current player
+    private ArrayList<Boolean> AIList = new ArrayList<>();
+    private ArrayList<Player.Level> levelList = new ArrayList<>();
     private final Text currentPlayerLabel = new Text();
     private Button eastButton;
     private Button westButton;
@@ -49,12 +49,70 @@ public class Game extends Application {
 
 
     private void newGame() {
-        ArrayList<Player> playersList = new ArrayList<>();
-        playersList.add(new Player(Color.CYAN));
-        playersList.add(new Player(Color.YELLOW));
-        playersList.add(new Player(Color.PURPLE));
-        playersList.add(new Player(Color.RED));
-        gameState = new State(playersList);
+        Text[] playerTexts = new Text[4];
+        Button[] playerButtons = new Button[4];
+        for (int i = 0; i < 4; i++) {
+            playerTexts[i] = new Text("Player "+"i");
+            Text playerText = playerTexts[i];
+            playerText.setLayoutX(200 * i + 200);
+            playerText.setLayoutY(300);
+            root.getChildren().add(playerText);
+
+            playerButtons[i] = new Button("Human");
+            Button playerButton = playerButtons[i];
+            playerButton.setLayoutX(200 * i + 200);
+            playerButton.setLayoutY(400);
+            playerButton.setOnAction(e -> {
+                switch (playerButton.getText()) {
+                    case "Disable" -> playerButton.setText("Human");
+                    case "Human" -> playerButton.setText("AI");
+                    case "AI" -> playerButton.setText("Disable");
+                }
+            });
+            root.getChildren().add(playerButton);
+        }
+
+        Stack<Color> colors = new Stack<>();
+        colors.push(Color.CYAN);
+        colors.push(Color.YELLOW);
+        colors.push(Color.PURPLE);
+        colors.push(Color.RED);
+
+        Button start = new Button("start");
+        start.setLayoutX(1000);
+        start.setLayoutY(500);
+        start.setOnAction(event -> {
+            ArrayList<Player> playersList = new ArrayList<>();
+            for (Button playerButton : playerButtons) {
+                switch (playerButton.getText()) {
+                    case "Disable" -> {}
+                    case "Human" -> {
+                        playersList.add(new Player(colors.pop()));
+                        AIList.add(false);
+                        levelList.add(Player.Level.easy);
+                    }
+                    case "AI" -> {
+                        playersList.add(new Player(colors.pop()));
+                        AIList.add(true);
+                        levelList.add(Player.Level.easy);
+                    }
+                }
+            }
+            if (playersList.size() > 1){
+                for (Button playerButton : playerButtons) {
+                    root.getChildren().remove(playerButton);
+                }
+                for (Text playerText : playerTexts) {
+                    root.getChildren().remove(playerText);
+                }
+                root.getChildren().remove(start);
+                gameState = new State(playersList);
+                makeControls();
+            } else {
+                playersList.clear();
+            }
+        });
+        root.getChildren().add(start);
     }
 
     /**
@@ -146,6 +204,10 @@ public class Game extends Application {
         });
 
         root.getChildren().addAll(square, diceFace, rollButton, eastButton, westButton, southButton, northButton, currentPlayerLabel);
+
+        if (AIList.get(currentPlayer)){
+            rollDice();
+        }
     }
 
     private void rollDice() {
@@ -168,7 +230,7 @@ public class Game extends Application {
             disableDirectionButtons();
             int dieResult = Integer.parseInt(diceFace.getText());  // Get the die result from the diceFace Text node
             moveAssamAfterRoll(dieResult);  // Move Assam based on the die result
-            Player current = gameState.getPlayers().get(currentPlayer);
+            Player current = gameState.getPlayer(currentPlayer);
             Color color = gameState.getBoard().getRug(gameState.getAssam().getPoint().getX(), gameState.getAssam().getPoint().getY()).getColor();
             for (Player player : gameState.getPlayers()) {
                 if (player.getColor() == color) {
@@ -177,8 +239,14 @@ public class Game extends Application {
                 }
             }
 
-            // TODO：增加放地毯的提示
-            root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
+            if (AIList.get(currentPlayer)){
+                gameState=current.actionRug(gameState, levelList.get(currentPlayer));
+                refreshGameView(gameState);
+                updateCurrentPlayerLabel();
+            } else {
+                // TODO：增加放地毯的提示
+                root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
+            }
         });
         timeline.play(); //Play the dice
     }
@@ -214,6 +282,11 @@ public class Game extends Application {
                 currentPlayerLabel.setText("Winner is Purple");
                 rollButton.setDisable(false);
             }
+        }
+
+        if (AIList.get(currentPlayer)){
+            gameState = gameState.getPlayer(currentPlayer).actionAssam(gameState, levelList.get(currentPlayer));
+            rollDice();
         }
 //        currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
     }
@@ -347,7 +420,7 @@ public class Game extends Application {
             } else if (putTwoRugCounter == 1) {
                 selectedRugPoints[1] = new Point(colRug, rowRug);
                 // Get the current player and their color
-                Player current = gameState.getPlayers().get(currentPlayer);
+                Player current = gameState.getPlayer(currentPlayer);
                 Color currentPlayerColor = current.getColor();
 
                 // Create a string representation of the rug placement
@@ -374,24 +447,10 @@ public class Game extends Application {
         }
     };
 
-    private void selectPlayer() {
-        //TODO 选择Player数量(2~4),以及是否加入AI
-    }
-
-    private void selectDifficult() {
-        //TODO 选择ai难度
-    }
-
-    private void isGameOver() {
-        //TODO 每回合都判断游戏是否结束(Task 8)，以及胜者是谁(Task 12)
-    }
-
-
     @Override
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
         newGame();
-        makeControls();
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
         stage.show();

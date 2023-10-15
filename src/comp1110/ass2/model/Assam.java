@@ -131,13 +131,13 @@ public class Assam implements IBean {
         return this;
     }
 
-    public Orientation getOrientationRandomly() {
+    public void setOrientationRandomly() {
         switch (orientation) {
             case N, S -> {
-                return new Orientation[]{orientation, Orientation.E, Orientation.W}[new Random().nextInt(3)];
+                orientation = new Orientation[]{orientation, Orientation.E, Orientation.W}[new Random().nextInt(3)];
             }
             case E, W -> {
-                return new Orientation[]{orientation, Orientation.N, Orientation.S}[new Random().nextInt(3)];
+                orientation = new Orientation[]{orientation, Orientation.N, Orientation.S}[new Random().nextInt(3)];
             }
             default -> throw new RuntimeException(
                     "Orientation? "+ orientation

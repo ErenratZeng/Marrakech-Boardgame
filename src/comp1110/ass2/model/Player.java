@@ -1,8 +1,15 @@
 package comp1110.ass2.model;
 
 import comp1110.ass2.model.base.IBean;
+import comp1110.ass2.model.base.Point;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static comp1110.ass2.Marrakech.makePlacement;
+import static comp1110.ass2.model.Board.BOARD_HEIGHT;
+import static comp1110.ass2.model.Board.BOARD_WIDTH;
 import static comp1110.ass2.model.base.utils.subStr2int;
 
 public class Player implements IBean {
@@ -159,6 +166,96 @@ public class Player implements IBean {
         else sb.append("o");
 
         return sb.toString();
+    }
+
+    public enum Level {
+        easy, // random action
+        normal, // greedy algorithm
+        hard // plus against the first
+    }
+
+    public State actionAssam(State state, Level level) {
+        switch (level) {
+            case easy -> {
+                state.getAssam().setOrientationRandomly();
+                return state;
+            }
+            case normal -> {
+                //TODO: normal
+                return null;
+            }
+            case hard -> {
+                //TODO: hard
+                return null;
+            }
+            default -> throw new RuntimeException(
+                    "level? " + level
+            );
+        }
+    }
+
+    public State actionRug(State state, Level level) {
+        switch (level) {
+            case easy -> {
+                Point point = state.getAssam().getPoint();
+                List<Point[]> pointsList = getAllPoints(point);
+                TwoRug twoRug;
+                for (Point[] twoPoints : pointsList) {
+                    twoRug = new TwoRug(getColor(), getCoins(), twoPoints);
+                    String newGameState = makePlacement(state.getString(), twoRug.getString());
+                    if (newGameState != null && !newGameState.equals(state.getString())) {
+                        return new State(newGameState);
+                    }
+                }
+                throw new RuntimeException(
+                        "Can not put rug."+state.getString()
+                );
+            }
+            case normal -> {
+                //TODO: normal
+                return null;
+            }
+            case hard -> {
+                //TODO: hard
+                return null;
+            }
+            default -> throw new RuntimeException(
+                    "level? " + level
+            );
+        }
+    }
+
+    private List<Point[]> getAllPoints(Point point) {
+        int x = point.getX();
+        int y = point.getY();
+        List<Point[]> pointsList = new ArrayList<>();
+        if (x + 1 < BOARD_WIDTH && y + 1 < BOARD_HEIGHT)
+            pointsList.add(new Point[]{new Point(x + 1, y), new Point(x + 1, y + 1)});
+        if (x + 1 < BOARD_WIDTH && y - 1 >= 0)
+            pointsList.add(new Point[]{new Point(x + 1, y), new Point(x + 1, y - 1)});
+        if (x + 2 < BOARD_WIDTH)
+            pointsList.add(new Point[]{new Point(x + 1, y), new Point(x + 2, y)});
+        if (x - 1 >= 0 && y + 1 < BOARD_HEIGHT)
+            pointsList.add(new Point[]{new Point(x - 1, y), new Point(x - 1, y + 1)});
+        if (x - 1 >= 0 && y - 1 >= 0)
+            pointsList.add(new Point[]{new Point(x - 1, y), new Point(x - 1, y - 1)});
+        if (x - 2 >= 0)
+            pointsList.add(new Point[]{new Point(x - 1, y), new Point(x - 2, y)});
+
+        if (y + 1 < BOARD_WIDTH && x + 1 < BOARD_HEIGHT)
+            pointsList.add(new Point[]{new Point(x, y + 1), new Point(x + 1, y + 1)});
+        if (y + 1 < BOARD_WIDTH && x - 1 >= 0)
+            pointsList.add(new Point[]{new Point(x, y + 1), new Point(x - 1, y + 1)});
+        if (y + 2 < BOARD_WIDTH)
+            pointsList.add(new Point[]{new Point(x, y + 1), new Point(x, y + 2)});
+        if (y - 1 >= 0 && x + 1 < BOARD_HEIGHT)
+            pointsList.add(new Point[]{new Point(x, y - 1), new Point(x + 1, y - 1)});
+        if (y - 1 >= 0 && x - 1 >= 0)
+            pointsList.add(new Point[]{new Point(x, y - 1), new Point(x - 1, y - 1)});
+        if (y - 2 >= 0)
+            pointsList.add(new Point[]{new Point(x, y - 1), new Point(x, y - 2)});
+
+        return pointsList;
     }
 
 }
