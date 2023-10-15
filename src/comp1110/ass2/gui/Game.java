@@ -170,6 +170,14 @@ public class Game extends Application {
             disableDirectionButtons();
             int dieResult = Integer.parseInt(diceFace.getText());  // Get the die result from the diceFace Text node
             moveAssamAfterRoll(dieResult);  // Move Assam based on the die result
+            Player current = gameState.getPlayers().get(currentPlayer);
+            Color color = gameState.getBoard().getRug(gameState.getAssam().getPoint().getX(), gameState.getAssam().getPoint().getY()).getColor();
+            for (Player player : gameState.getPlayers()) {
+                if (player.getColor() == color) {
+                    player.gainCoins(current.payCoins(getPaymentAmount(gameState.getString())));
+                }
+            }
+
             // TODO：增加放地毯的提示
             root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
         });
@@ -283,11 +291,8 @@ public class Game extends Application {
     EventHandler<MouseEvent> handleMouseClick = new EventHandler<>() {
         @Override
         public void handle(MouseEvent e) {
-            // TODO：放地毯的逻辑有问题，设置flag记录第一次点击和第二次点击，点击完以后跳出
             int colAssam = gameState.getAssam().getPoint().getX();
             int rowAssam = gameState.getAssam().getPoint().getY();
-
-            System.out.println("Mouse Clicked at: X = " + e.getX() + ", Y = " + e.getY());
 
             // Check if the game has started and a direction has been selected
             double x = e.getX();
@@ -311,21 +316,19 @@ public class Game extends Application {
                         (colRug == colAssam && rowRug == rowAssam - 1)
                 ) {
                     selectedRugPoints[0] = new Point(colRug, rowRug);
-                    System.out.println(putTwoRugCounter + "," + colRug + "," + rowRug);
                     putTwoRugCounter++;
                 }
 
 
             } else if (putTwoRugCounter == 1) {
                 selectedRugPoints[1] = new Point(colRug, rowRug);
-                System.out.println(putTwoRugCounter + "," + colRug + "," + rowRug);
                 // Get the current player and their color
-                Player current = players[currentPlayer];
+                Player current = gameState.getPlayers().get(currentPlayer);
                 Color currentPlayerColor = current.getColor();
 
                 // Create a string representation of the rug placement
                 String rugString = new TwoRug(currentPlayerColor, current.getrugNum(), selectedRugPoints).getString();
-                System.out.println(isRugValid(gameState.getString(), rugString));
+                System.out.println(current.getrugNum());
                 // Check if the rug and its placement are valid
                 if (isRugValid(gameState.getString(), rugString) &&
                         isPlacementValid(gameState.getString(), rugString)) {
@@ -348,27 +351,25 @@ public class Game extends Application {
         }
     };
 
-    private void selectPlayer(){
+    private void selectPlayer() {
         //TODO 选择Player数量(2~4),以及是否加入AI
     }
 
-    private void selectDifficult(){
+    private void selectDifficult() {
         //TODO 选择ai难度
     }
 
-    private void paidCoins(){
+    private void paidCoins() {
         //TODO Assam完成移动后判断玩家是否需要支付coins给其他玩家(Task 11)
     }
 
-    private void areYouOver(){
+    private void areYouOver() {
         //TODO 玩家当前回合结束后，判断玩家是否over(Task 8)
     }
 
-    private void isGameOver(){
+    private void isGameOver() {
         //TODO 每回合都判断游戏是否结束(Task 8)，以及胜者是谁(Task 12)
     }
-
-
 
 
     @Override

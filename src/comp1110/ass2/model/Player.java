@@ -87,6 +87,20 @@ public class Player implements IBean {
         return this;
     }
 
+    public int payCoins(int coins) {
+        if (this.coins < coins) {
+            alive = false;
+            return this.coins;
+        }
+        this.coins -= coins;
+        return coins;
+    }
+
+    public Player gainCoins(int coins) {
+        this.coins += coins;
+        return this;
+    }
+
     /**
      * @return  Returns the number of rugs the player has.
      * @description Retrieves the player's rug count.
