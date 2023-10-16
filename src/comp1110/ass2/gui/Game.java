@@ -36,6 +36,7 @@ public class Game extends Application {
     private final Text diceFace = new Text("0");
     private State gameState;
     private int currentPlayer = 0;  // track current player
+    private int currentPlayerNo = 1;  // track current player display
     private int totalPlayer = 0;
     private ArrayList<Boolean> AIList = new ArrayList<>();
     private ArrayList<Player.Level> levelList = new ArrayList<>();
@@ -54,7 +55,7 @@ public class Game extends Application {
         Text[] playerTexts = new Text[4];
         Button[] playerButtons = new Button[4];
         for (int i = 0; i < 4; i++) {
-            playerTexts[i] = new Text("Player "+"i");
+            playerTexts[i] = new Text("Player " + i);
             Text playerText = playerTexts[i];
             playerText.setLayoutX(200 * i + 200);
             playerText.setLayoutY(300);
@@ -87,26 +88,29 @@ public class Game extends Application {
             ArrayList<Player> playersList = new ArrayList<>();
             for (Button playerButton : playerButtons) {
                 switch (playerButton.getText()) {
-                    case "Disable" -> {
-                        playersList.add(new Player(colors.pop()).setAlive(false));
-                        AIList.add(false);
-                        levelList.add(Player.Level.easy);
-                    }
-                    case "Human" -> {
-                        playersList.add(new Player(colors.pop()));
-                        AIList.add(false);
-                        levelList.add(Player.Level.easy);
-                        totalPlayer++;
-                    }
-                    case "AI" -> {
-                        playersList.add(new Player(colors.pop()));
-                        AIList.add(true);
-                        levelList.add(Player.Level.easy);
-                        totalPlayer++;
-                    }
+                    case "Human", "AI" -> totalPlayer++;
                 }
             }
-            if (playersList.size() > 1){
+            if (totalPlayer > 1) {
+                for (Button playerButton : playerButtons) {
+                    switch (playerButton.getText()) {
+                        case "Disable" -> {
+                            playersList.add(new Player(colors.pop()).setAlive(false));
+                            AIList.add(false);
+                            levelList.add(Player.Level.easy);
+                        }
+                        case "Human" -> {
+                            playersList.add(new Player(colors.pop()));
+                            AIList.add(false);
+                            levelList.add(Player.Level.easy);
+                        }
+                        case "AI" -> {
+                            playersList.add(new Player(colors.pop()));
+                            AIList.add(true);
+                            levelList.add(Player.Level.easy);
+                        }
+                    }
+                }
                 for (Button playerButton : playerButtons) {
                     root.getChildren().remove(playerButton);
                 }
@@ -116,8 +120,6 @@ public class Game extends Application {
                 root.getChildren().remove(start);
                 gameState = new State(playersList);
                 makeControls();
-            } else {
-                playersList.clear();
             }
         });
         root.getChildren().add(start);
@@ -153,7 +155,7 @@ public class Game extends Application {
         currentPlayerLabel.setX(365);
         currentPlayerLabel.setY(60);
         currentPlayerLabel.setStyle("-fx-font-size: 72;");
-        currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
+        currentPlayerLabel.setText("Player " + 1 + "'s turn");
 
         // Create a button to roll the dice and set its position
         rollButton = new Button("Roll Dice");
@@ -213,7 +215,7 @@ public class Game extends Application {
 
         root.getChildren().addAll(square, diceFace, rollButton, eastButton, westButton, southButton, northButton, currentPlayerLabel);
 
-        if (AIList.get(currentPlayer)){
+        if (AIList.get(currentPlayer)) {
             rollDice();
         }
     }
@@ -247,8 +249,8 @@ public class Game extends Application {
                 }
             }
 
-            if (AIList.get(currentPlayer)){
-                gameState=current.actionRug(gameState, levelList.get(currentPlayer));
+            if (AIList.get(currentPlayer)) {
+                gameState = current.actionRug(gameState, levelList.get(currentPlayer));
                 refreshGameView(gameState);
                 updateCurrentPlayerLabel();
             } else {
@@ -266,14 +268,18 @@ public class Game extends Application {
         // Cycle through players after each turn
         updateDirectionButtons();
         rollButton.setDisable(false);
-        currentPlayer = (currentPlayer + 1) % totalPlayer;
+        currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
         // Determine the winner of a game of Marrakech.
         switch (getWinner(gameState.getString())) {
             case 'n' -> {
-                while (!gameState.getPlayer(currentPlayer).getAlive()){
-                    currentPlayer = (currentPlayer + 1) % totalPlayer;
+                while (!gameState.getPlayer(currentPlayer).getAlive()) {
+                    currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
                 }
-                currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
+                currentPlayerLabel.setText("Player " + (currentPlayerNo++ % totalPlayer + 1) + "'s turn");
+                if (AIList.get(currentPlayer)) {
+                    gameState = gameState.getPlayer(currentPlayer).actionAssam(gameState, levelList.get(currentPlayer));
+                    rollDice();
+                }
             }
             case 't' -> {
                 currentPlayerLabel.setText("Game is a tie");
@@ -296,12 +302,6 @@ public class Game extends Application {
                 rollButton.setDisable(false);
             }
         }
-
-        if (AIList.get(currentPlayer)){
-            gameState = gameState.getPlayer(currentPlayer).actionAssam(gameState, levelList.get(currentPlayer));
-            rollDice();
-        }
-//        currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
     }
 
     /**
