@@ -216,6 +216,12 @@ public class Game extends Application {
         if (AIList.get(currentPlayer)){
             rollDice();
         }
+
+        Button backButton = new Button("Back to Player Selection");
+        backButton.setLayoutX(50);
+        backButton.setLayoutY(650);
+        backButton.setOnAction(e -> resetGame());
+        root.getChildren().add(backButton);
     }
 
     private void rollDice() {
@@ -459,6 +465,22 @@ public class Game extends Application {
             }
         }
     };
+
+    private void resetGame() {
+        // 清除root中的所有组件
+        root.getChildren().clear();
+
+        // 重置其他相关的变量和状态
+        currentPlayer = 0;
+        totalPlayer = 0;
+        AIList.clear();
+        levelList.clear();
+        putTwoRugCounter = 0;
+
+        // 加载选择玩家的界面
+        newGame();
+    }
+
 
 
     @Override
