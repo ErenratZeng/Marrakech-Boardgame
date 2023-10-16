@@ -470,16 +470,19 @@ public class Game extends Application {
 
     private void addConnectingLine(Point p1, Point p2, Color color) {
         // TODO
-        double x1 = p1.getX() * TILE_SIZE + TILE_SIZE / 2;
-        double y1 = p1.getY() * TILE_SIZE + TILE_SIZE / 2;
-        double x2 = p2.getX() * TILE_SIZE + TILE_SIZE / 2;
-        double y2 = p2.getY() * TILE_SIZE + TILE_SIZE / 2;
+        double x1 = viewer.getOffsetX() + p1.getX() * (TILE_SIZE + TILE_SIZE) / 2;
+        double y1 = viewer.getOffsetY() + p1.getY() * (TILE_SIZE + TILE_SIZE) / 2;
+        double x2 = viewer.getOffsetX() + p2.getX() * (TILE_SIZE + TILE_SIZE) / 2;
+        double y2 = viewer.getOffsetY() + p2.getY() * (TILE_SIZE + TILE_SIZE) / 2;
+
 
         Line line = new Line(x1, y1, x2, y2);
         line.setStroke(color);
-        line.setStrokeWidth(TILE_SIZE / 8); // 设置线的宽度为地毯宽度的1/8，你可以根据需要调整
+        line.setStrokeWidth(TILE_SIZE / 8);
         root.getChildren().add(line);
     }
+
+
 
     private void resetGame() {
 

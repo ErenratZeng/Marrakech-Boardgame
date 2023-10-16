@@ -41,6 +41,14 @@ public class Viewer extends Application {
 
     private String recentState;
 
+    public double getOffsetX() {
+        return offsetX;
+    }
+
+    public double getOffsetY() {
+        return offsetY;
+    }
+
 
 
     /**
