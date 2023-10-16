@@ -265,7 +265,12 @@ public class Game extends Application {
         currentPlayer = (currentPlayer + 1) % gameState.getPlayers().size();
         // Determine the winner of a game of Marrakech.
         switch (getWinner(gameState.getString())) {
-            case 'n' -> currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
+            case 'n' -> {
+                while (!gameState.getPlayer(currentPlayer).getAlive()){
+                    currentPlayer = (currentPlayer + 1) % gameState.getPlayers().size();
+                }
+                currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
+            }
             case 't' -> {
                 currentPlayerLabel.setText("Game is a tie");
                 rollButton.setDisable(false);

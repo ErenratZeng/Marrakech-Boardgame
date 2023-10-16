@@ -86,6 +86,7 @@ public class Viewer extends Application {
 
         // Get the coins of each player
         for (Player player : players) {
+            if (!player.getAlive()) continue;
             Color playerColor = player.getColor();
             int playerMoney = player.getCoins();
             int remainingRugs = player.getrugNum();
