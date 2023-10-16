@@ -290,23 +290,23 @@ public class Game extends Application {
             }
             case 't' -> {
                 currentPlayerLabel.setText("Game is a tie");
-                rollButton.setDisable(false);
+                rollButton.setDisable(true);
             }
             case 'c' -> {
                 currentPlayerLabel.setText("Winner is Cyan");
-                rollButton.setDisable(false);
+                rollButton.setDisable(true);
             }
             case 'y' -> {
                 currentPlayerLabel.setText("Winner is Yellow");
-                rollButton.setDisable(false);
+                rollButton.setDisable(true);
             }
             case 'r' -> {
                 currentPlayerLabel.setText("Winner is Red");
-                rollButton.setDisable(false);
+                rollButton.setDisable(true);
             }
             case 'p' -> {
                 currentPlayerLabel.setText("Winner is Purple");
-                rollButton.setDisable(false);
+                rollButton.setDisable(true);
             }
         }
     }
@@ -508,6 +508,7 @@ public class Game extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
+        stage.setTitle("Marrakech Game");
         Image backgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/Background.png").toString());
         ImageView backgroundView = new ImageView(backgroundImage);
         backgroundView.setFitWidth(WINDOW_WIDTH);
