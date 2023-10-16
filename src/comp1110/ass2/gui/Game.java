@@ -85,7 +85,11 @@ public class Game extends Application {
             ArrayList<Player> playersList = new ArrayList<>();
             for (Button playerButton : playerButtons) {
                 switch (playerButton.getText()) {
-                    case "Disable" -> {}
+                    case "Disable" -> {
+                        playersList.add(new Player(colors.pop()).setAlive(false));
+                        AIList.add(false);
+                        levelList.add(Player.Level.easy);
+                    }
                     case "Human" -> {
                         playersList.add(new Player(colors.pop()));
                         AIList.add(false);
