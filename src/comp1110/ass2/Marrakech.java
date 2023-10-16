@@ -122,7 +122,7 @@ public class Marrakech {
         // Check if each player are alive and have rugs left.
         // if there are anyone is alive and has rugs left, the game should continue
         for (Player player : playerArray) {
-            if (player.getAlive() && player.getrugNum() > 0) {
+            if (player.getAlive() && player.getRugNum() > 0) {
                 return false;
             }
         }
@@ -554,10 +554,10 @@ public class Marrakech {
             String currentPlayer3String = playerArray.get(2).getString();
             String currentPlayer4String = playerArray.get(3).getString();
 
-            int newPlayer1RugNum = playerArray.get(0).getrugNum() - 1;
-            int newPlayer2RugNum = playerArray.get(1).getrugNum() - 1;
-            int newPlayer3RugNum = playerArray.get(2).getrugNum() - 1;
-            int newPlayer4RugNum = playerArray.get(3).getrugNum() - 1;
+            int newPlayer1RugNum = playerArray.get(0).getRugNum() - 1;
+            int newPlayer2RugNum = playerArray.get(1).getRugNum() - 1;
+            int newPlayer3RugNum = playerArray.get(2).getRugNum() - 1;
+            int newPlayer4RugNum = playerArray.get(3).getRugNum() - 1;
 
             String newPlayer1RugNumString;
             String newPlayer2RugNumString;

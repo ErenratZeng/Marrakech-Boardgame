@@ -35,6 +35,7 @@ public class Game extends Application {
     private final Text diceFace = new Text("0");
     private State gameState;
     private int currentPlayer = 0;  // track current player
+    private int totalPlayer = 0;
     private ArrayList<Boolean> AIList = new ArrayList<>();
     private ArrayList<Player.Level> levelList = new ArrayList<>();
     private final Text currentPlayerLabel = new Text();
@@ -94,11 +95,13 @@ public class Game extends Application {
                         playersList.add(new Player(colors.pop()));
                         AIList.add(false);
                         levelList.add(Player.Level.easy);
+                        totalPlayer++;
                     }
                     case "AI" -> {
                         playersList.add(new Player(colors.pop()));
                         AIList.add(true);
                         levelList.add(Player.Level.easy);
+                        totalPlayer++;
                     }
                 }
             }
@@ -262,12 +265,12 @@ public class Game extends Application {
         // Cycle through players after each turn
         updateDirectionButtons();
         rollButton.setDisable(false);
-        currentPlayer = (currentPlayer + 1) % gameState.getPlayers().size();
+        currentPlayer = (currentPlayer + 1) % totalPlayer;
         // Determine the winner of a game of Marrakech.
         switch (getWinner(gameState.getString())) {
             case 'n' -> {
                 while (!gameState.getPlayer(currentPlayer).getAlive()){
-                    currentPlayer = (currentPlayer + 1) % gameState.getPlayers().size();
+                    currentPlayer = (currentPlayer + 1) % totalPlayer;
                 }
                 currentPlayerLabel.setText("Player " + (currentPlayer + 1) + "'s turn");
             }
@@ -433,7 +436,7 @@ public class Game extends Application {
                 Color currentPlayerColor = current.getColor();
 
                 // Create a string representation of the rug placement
-                String rugString = new TwoRug(currentPlayerColor, current.getrugNum(), selectedRugPoints).getString();
+                String rugString = new TwoRug(currentPlayerColor, current.getRugNum(), selectedRugPoints).getString();
                 // Check if the rug and its placement are valid
                 if (isRugValid(gameState.getString(), rugString) &&
                         isPlacementValid(gameState.getString(), rugString)) {

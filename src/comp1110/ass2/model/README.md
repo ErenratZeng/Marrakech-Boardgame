@@ -83,8 +83,8 @@ Player is a Java class that represents the player in the game. Each player has a
 - Color getColor(): Returns the player's color.
 - int getCoins(): Returns the player's number of coins.
 - Player setCoins(int coins): Set the player's number of coins.
-- int getrugNum(): Returns the number of carpets left by the player.
-- Player setrugNum(int rugNum): Set the number of remaining rugs for the player.
+- int getRugNum(): Returns the number of carpets left by the player.
+- Player setRugNum(int rugNum): Set the number of remaining rugs for the player.
 - boolean getAlive(): Returns the player's survival status.
 - Player setAlive(Boolean alive): Set the player's survival status.
 - String getString(): Returns the string representation of the player.

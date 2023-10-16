@@ -112,7 +112,7 @@ public class Player implements IBean {
      * @return  Returns the number of rugs the player has.
      * @description Retrieves the player's rug count.
      */
-    public int getrugNum() {
+    public int getRugNum() {
         return rugNum;
     }
 
@@ -121,7 +121,7 @@ public class Player implements IBean {
      * @return Returns the current instance of the Player object (useful for method chaining).
      * @description Updates the player's rug count.
      */
-    public Player setrugNum(int rugNum) {
+    public Player setRugNum(int rugNum) {
         this.rugNum = rugNum;
         return this;
     }

@@ -89,7 +89,7 @@ public class Viewer extends Application {
             if (!player.getAlive()) continue;
             Color playerColor = player.getColor();
             int playerMoney = player.getCoins();
-            int remainingRugs = player.getrugNum();
+            int remainingRugs = player.getRugNum();
 
             // Show the player coins & remain rugs
             Label scoreLabel = new Label("Player " + playerNumber + " Coins: " + playerMoney + "     Remain Rugs " + remainingRugs);
