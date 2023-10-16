@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Line;
 
 import static comp1110.ass2.Marrakech.*;
 import static comp1110.ass2.gui.Viewer.*;
@@ -455,6 +456,7 @@ public class Game extends Application {
                     if (newGameState != null && !newGameState.equals(gameState.getString())) {
                         gameState = new State(newGameState);
                         refreshGameView(gameState);
+                        addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
 
                         updateCurrentPlayerLabel();
                         root.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
@@ -465,6 +467,19 @@ public class Game extends Application {
             }
         }
     };
+
+    private void addConnectingLine(Point p1, Point p2, Color color) {
+        // TODO
+        double x1 = p1.getX() * TILE_SIZE + TILE_SIZE / 2;
+        double y1 = p1.getY() * TILE_SIZE + TILE_SIZE / 2;
+        double x2 = p2.getX() * TILE_SIZE + TILE_SIZE / 2;
+        double y2 = p2.getY() * TILE_SIZE + TILE_SIZE / 2;
+
+        Line line = new Line(x1, y1, x2, y2);
+        line.setStroke(color);
+        line.setStrokeWidth(TILE_SIZE / 8); // 设置线的宽度为地毯宽度的1/8，你可以根据需要调整
+        root.getChildren().add(line);
+    }
 
     private void resetGame() {
 
