@@ -17,9 +17,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
 import java.util.Stack;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import static comp1110.ass2.Marrakech.*;
 import static comp1110.ass2.gui.Viewer.*;
@@ -459,9 +460,16 @@ public class Game extends Application {
         }
     };
 
+
     @Override
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
+        Image backgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/Background.png").toString());
+        ImageView backgroundView = new ImageView(backgroundImage);
+        backgroundView.setFitWidth(WINDOW_WIDTH);
+        backgroundView.setFitHeight(WINDOW_HEIGHT);
+        backgroundView.setOpacity(0.5);
+        root.getChildren().add(backgroundView);
         newGame();
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
