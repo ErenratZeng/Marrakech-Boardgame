@@ -122,7 +122,7 @@ public class Marrakech {
         // Check if each player are alive and have rugs left.
         // if there are anyone is alive and has rugs left, the game should continue
         for (Player player : playerArray) {
-            if (player.getAlive() && player.getrugNum() > 0) {
+            if (player.getAlive() && player.getRugNum() > 0) {
                 return false;
             }
         }
@@ -208,6 +208,11 @@ public class Marrakech {
 
         // Check if the rug is placed on the Assam position
         if ((rugSide1X == assamX &&  rugSide1Y == assamY) || (rugSide2X == assamX && rugSide2Y == assamY)) {
+            return false;
+        }
+
+        // Additional conditions to prevent rugs from being placed diagonally or at intervals
+        if (!(rugSide1X == rugSide2X && Math.abs(rugSide1Y - rugSide2Y) == 1 || Math.abs(rugSide1X - rugSide2X) == 1 && rugSide1Y == rugSide2Y)) {
             return false;
         }
 
@@ -524,50 +529,80 @@ public class Marrakech {
      */
     public static String makePlacement(String currentGame, String rug) {
         // FIXME: Task 14
-        if (!isRugValid(currentGame,rug)){
+
+        //System.out.println(currentGame);
+
+        if (!isRugValid(currentGame, rug)) {
             return currentGame;
         }
 
-        if (isPlacementValid(currentGame,rug)){
+        if (isPlacementValid(currentGame, rug)) {
 
-            // Structure new PlayerArray String
+            // Structure new PlayerArray
             State currentState = new State(currentGame);
             ArrayList<Player> playerArray = currentState.getPlayers();
 
-            // Define a mapping from rug color to index
-            Map<Character, Integer> newRugColorIndex = Map.of('c', 0, 'y', 1, 'p', 2, 'r', 3);
+            char player1 = playerArray.get(0).getString().charAt(1);
+            char player2 = playerArray.get(1).getString().charAt(1);
+            char player3 = playerArray.get(2).getString().charAt(1);
+            char player4 = playerArray.get(3).getString().charAt(1);
+            //System.out.println(player1);
 
-            // Array to store the current player strings
-            String[] currentString = new String[4];
-            // Array to store new rug numbers after placement
-            int[] newRugNum = new int[4];
-            // Array to store the new rug numbers as strings
-            String[] newRugNumString = new String[4];
+            // 处理RugNumber
+            String currentPlayer1String = playerArray.get(0).getString();
+            String currentPlayer2String = playerArray.get(1).getString();
+            String currentPlayer3String = playerArray.get(2).getString();
+            String currentPlayer4String = playerArray.get(3).getString();
 
-            // Iterate over each player and update relevant data
-            for (int i = 0; i < 4; i++) {
-                // Find player information before placement
-                currentString[i] = playerArray.get(i).getString();
-                // Decrease the player's rug number by one after placing a rug
-                newRugNum[i] = playerArray.get(i).getrugNum() - 1;
-                // After placement, if a player's remaining rug count is a single digit
-                // append '0' to create correct string form
-                newRugNumString[i] = (newRugNum[i] < 10) ? "0" + newRugNum[i] : Integer.toString(newRugNum[i]);
+            int newPlayer1RugNum = playerArray.get(0).getRugNum() - 1;
+            int newPlayer2RugNum = playerArray.get(1).getRugNum() - 1;
+            int newPlayer3RugNum = playerArray.get(2).getRugNum() - 1;
+            int newPlayer4RugNum = playerArray.get(3).getRugNum() - 1;
+
+            String newPlayer1RugNumString;
+            String newPlayer2RugNumString;
+            String newPlayer3RugNumString;
+            String newPlayer4RugNumString;
+
+            if (newPlayer1RugNum < 10) {
+                newPlayer1RugNumString = "0" + newPlayer1RugNum;
+            } else {
+                newPlayer1RugNumString = Integer.toString(newPlayer1RugNum);
             }
 
-            // Check the color of the placed rug and update the respective player's information
-            char rugColor = rug.charAt(0);
+            if (newPlayer2RugNum < 10) {
+                newPlayer2RugNumString = "0" + newPlayer2RugNum;
+            } else {
+                newPlayer2RugNumString = Integer.toString(newPlayer2RugNum);
+            }
 
-            // Find the player index using the rug color mapping
-            int playerIndex = newRugColorIndex.get(rugColor);
+            if (newPlayer3RugNum < 10) {
+                newPlayer3RugNumString = "0" + newPlayer3RugNum;
+            } else {
+                newPlayer3RugNumString = Integer.toString(newPlayer3RugNum);
+            }
 
-            // Post-placement, the player's string should
-            // keep the color, coins count, and living status (alive or out) unchanged,
-            // only update the number of unplaced rugs
-            currentString[playerIndex] = currentString[playerIndex].substring(0, 5) + newRugNumString[playerIndex] + currentString[playerIndex].charAt(7);
+            if (newPlayer4RugNum < 10) {
+                newPlayer4RugNumString = "0" + newPlayer4RugNum;
+            } else {
+                newPlayer4RugNumString = Integer.toString(newPlayer4RugNum);
+            }
 
-            // Concatenate the updated player string with other unchanged player strings
-            String newPlayerArrayString = String.join("", currentString);
+            String newPlayer1String = currentPlayer1String.substring(0, 5) + newPlayer1RugNumString + currentPlayer1String.charAt(7);
+            String newPlayer2String = currentPlayer2String.substring(0, 5) + newPlayer2RugNumString + currentPlayer2String.charAt(7);
+            String newPlayer3String = currentPlayer3String.substring(0, 5) + newPlayer3RugNumString + currentPlayer3String.charAt(7);
+            String newPlayer4String = currentPlayer4String.substring(0, 5) + newPlayer4RugNumString + currentPlayer4String.charAt(7);
+
+            String newPlayerArrayString = "";
+            if (rug.charAt(0) == player1) {
+                newPlayerArrayString = newPlayer1String + currentPlayer2String + currentPlayer3String + currentPlayer4String;
+            } else if (rug.charAt(0) == player2) {
+                newPlayerArrayString = currentPlayer1String + newPlayer2String + currentPlayer3String + currentPlayer4String;
+            } else if (rug.charAt(0) == player3) {
+                newPlayerArrayString = currentPlayer1String + currentPlayer2String + newPlayer3String + currentPlayer4String;
+            } else if (rug.charAt(0) == player4) {
+                newPlayerArrayString = currentPlayer1String + currentPlayer2String + currentPlayer3String + newPlayer4String;
+            }
 
 
             // Find Assam String
@@ -603,6 +638,6 @@ public class Marrakech {
             return currentGame;
         }
     }
-
 }
+
 

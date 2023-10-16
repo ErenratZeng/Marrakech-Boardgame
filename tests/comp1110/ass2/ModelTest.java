@@ -37,7 +37,7 @@ public class ModelTest {
         Player playerCyan = new Player(Color.CYAN);
         Assertions.assertEquals(Color.CYAN, playerCyan.getColor(), "Expected color to be CYAN");
         Assertions.assertEquals(30, playerCyan.getCoins(), "Expected initial coins to be 30");
-        Assertions.assertEquals(15, playerCyan.getrugNum(), "Expected initial rugNum to be 15");
+        Assertions.assertEquals(15, playerCyan.getRugNum(), "Expected initial rugNum to be 15");
         Assertions.assertTrue(playerCyan.getAlive(), "Expected player to be alive initially");
 
         Player playerYellow = new Player(Color.YELLOW);
@@ -71,8 +71,8 @@ public class ModelTest {
         playerCyan.setCoins(25);
         Assertions.assertEquals(25, playerCyan.getCoins(), "Expected coins to be set to 25");
 
-        playerCyan.setrugNum(10);
-        Assertions.assertEquals(10, playerCyan.getrugNum(), "Expected rugNum to be set to 10");
+        playerCyan.setRugNum(10);
+        Assertions.assertEquals(10, playerCyan.getRugNum(), "Expected rugNum to be set to 10");
 
         playerCyan.setAlive(false);
         Assertions.assertFalse(playerCyan.getAlive(), "Expected player to be set to not alive");

@@ -10,6 +10,14 @@ public class State {
 
     private final ArrayList<Player> players;
 
+    public State(ArrayList<Player> players) {
+        this.players = players;
+        this.assam = new Assam();
+        this.board = new Board();
+        if (players.size() > 4 || players.size() < 2)
+            throw new RuntimeException("players.size() should be 2~4, but now is: " + players.size());
+    }
+
     // A Game string is the concatenation of one player string for each player, followed by one Assam string, followed by one board string.
     /**
      * @param players: An ArrayList of Player objects. The size should be between 2 and 4.
@@ -71,6 +79,10 @@ public class State {
      */
     public ArrayList<Player> getPlayers() {
         return players;
+    }
+
+    public Player getPlayer(int num) {
+        return players.get(num);
     }
 
     /**

@@ -19,10 +19,19 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
+import static comp1110.ass2.model.Board.BOARD_HEIGHT;
+
 public class Viewer extends Application {
 
     private static final int VIEWER_WIDTH = 1200;
     private static final int VIEWER_HEIGHT = 700;
+
+    // Constants
+    public static final int TILE_SIZE = 71;
+    public static final int BOARD_SIZE = 7;
+    public static final int BOARD_PIXEL_SIZE = TILE_SIZE * BOARD_SIZE;
+    public static final int offsetX = (1200 - BOARD_PIXEL_SIZE) / 2;
+    public static final int offsetY = (700 - BOARD_PIXEL_SIZE) / 2;
 
     private final Group root = new Group();
     private final Group controls = new Group();
@@ -31,6 +40,14 @@ public class Viewer extends Application {
     private Label errorLabel = new Label();
 
     private String recentState;
+
+    public double getOffsetX() {
+        return offsetX;
+    }
+
+    public double getOffsetY() {
+        return offsetY;
+    }
 
 
 
@@ -57,37 +74,12 @@ public class Viewer extends Application {
             return;
         }
 
-//        //Text bar
-//        TextField stateInput = new TextField();
-//        stateInput.setText(state);
-//        stateInput.setLayoutX(10);
-//        stateInput.setLayoutY(650);
-//        stateInput.setPrefWidth(700);
-//        root.getChildren().add(stateInput);
-
-//        //Update button
-//        Button updateButton = new Button("Update State");
-//        updateButton.setLayoutX(720);
-//        updateButton.setLayoutY(650);
-//        updateButton.setOnAction(e -> {
-//            String newState = stateInput.getText();
-//            displayState(newState);
-//        });
-//        root.getChildren().add(updateButton);
-
-        // Constants
-        final int TILE_SIZE = 71;
-        final int BOARD_SIZE = 7;
-        final int BOARD_PIXEL_SIZE = TILE_SIZE * BOARD_SIZE;
-        int offsetX = (1200 - BOARD_PIXEL_SIZE) / 2;
-        int offsetY = (700 - BOARD_PIXEL_SIZE) / 2;
-
         // Use the State class to parse the game state
         State gameState = new State(state);
 
         // Draw the board
         for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
+            for (int j = 0; j < BOARD_HEIGHT; j++) {
                 Rectangle square = new Rectangle(i * TILE_SIZE + offsetX, j * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE);
                 square.setFill((i + j) % 2 == 0 ? Color.DARKGRAY : Color.DARKGRAY);
                 square.setStroke(Color.BLACK);
@@ -102,9 +94,10 @@ public class Viewer extends Application {
 
         // Get the coins of each player
         for (Player player : players) {
+            if (!player.getAlive()) continue;
             Color playerColor = player.getColor();
             int playerMoney = player.getCoins();
-            int remainingRugs = player.getrugNum();
+            int remainingRugs = player.getRugNum();
 
             // Show the player coins & remain rugs
             Label scoreLabel = new Label("Player " + playerNumber + " Coins: " + playerMoney + "     Remain Rugs " + remainingRugs);
