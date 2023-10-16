@@ -201,7 +201,7 @@ public class Player implements IBean {
                 List<Point[]> pointsList = getAllPoints(point);
                 TwoRug twoRug;
                 for (Point[] twoPoints : pointsList) {
-                    twoRug = new TwoRug(getColor(), getCoins(), twoPoints);
+                    twoRug = new TwoRug(getColor(), getRugNum(), twoPoints);
                     String newGameState = makePlacement(state.getString(), twoRug.getString());
                     if (newGameState != null && !newGameState.equals(state.getString())) {
                         return new State(newGameState);
