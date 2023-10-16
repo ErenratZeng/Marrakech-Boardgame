@@ -467,17 +467,21 @@ public class Game extends Application {
     };
 
     private void resetGame() {
-        // 清除root中的所有组件
+
         root.getChildren().clear();
 
-        // 重置其他相关的变量和状态
         currentPlayer = 0;
         totalPlayer = 0;
         AIList.clear();
         levelList.clear();
         putTwoRugCounter = 0;
 
-        // 加载选择玩家的界面
+        Image backgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/Background.png").toString());
+        ImageView backgroundView = new ImageView(backgroundImage);
+        backgroundView.setFitWidth(WINDOW_WIDTH);
+        backgroundView.setFitHeight(WINDOW_HEIGHT);
+        backgroundView.setOpacity(0.5);
+        root.getChildren().add(backgroundView);
         newGame();
     }
 
