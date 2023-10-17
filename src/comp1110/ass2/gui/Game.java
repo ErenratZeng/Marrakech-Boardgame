@@ -470,15 +470,27 @@ public class Game extends Application {
 
     private void addConnectingLine(Point p1, Point p2, Color color) {
         // TODO
-        double x1 = viewer.getOffsetX() + p1.getX() * (TILE_SIZE + TILE_SIZE) / 2;
-        double y1 = viewer.getOffsetY() + p1.getY() * (TILE_SIZE + TILE_SIZE) / 2;
-        double x2 = viewer.getOffsetX() + p2.getX() * (TILE_SIZE + TILE_SIZE) / 2;
-        double y2 = viewer.getOffsetY() + p2.getY() * (TILE_SIZE + TILE_SIZE) / 2;
+        double x1 = viewer.getOffsetX() + p1.getX() * TILE_SIZE + TILE_SIZE / 2;
+        double y1 = viewer.getOffsetY() + p1.getY() * TILE_SIZE + TILE_SIZE / 2;
+        double x2 = viewer.getOffsetX() + p2.getX() * TILE_SIZE + TILE_SIZE / 2;
+        double y2 = viewer.getOffsetY() + p2.getY() * TILE_SIZE + TILE_SIZE / 2;
 
 
-        Line line = new Line(x1, y1, x2, y2);
+        Line line;
+        if (y1 == y2) { // If the rugs are placed horizontally
+            double midX = (x1 + x2) / 2;
+            line = new Line(midX, y1 - TILE_SIZE / 2, midX, y2 + TILE_SIZE / 2); // Adjusted the y coordinates
+        } else if (x1 == x2) { // If the rugs are placed vertically
+            double midY = (y1 + y2) / 2;
+            line = new Line(x1 - TILE_SIZE / 2, midY, x2 + TILE_SIZE / 2, midY); // Adjusted the x coordinates
+        } else {
+            // In case the rugs are not aligned horizontally or vertically
+            return;
+        }
+
+//        Line line = new Line(x1, y1, x2, y2);
         line.setStroke(color);
-        line.setStrokeWidth(TILE_SIZE / 8);
+        line.setStrokeWidth(4);
         root.getChildren().add(line);
     }
 
