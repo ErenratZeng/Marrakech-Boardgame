@@ -259,6 +259,7 @@ public class Game extends Application {
             if (AIList.get(currentPlayer)) {
                 gameState = current.actionRug(gameState, levelList.get(currentPlayer));
                 refreshGameView(gameState);
+                addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
                 updateCurrentPlayerLabel();
             } else {
                 // TODO：增加放地毯的提示
