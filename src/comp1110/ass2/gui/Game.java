@@ -263,7 +263,7 @@ public class Game extends Application {
                 selectedRugPoints[0] = tuple.y.getPoints()[0];
                 selectedRugPoints[1] = tuple.y.getPoints()[1];
                 refreshGameView(gameState);
-                // TODO addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
+                addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
                 updateCurrentPlayerLabel();
             } else {
                 // TODO：增加放地毯的提示
