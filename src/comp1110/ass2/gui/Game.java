@@ -49,6 +49,7 @@ public class Game extends Application {
     private Button northButton;
     private Button rollButton;
     private final Point[] selectedRugPoints = new Point[2];
+    private final Rectangle currentPlayerColorRectangle = new Rectangle(0, 0, 20, 20);
 
     private int putTwoRugCounter = 0;
 
@@ -226,6 +227,7 @@ public class Game extends Application {
         backButton.setLayoutY(650);
         backButton.setOnAction(e -> resetGame());
         root.getChildren().add(backButton);
+        root.getChildren().add(currentPlayerColorRectangle);
     }
 
     private void rollDice() {
@@ -280,7 +282,19 @@ public class Game extends Application {
         // Cycle through players after each turn
         updateDirectionButtons();
         rollButton.setDisable(false);
+
         currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
+
+        // 获取当前玩家的颜色
+        Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
+
+        // 更新表示玩家颜色的矩形的颜色
+        currentPlayerColorRectangle.setFill(currentPlayerColor);
+
+        // 更新矩形的位置，使其出现在 currentPlayerLabel 旁边
+        currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
+        currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
+
         // Determine the winner of a game of Marrakech.
         switch (getWinner(gameState.getString())) {
             case 'n' -> {

@@ -120,7 +120,10 @@ public class Viewer extends Application {
 
             scoreLabelY += 30;
             playerNumber++;
+
         }
+
+
 
         // Get the rug string from board string
         Board board = gameState.getBoard();
