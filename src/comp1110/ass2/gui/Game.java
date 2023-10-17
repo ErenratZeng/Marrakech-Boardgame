@@ -259,7 +259,7 @@ public class Game extends Application {
             if (AIList.get(currentPlayer)) {
                 gameState = current.actionRug(gameState, levelList.get(currentPlayer));
                 refreshGameView(gameState);
-                addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
+                // TODO addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
                 updateCurrentPlayerLabel();
             } else {
                 // TODO：增加放地毯的提示
@@ -470,7 +470,6 @@ public class Game extends Application {
     };
 
     private void addConnectingLine(Point p1, Point p2, Color color) {
-        // TODO
         double x1 = viewer.getOffsetX() + p1.getX() * TILE_SIZE + TILE_SIZE / 2;
         double y1 = viewer.getOffsetY() + p1.getY() * TILE_SIZE + TILE_SIZE / 2;
         double x2 = viewer.getOffsetX() + p2.getX() * TILE_SIZE + TILE_SIZE / 2;
@@ -478,12 +477,13 @@ public class Game extends Application {
 
 
         Line line;
+        int offset = 3;
         if (y1 == y2) { // If the rugs are placed horizontally
             double midX = (x1 + x2) / 2;
-            line = new Line(midX, y1 - TILE_SIZE / 2, midX, y2 + TILE_SIZE / 2); // Adjusted the y coordinates
+            line = new Line(midX, y1 - TILE_SIZE / 2 + offset, midX, y2 + TILE_SIZE / 2 - offset); // Adjusted the y coordinates
         } else if (x1 == x2) { // If the rugs are placed vertically
             double midY = (y1 + y2) / 2;
-            line = new Line(x1 - TILE_SIZE / 2, midY, x2 + TILE_SIZE / 2, midY); // Adjusted the x coordinates
+            line = new Line(x1 - TILE_SIZE / 2 + offset, midY, x2 + TILE_SIZE / 2- offset, midY); // Adjusted the x coordinates
         } else {
             // In case the rugs are not aligned horizontally or vertically
             return;
