@@ -16,7 +16,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
+
+
+import java.awt.*;
 import java.util.ArrayList;
 
 import static comp1110.ass2.model.Board.BOARD_HEIGHT;
@@ -127,17 +133,27 @@ public class Viewer extends Application {
             int col = i / 3 / 7;
             int row = i / 3 % 7;
 
+//            if (carpetColor != null) {
+//                Rectangle carpet = new Rectangle((col * TILE_SIZE) + offsetX, (row * TILE_SIZE) + offsetY, TILE_SIZE, TILE_SIZE);
+//                carpet.setFill(carpetColor);
+//
+//                carpet.setStroke(Color.BLACK);
+//                carpet.setStrokeWidth(2);
+//
+//                root.getChildren().add(carpet);
+//            }
             if (carpetColor != null) {
-                Rectangle carpet = new Rectangle((col * TILE_SIZE) + offsetX, (row * TILE_SIZE) + offsetY, TILE_SIZE, TILE_SIZE);
-                carpet.setFill(carpetColor);
-
-                carpet.setStroke(Color.BLACK);
-                carpet.setStrokeWidth(2);
-
+                // Replace rug with image by ImageView
+                Image image = new Image(getImagePathBasedOnColor(carpetColor));
+                ImageView carpet = new ImageView(image);
+                carpet.setX((col * TILE_SIZE) + offsetX);
+                carpet.setY((row * TILE_SIZE) + offsetY);
+                carpet.setFitWidth(TILE_SIZE);
+                carpet.setFitHeight(TILE_SIZE);
                 root.getChildren().add(carpet);
             }
-        }
 
+        }
 
         // Get Assam's information
         Assam assam = gameState.getAssam();
@@ -145,49 +161,92 @@ public class Viewer extends Application {
         Assam.Orientation assamOrientation = assam.getOrientation();
 
         // Draw Assam on the viewer
-        Circle assamCircle = new Circle((assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX, (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY, TILE_SIZE * 0.4);
-        assamCircle.setFill(Color.ORANGE);
-        root.getChildren().add(assamCircle);
+//        Circle assamCircle = new Circle((assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX, (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY, TILE_SIZE * 0.4);
+//        assamCircle.setFill(Color.ORANGE);
+//        root.getChildren().add(assamCircle);
+        Image assamImage = new Image("comp1110/ass2/gui/assets/Assam.png");  // Update with the actual path
+        ImageView assamImageView = new ImageView(assamImage);
+        assamImageView.setX((assamPoint.getX() * TILE_SIZE) + offsetX);
+        assamImageView.setY((assamPoint.getY() * TILE_SIZE) + offsetY);
+        assamImageView.setFitWidth(TILE_SIZE);
+        assamImageView.setFitHeight(TILE_SIZE);
+        root.getChildren().add(assamImageView);
 
         // Draw an arrow for the direction of Assam
-        Polygon arrow = new Polygon();
-        arrow.setFill(Color.BLACK);
-        double arrowLength = TILE_SIZE * 0.5;
-        double arrowWidth = TILE_SIZE * 0.2;
-        double centerX = (assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX;
-        double centerY = (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY;
+//        Polygon arrow = new Polygon();
+//        arrow.setFill(Color.BLACK);
+//        double arrowLength = TILE_SIZE * 0.5;
+//        double arrowWidth = TILE_SIZE * 0.2;
+//        double centerX = (assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX;
+//        double centerY = (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY;
+        Image arrowImage = new Image("comp1110/ass2/gui/assets/Assam.png");  // Update with the actual path
+        ImageView arrowImageView = new ImageView(arrowImage);
+        arrowImageView.setX((assamPoint.getX() * TILE_SIZE) + offsetX);
+        arrowImageView.setY((assamPoint.getY() * TILE_SIZE) + offsetY);
+        arrowImageView.setFitWidth(TILE_SIZE);
+        arrowImageView.setFitHeight(TILE_SIZE);
 
+//        switch (assamOrientation) {
+//            case N:
+//                arrow.getPoints().addAll(new Double[]{
+//                        centerX - arrowWidth, centerY + arrowLength / 2,
+//                        centerX, centerY - arrowLength / 2,
+//                        centerX + arrowWidth, centerY + arrowLength / 2
+//                });
+//                break;
+//            case E:
+//                arrow.getPoints().addAll(new Double[]{
+//                        centerX - arrowLength / 2, centerY - arrowWidth,
+//                        centerX + arrowLength / 2, centerY,
+//                        centerX - arrowLength / 2, centerY + arrowWidth
+//                });
+//                break;
+//            case S:
+//                arrow.getPoints().addAll(new Double[]{
+//                        centerX - arrowWidth, centerY - arrowLength / 2,
+//                        centerX, centerY + arrowLength / 2,
+//                        centerX + arrowWidth, centerY - arrowLength / 2
+//                });
+//                break;
+//            case W:
+//                arrow.getPoints().addAll(new Double[]{
+//                        centerX + arrowLength / 2, centerY - arrowWidth,
+//                        centerX - arrowLength / 2, centerY,
+//                        centerX + arrowLength / 2, centerY + arrowWidth
+//                });
+//                break;
+//        }
+//        root.getChildren().add(arrow);
         switch (assamOrientation) {
             case N:
-                arrow.getPoints().addAll(new Double[]{
-                        centerX - arrowWidth, centerY + arrowLength / 2,
-                        centerX, centerY - arrowLength / 2,
-                        centerX + arrowWidth, centerY + arrowLength / 2
-                });
+                arrowImageView.setRotate(0);
                 break;
             case E:
-                arrow.getPoints().addAll(new Double[]{
-                        centerX - arrowLength / 2, centerY - arrowWidth,
-                        centerX + arrowLength / 2, centerY,
-                        centerX - arrowLength / 2, centerY + arrowWidth
-                });
+                arrowImageView.setRotate(90);
                 break;
             case S:
-                arrow.getPoints().addAll(new Double[]{
-                        centerX - arrowWidth, centerY - arrowLength / 2,
-                        centerX, centerY + arrowLength / 2,
-                        centerX + arrowWidth, centerY - arrowLength / 2
-                });
+                arrowImageView.setRotate(180);
                 break;
             case W:
-                arrow.getPoints().addAll(new Double[]{
-                        centerX + arrowLength / 2, centerY - arrowWidth,
-                        centerX - arrowLength / 2, centerY,
-                        centerX + arrowLength / 2, centerY + arrowWidth
-                });
+                arrowImageView.setRotate(270);
                 break;
         }
-        root.getChildren().add(arrow);
+
+        root.getChildren().add(arrowImageView);
+    }
+
+    private String getImagePathBasedOnColor(Color color) {
+        if (color == Color.RED) {
+            return "/comp1110/ass2/gui/assets/red_Rug.png";
+        } else if (color == Color.YELLOW) {
+            return "/comp1110/ass2/gui/assets/yellow_Rug.png";
+        } else if (color == Color.CYAN) {
+            return "/comp1110/ass2/gui/assets/cyan_Rug.png";
+        } else if (color == Color.PURPLE) {
+            return "/comp1110/ass2/gui/assets/purple_Rug.png";
+        } else {
+            throw new IllegalArgumentException("Unsupported color");
+        }
     }
 
 
