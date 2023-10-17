@@ -259,17 +259,21 @@ public class Game extends Application {
                 }
             }
 
-            if (AIList.get(currentPlayer)) {
-                Tuple<State, TwoRug> tuple = current.actionRug(gameState, levelList.get(currentPlayer));
-                gameState = tuple.x;
-                selectedRugPoints[0] = tuple.y.getPoints()[0];
-                selectedRugPoints[1] = tuple.y.getPoints()[1];
-                refreshGameView(gameState);
-                addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
-                updateCurrentPlayerLabel();
+            if (current.getAlive()){
+                if (AIList.get(currentPlayer)) {
+                    Tuple<State, TwoRug> tuple = current.actionRug(gameState, levelList.get(currentPlayer));
+                    gameState = tuple.x;
+                    selectedRugPoints[0] = tuple.y.getPoints()[0];
+                    selectedRugPoints[1] = tuple.y.getPoints()[1];
+                    refreshGameView(gameState);
+                    addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
+                    updateCurrentPlayerLabel();
+                } else {
+                    // TODO：增加放地毯的提示
+                    root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
+                }
             } else {
-                // TODO：增加放地毯的提示
-                root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
+                updateCurrentPlayerLabel();
             }
         });
         timeline.play(); //Play the dice
