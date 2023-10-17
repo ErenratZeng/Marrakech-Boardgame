@@ -2,6 +2,7 @@ package comp1110.ass2.model;
 
 import comp1110.ass2.model.base.IBean;
 import comp1110.ass2.model.base.Point;
+import comp1110.ass2.model.base.Tuple;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class Player implements IBean {
 
     /**
      * @param string: A string representing the player's information including
-     *              color, coins, rug number, and alive status.
+     *                color, coins, rug number, and alive status.
      * @description Initializes a new Player instance using the given string.
      */
     public Player(String string) {
@@ -68,7 +69,7 @@ public class Player implements IBean {
     }
 
     /**
-     * @return  Returns the player's Color.
+     * @return Returns the player's Color.
      * @description Retrieves the player's color.
      */
     public Color getColor() {
@@ -86,7 +87,7 @@ public class Player implements IBean {
 
     /**
      * @param coins: An integer indicating the number of coins to set for the player.
-     * @return  Returns the current instance of the Player object (useful for method chaining).
+     * @return Returns the current instance of the Player object (useful for method chaining).
      * @description Updates the player's coin count.
      */
     public Player setCoins(int coins) {
@@ -109,7 +110,7 @@ public class Player implements IBean {
     }
 
     /**
-     * @return  Returns the number of rugs the player has.
+     * @return Returns the number of rugs the player has.
      * @description Retrieves the player's rug count.
      */
     public int getRugNum() {
@@ -147,7 +148,7 @@ public class Player implements IBean {
     /**
      * @param
      * @return Returns a string representing the player's current state.
-     * @description  Converts the player's state into a string format,
+     * @description Converts the player's state into a string format,
      * including color, coins, rug number, and alive status.
      */
     @Override
@@ -194,7 +195,7 @@ public class Player implements IBean {
         }
     }
 
-    public State actionRug(State state, Level level) {
+    public Tuple<State, TwoRug> actionRug(State state, Level level) {
         switch (level) {
             case easy -> {
                 Point point = state.getAssam().getPoint();
@@ -204,11 +205,11 @@ public class Player implements IBean {
                     twoRug = new TwoRug(getColor(), getRugNum(), twoPoints);
                     String newGameState = makePlacement(state.getString(), twoRug.getString());
                     if (newGameState != null && !newGameState.equals(state.getString())) {
-                        return new State(newGameState);
+                        return new Tuple(new State(newGameState), twoRug);
                     }
                 }
                 throw new RuntimeException(
-                        "Can not put rug."+state.getString()
+                        "Can not put rug." + state.getString()
                 );
             }
             case normal -> {

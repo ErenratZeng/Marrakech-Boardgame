@@ -4,6 +4,7 @@ import comp1110.ass2.Marrakech;
 import comp1110.ass2.model.*;
 import comp1110.ass2.model.base.Dice;
 import comp1110.ass2.model.base.Point;
+import comp1110.ass2.model.base.Tuple;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -257,7 +258,10 @@ public class Game extends Application {
             }
 
             if (AIList.get(currentPlayer)) {
-                gameState = current.actionRug(gameState, levelList.get(currentPlayer));
+                Tuple<State, TwoRug> tuple = current.actionRug(gameState, levelList.get(currentPlayer));
+                gameState = tuple.x;
+                selectedRugPoints[0] = tuple.y.getPoints()[0];
+                selectedRugPoints[1] = tuple.y.getPoints()[1];
                 refreshGameView(gameState);
                 // TODO addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
                 updateCurrentPlayerLabel();
