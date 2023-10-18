@@ -18,8 +18,11 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Stack;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Line;
@@ -50,6 +53,7 @@ public class Game extends Application {
     private Button rollButton;
     private final Point[] selectedRugPoints = new Point[2];
     private final Rectangle currentPlayerColorRectangle = new Rectangle(0, 0, 20, 20);
+    private final ArrayList<Rectangle> hintSquares = new ArrayList<>();
 
     private int putTwoRugCounter = 0;
 
@@ -71,8 +75,9 @@ public class Game extends Application {
             playerButton.setOnAction(e -> {
                 switch (playerButton.getText()) {
                     case "Disable" -> playerButton.setText("Human");
-                    case "Human" -> playerButton.setText("AI");
-                    case "AI" -> playerButton.setText("Disable");
+                    case "Human" -> playerButton.setText("Easy");
+                    case "Easy" -> playerButton.setText("Normal");
+                    case "Normal" -> playerButton.setText("Disable");
                 }
             });
             root.getChildren().add(playerButton);
@@ -91,7 +96,7 @@ public class Game extends Application {
             ArrayList<Player> playersList = new ArrayList<>();
             for (Button playerButton : playerButtons) {
                 switch (playerButton.getText()) {
-                    case "Human", "AI" -> totalPlayer++;
+                    case "Human", "Easy", "Normal" -> totalPlayer++;
                 }
             }
             if (totalPlayer > 1) {
@@ -107,10 +112,15 @@ public class Game extends Application {
                             AIList.add(false);
                             levelList.add(Player.Level.easy);
                         }
-                        case "AI" -> {
+                        case "Easy" -> {
                             playersList.add(new Player(colors.pop()));
                             AIList.add(true);
                             levelList.add(Player.Level.easy);
+                        }
+                        case "Normal" -> {
+                            playersList.add(new Player(colors.pop()));
+                            AIList.add(true);
+                            levelList.add(Player.Level.normal);
                         }
                     }
                 }
@@ -259,7 +269,7 @@ public class Game extends Application {
                 }
             }
 
-            if (current.getAlive()){
+            if (current.getAlive()) {
                 if (AIList.get(currentPlayer)) {
                     Tuple<State, TwoRug> tuple = current.actionRug(gameState, levelList.get(currentPlayer));
                     gameState = tuple.x;
@@ -269,7 +279,21 @@ public class Game extends Application {
                     addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
                     updateCurrentPlayerLabel();
                 } else {
-                    // TODO：增加放地毯的提示
+                    int x = gameState.getAssam().getPoint().getX();
+                    int y = gameState.getAssam().getPoint().getY();
+                    if (x + 1 < BOARD_SIZE)
+                        hintSquares.add(new Rectangle((x + 1) * TILE_SIZE + offsetX, y * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+                    if (x - 1 >= 0)
+                        hintSquares.add(new Rectangle((x - 1) * TILE_SIZE + offsetX, y * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+                    if (y + 1 < BOARD_SIZE)
+                        hintSquares.add(new Rectangle(x * TILE_SIZE + offsetX, (y + 1) * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+                    if (y - 1 >= 0)
+                        hintSquares.add(new Rectangle(x * TILE_SIZE + offsetX, (y - 1) * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+                    for (Rectangle hintSquare : hintSquares) {
+                        hintSquare.setFill(gameState.getPlayer(currentPlayer).getColor());
+                        hintSquare.setOpacity(0.3);
+                        root.getChildren().add(hintSquare);
+                    }
                     root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
                 }
             } else {
@@ -277,6 +301,14 @@ public class Game extends Application {
             }
         });
         timeline.play(); //Play the dice
+    }
+
+    private void checkHint() {
+        String rugString = new TwoRug(gameState.getPlayer(currentPlayer).getColor(), gameState.getPlayer(currentPlayer).getRugNum(), selectedRugPoints).getString();
+        String newGameState = makePlacement(gameState.getString(), rugString);
+        if (newGameState != null && !newGameState.equals(gameState.getString())){
+            hintSquares.add(new Rectangle(selectedRugPoints[1].getX() * TILE_SIZE + offsetX, selectedRugPoints[1].getY() * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+        }
     }
 
     /**
@@ -456,7 +488,25 @@ public class Game extends Application {
                         (colRug == colAssam && rowRug == rowAssam - 1)
                 ) {
                     selectedRugPoints[0] = new Point(colRug, rowRug);
+                    for (Rectangle hintSquare : hintSquares) {
+                        root.getChildren().remove(hintSquare);
+                    }
+                    hintSquares.clear();
+                    viewer.putRug(colRug, rowRug, gameState.getPlayer(currentPlayer).getColor());
                     putTwoRugCounter++;
+                    selectedRugPoints[1] = new Point(selectedRugPoints[0].getX() + 1, selectedRugPoints[0].getY());
+                    checkHint();
+                    selectedRugPoints[1] = new Point(selectedRugPoints[0].getX() - 1, selectedRugPoints[0].getY());
+                    checkHint();
+                    selectedRugPoints[1] = new Point(selectedRugPoints[0].getX(), selectedRugPoints[0].getY() + 1);
+                    checkHint();
+                    selectedRugPoints[1] = new Point(selectedRugPoints[0].getX(), selectedRugPoints[0].getY() - 1);
+                    checkHint();
+                    for (Rectangle hintSquare : hintSquares) {
+                        hintSquare.setFill(gameState.getPlayer(currentPlayer).getColor());
+                        hintSquare.setOpacity(0.3);
+                        root.getChildren().add(hintSquare);
+                    }
                 }
 
 
@@ -477,6 +527,10 @@ public class Game extends Application {
 
                     // Update the game state and refresh the game view if the game state has changed
                     if (newGameState != null && !newGameState.equals(gameState.getString())) {
+                        for (Rectangle hintSquare : hintSquares) {
+                            root.getChildren().remove(hintSquare);
+                        }
+                        hintSquares.clear();
                         gameState = new State(newGameState);
                         refreshGameView(gameState);
                         addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
@@ -505,7 +559,7 @@ public class Game extends Application {
             line = new Line(midX, y1 - TILE_SIZE / 2 + offset, midX, y2 + TILE_SIZE / 2 - offset); // Adjusted the y coordinates
         } else if (x1 == x2) { // If the rugs are placed vertically
             double midY = (y1 + y2) / 2;
-            line = new Line(x1 - TILE_SIZE / 2 + offset, midY, x2 + TILE_SIZE / 2- offset, midY); // Adjusted the x coordinates
+            line = new Line(x1 - TILE_SIZE / 2 + offset, midY, x2 + TILE_SIZE / 2 - offset, midY); // Adjusted the x coordinates
         } else {
             // In case the rugs are not aligned horizontally or vertically
             return;
@@ -516,7 +570,6 @@ public class Game extends Application {
         line.setStrokeWidth(4);
         root.getChildren().add(line);
     }
-
 
 
     private void resetGame() {
@@ -537,7 +590,6 @@ public class Game extends Application {
         root.getChildren().add(backgroundView);
         newGame();
     }
-
 
 
     @Override

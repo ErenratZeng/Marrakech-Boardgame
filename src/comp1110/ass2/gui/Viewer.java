@@ -147,13 +147,7 @@ public class Viewer extends Application {
 //            }
             if (carpetColor != null) {
                 // Replace rug with image by ImageView
-                Image image = new Image(getImagePathBasedOnColor(carpetColor));
-                ImageView carpet = new ImageView(image);
-                carpet.setX((col * TILE_SIZE) + offsetX);
-                carpet.setY((row * TILE_SIZE) + offsetY);
-                carpet.setFitWidth(TILE_SIZE);
-                carpet.setFitHeight(TILE_SIZE);
-                root.getChildren().add(carpet);
+                putRug(col, row, carpetColor);
             }
 
         }
@@ -236,6 +230,16 @@ public class Viewer extends Application {
         }
 
         root.getChildren().add(arrowImageView);
+    }
+
+    public void putRug(int col, int row, Color color) {
+        Image image = new Image(getImagePathBasedOnColor(color));
+        ImageView carpet = new ImageView(image);
+        carpet.setX((col * TILE_SIZE) + offsetX);
+        carpet.setY((row * TILE_SIZE) + offsetY);
+        carpet.setFitWidth(TILE_SIZE);
+        carpet.setFitHeight(TILE_SIZE);
+        root.getChildren().add(carpet);
     }
 
     private String getImagePathBasedOnColor(Color color) {
