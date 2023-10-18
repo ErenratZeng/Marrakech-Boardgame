@@ -237,6 +237,15 @@ public class Game extends Application {
         backButton.setLayoutY(650);
         backButton.setOnAction(e -> resetGame());
         root.getChildren().add(backButton);
+        // 获取当前玩家的颜色
+        Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
+
+        // 更新表示玩家颜色的矩形的颜色
+        currentPlayerColorRectangle.setFill(currentPlayerColor);
+
+        // 更新矩形的位置，使其出现在 currentPlayerLabel 旁边
+        currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
+        currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
         root.getChildren().add(currentPlayerColorRectangle);
     }
 
@@ -338,6 +347,15 @@ public class Game extends Application {
                     currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
                 }
                 currentPlayerLabel.setText("Player " + (currentPlayerNo++ % totalPlayer + 1) + "'s turn");
+                // 获取当前玩家的颜色
+                Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
+
+                // 更新表示玩家颜色的矩形的颜色
+                currentPlayerColorRectangle.setFill(currentPlayerColor);
+
+                // 更新矩形的位置，使其出现在 currentPlayerLabel 旁边
+                currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
+                currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
                 if (AIList.get(currentPlayer)) {
                     gameState = gameState.getPlayer(currentPlayer).actionAssam(gameState, levelList.get(currentPlayer));
                     rollDice();
