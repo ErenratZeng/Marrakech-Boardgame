@@ -12,17 +12,66 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
-public class ModelTest {
-    @Test
-    public void checkAbbreviatedRug() {
-        // TODO
-        Assertions.assertTrue(true);
+public void checkAbbreviatedRug() {
+        AbbreviatedRug defaultRug = new AbbreviatedRug();
+        Assertions.assertNull(defaultRug.getColor(), "Default constructor should initialize color as null");
+        Assertions.assertEquals(0, defaultRug.getID(), "Default constructor should initialize ID as 0");
+
+        // Test constructor with color and ID
+        AbbreviatedRug specificRug = new AbbreviatedRug(Color.CYAN, 12);
+        Assertions.assertEquals(Color.CYAN, specificRug.getColor());
+        Assertions.assertEquals(12, specificRug.getID());
+
+        // Test constructor with string representation
+        AbbreviatedRug stringRug = new AbbreviatedRug("c12");
+        Assertions.assertEquals(Color.CYAN, stringRug.getColor());
+        Assertions.assertEquals(12, stringRug.getID());
+
+        // Test getString() method
+        String stringRepresentation = stringRug.getString();
+        Assertions.assertEquals("c12", stringRepresentation, "getString should return the string representation of the rug");
     }
 
     @Test
     public void checkAssam() {
-        // TODO
-        Assertions.assertTrue(true);
+        // Test default constructor
+        Assam assam = new Assam();
+        Assertions.assertEquals(3, assam.getPoint().getX(), "Default position x should be 3");
+        Assertions.assertEquals(3, assam.getPoint().getY(), "Default position y should be 3");
+        Assertions.assertEquals(Assam.Orientation.N, assam.getOrientation(), "Default orientation should be N");
+
+        // Test string constructor
+        assam = new Assam("A32E");
+        Assertions.assertEquals(3, assam.getPoint().getX());
+        Assertions.assertEquals(2, assam.getPoint().getY());
+        Assertions.assertEquals(Assam.Orientation.E, assam.getOrientation());
+
+        // Test set point
+        assam.setPoint(new Point(4, 4));
+        Assertions.assertEquals(4, assam.getPoint().getX());
+        Assertions.assertEquals(4, assam.getPoint().getY());
+
+        // Test set orientation
+        assam.setOrientation(Assam.Orientation.S);
+        Assertions.assertEquals(Assam.Orientation.S, assam.getOrientation());
+
+        // Test orientation rotation to right
+        assam.setOrientationRight90();
+        Assertions.assertEquals(Assam.Orientation.W, assam.getOrientation(), "Rotation to right from S should give W");
+
+        // Test orientation rotation to left
+        assam.setOrientationLeft90();
+        Assertions.assertEquals(Assam.Orientation.S, assam.getOrientation(), "Rotation to left from W should give S");
+
+        // Test orientation rotation to back
+        assam.setOrientationBack();
+        Assertions.assertEquals(Assam.Orientation.N, assam.getOrientation(), "180 degrees rotation from S should give N");
+
+        // Test string representation of Assam
+        String assamStr = assam.getString();
+        Assertions.assertTrue(assamStr.startsWith("A"), "String representation should start with 'A'");
+        Assertions.assertTrue(assamStr.contains("4"), "String representation should contain x and y coordinates of Assam");
+        Assertions.assertTrue(assamStr.endsWith("N"), "String representation should end with orientation of Assam");
     }
 
     @Test
