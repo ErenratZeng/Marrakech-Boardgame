@@ -12,8 +12,11 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -22,10 +25,6 @@ import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Stack;
-
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.Line;
 
 import static comp1110.ass2.Marrakech.*;
 import static comp1110.ass2.gui.Viewer.*;
@@ -43,8 +42,8 @@ public class Game extends Application {
     private int currentPlayer = 0;  // track current player
     private int currentPlayerNo = 1;  // track current player display
     private int totalPlayer = 0;
-    private ArrayList<Boolean> AIList = new ArrayList<>();
-    private ArrayList<Player.Level> levelList = new ArrayList<>();
+    private final ArrayList<Boolean> AIList = new ArrayList<>();
+    private final ArrayList<Player.Level> levelList = new ArrayList<>();
     private final Text currentPlayerLabel = new Text();
     private Button eastButton;
     private Button westButton;
@@ -62,7 +61,7 @@ public class Game extends Application {
         Text[] playerTexts = new Text[4];
         Button[] playerButtons = new Button[4];
         for (int i = 0; i < 4; i++) {
-            playerTexts[i] = new Text("Player " + i);
+            playerTexts[i] = new Text("Player " + (i + 1));
             Text playerText = playerTexts[i];
             playerText.setLayoutX(200 * i + 200);
             playerText.setLayoutY(300);
@@ -100,6 +99,7 @@ public class Game extends Application {
                 }
             }
             if (totalPlayer > 1) {
+                while (Objects.equals(playerButtons[currentPlayer].getText(), "Disable")) currentPlayer++;
                 for (Button playerButton : playerButtons) {
                     switch (playerButton.getText()) {
                         case "Disable" -> {
@@ -329,16 +329,6 @@ public class Game extends Application {
         rollButton.setDisable(false);
 
         currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
-
-        // 获取当前玩家的颜色
-        Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
-
-        // 更新表示玩家颜色的矩形的颜色
-        currentPlayerColorRectangle.setFill(currentPlayerColor);
-
-        // 更新矩形的位置，使其出现在 currentPlayerLabel 旁边
-        currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
-        currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
 
         // Determine the winner of a game of Marrakech.
         switch (getWinner(gameState.getString())) {
