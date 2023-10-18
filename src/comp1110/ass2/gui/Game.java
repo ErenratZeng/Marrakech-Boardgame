@@ -354,22 +354,27 @@ public class Game extends Application {
             case 't' -> {
                 currentPlayerLabel.setText("Game is a tie");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
             case 'c' -> {
                 currentPlayerLabel.setText("Winner is Cyan");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
             case 'y' -> {
                 currentPlayerLabel.setText("Winner is Yellow");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
             case 'r' -> {
                 currentPlayerLabel.setText("Winner is Red");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
             case 'p' -> {
                 currentPlayerLabel.setText("Winner is Purple");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
         }
     }
