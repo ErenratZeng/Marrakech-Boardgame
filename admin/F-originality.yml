@@ -19,9 +19,12 @@ declaration: >-
 #
 # Add as many "name+comment" entries as necessary
 # (or remove it altogether if you haven't collaborated with anyone)
-#collaboration:
-#  - name:
-#    comment: >-
+collaboration:
+  - name: Haolin Li
+    comment: >- 
+    Haolin Li shared some thoughts on task13 moveAssam with group member Ruize Luo (u7776709), 
+    including thoughts on various out-of-bounds situations when Assam initially faces north. 
+    However, all codes in this method were independently written by team member Ruize Luo (u7776709).
 
 # Use this to list any code that you used that you did not write,
 # aside from code provided by the lecturer.  Provide a comment
