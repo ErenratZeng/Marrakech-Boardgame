@@ -1,7 +1,10 @@
 package comp1110.ass2;
 
+import comp1110.ass2.model.AbbreviatedRug;
+import comp1110.ass2.model.Assam;
 import comp1110.ass2.model.Player;
 import comp1110.ass2.model.base.Dice;
+import comp1110.ass2.model.base.Point;
 import javafx.scene.paint.Color;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
