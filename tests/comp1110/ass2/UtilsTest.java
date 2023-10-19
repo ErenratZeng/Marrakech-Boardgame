@@ -8,6 +8,11 @@ import java.util.concurrent.TimeUnit;
 
 import static comp1110.ass2.model.base.utils.subStr2int;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ */
 @Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
 public class UtilsTest {
     @Test

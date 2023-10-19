@@ -8,6 +8,11 @@ import comp1110.ass2.model.base.Point;
 
 import java.util.ArrayList;
 
+/**
+ * Authorship:
+ * name: Ruize Luo
+ * uid: u7776709
+ */
 public class RugValidator {
 
     public static boolean judgeRugValid(String gameString, String rug) {

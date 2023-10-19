@@ -15,6 +15,11 @@ import static comp1110.ass2.model.Board.BOARD_HEIGHT;
 import static comp1110.ass2.model.Board.BOARD_WIDTH;
 import static comp1110.ass2.model.base.utils.subStr2int;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ */
 public class Player implements IBean {
 
     // number of coins, start with 30.

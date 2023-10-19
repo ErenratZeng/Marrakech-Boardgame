@@ -2,6 +2,11 @@ package comp1110.ass2.model;
 
 import java.util.ArrayList;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ */
 public class State {
     private final Assam assam;
     private final Board board;

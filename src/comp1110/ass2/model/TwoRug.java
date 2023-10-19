@@ -5,6 +5,11 @@ import javafx.scene.paint.Color;
 
 import static comp1110.ass2.model.base.utils.subStr2int;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ */
 public class TwoRug extends AbbreviatedRug {
 
     // (x,y) with 2 squares covered by the rug.

@@ -38,12 +38,13 @@ declaration: >-
 # you want to just submit methods):
 class:
    - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/model/Player.java
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/model/base/Tuple.java
 
 # I wish to submit the following methods as entirely my own (remove this if
 # you want to just submit classes):
 method:
-   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#L408-470
-   - 
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#290-330
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/gui/Game.java#496-578
 
 # sign *your* name and uid here
 name: Zhuiqi Lin

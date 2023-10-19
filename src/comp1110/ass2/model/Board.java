@@ -2,6 +2,11 @@ package comp1110.ass2.model;
 
 import comp1110.ass2.model.base.IBean;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ */
 public class Board implements IBean {
     public final static int BOARD_WIDTH = 7;
 

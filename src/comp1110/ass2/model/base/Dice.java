@@ -2,6 +2,11 @@ package comp1110.ass2.model.base;
 
 import java.util.Random;
 
+/**
+ * Authorship:
+ * name: Ruize Luo
+ * uid: u7776709
+ */
 public class Dice {
     private final int[] sides;
     private final Random random;
