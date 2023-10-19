@@ -7,8 +7,7 @@ import comp1110.ass2.model.base.Point;
 import comp1110.ass2.model.base.Tuple;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static comp1110.ass2.Marrakech.getPaymentAmount;
 import static comp1110.ass2.Marrakech.makePlacement;
@@ -208,7 +207,33 @@ public class Player implements IBean {
                 return state;
             }
             case hard -> {
-                //TODO: hard
+                Color first = findFirst(state);
+                int sumFront = 0;
+                for (int step : new Dice().getSides()) {
+                    Assam assamNew = new Assam(Marrakech.moveAssam(state.getAssam().getString(), step));
+                    State stateNew = new State(state.getPlayers(), assamNew, state.getBoard());
+                    sumFront += getPaymentAmount(stateNew.getString());
+                    if (state.getBoard().getRug(state.getAssam().getPoint().getX(), state.getAssam().getPoint().getY()).getColor() == first)
+                        sumFront += getPaymentAmount(stateNew.getString());
+                }
+                int sumLeft = 0;
+                for (int step : new Dice().getSides()) {
+                    Assam assamNew = new Assam(Marrakech.moveAssam(state.getAssam().setOrientationLeft90().getString(), step));
+                    State stateNew = new State(state.getPlayers(), assamNew, state.getBoard());
+                    sumLeft += getPaymentAmount(stateNew.getString());
+                    if (state.getBoard().getRug(state.getAssam().getPoint().getX(), state.getAssam().getPoint().getY()).getColor() == first)
+                        sumLeft += getPaymentAmount(stateNew.getString());
+                }
+                int sumRight = 0;
+                for (int step : new Dice().getSides()) {
+                    Assam assamNew = new Assam(Marrakech.moveAssam(state.getAssam().setOrientationRight90().getString(), step));
+                    State stateNew = new State(state.getPlayers(), assamNew, state.getBoard());
+                    sumRight += getPaymentAmount(stateNew.getString());
+                    if (state.getBoard().getRug(state.getAssam().getPoint().getX(), state.getAssam().getPoint().getY()).getColor() == first)
+                        sumRight += getPaymentAmount(stateNew.getString());
+                }
+                if (sumLeft < sumFront && sumLeft < sumRight) state.getAssam().setOrientationLeft90();
+                if (sumRight < sumFront && sumRight < sumLeft) state.getAssam().setOrientationRight90();
                 return state;
             }
             default -> throw new RuntimeException(
@@ -254,8 +279,27 @@ public class Player implements IBean {
                 return backup0;
             }
             case hard -> {
-                //TODO: hard
-                return null;
+                Color first = findFirst(state);
+                Point point = state.getAssam().getPoint();
+                List<Point[]> pointsList = getAllPoints(point);
+                TwoRug twoRug;
+                Tuple<State, TwoRug>[] backups = new Tuple[5];
+                for (Point[] twoPoints : pointsList) {
+                    twoRug = new TwoRug(color, rugNum, twoPoints);
+                    String newGameState = makePlacement(state.getString(), twoRug.getString());
+                    if (newGameState != null && !newGameState.equals(state.getString())) {
+                        int i = 0;
+                        for (Point point1 : twoPoints) {
+                            Color colorTmp = state.getBoard().getRug(point1.getX(), point1.getY()).getColor();
+                            if (colorTmp != null && colorTmp != color) i++;
+                            if (colorTmp == first) i++;
+                        }
+                        backups[i] = new Tuple<>(new State(newGameState), twoRug);
+                    }
+                }
+                for (int i = 4; i >= 0; i--) {
+                    if (backups[i] != null) return backups[i];
+                }
             }
             default -> throw new RuntimeException(
                     "level? " + level
@@ -297,6 +341,36 @@ public class Player implements IBean {
             pointsList.add(new Point[]{new Point(x, y - 1), new Point(x, y - 2)});
 
         return pointsList;
+    }
+
+    private Color findFirst(State state) {
+        Map<Color, Integer> scores = new HashMap<>();
+        for (Player player : state.getPlayers()) {
+            scores.put(player.getColor(), player.getCoins());
+        }
+        // Create a new map to store only the coins of each player
+        // to determine the winner when the total score is the same
+        Map<Color, Integer> rugScores = new HashMap<>(scores);
+        for (int x = 0; x < 7; x++) {
+            for (int y = 0; y < 7; y++) {
+                Color rugColor = state.getBoard().getRug(x, y).getColor();
+                if (rugColor != null) {
+                    scores.put(rugColor, scores.get(rugColor) + 1);
+                }
+            }
+        }
+
+        List<Map.Entry<Color, Integer>> sortedScores = new ArrayList<>(scores.entrySet());
+        sortedScores.sort(Map.Entry.comparingByValue());
+
+        // If the two players with the highest scores have the same total score,
+        // the winner is determined based on their coins
+        if (Objects.equals(sortedScores.get(2).getValue(), sortedScores.get(3).getValue())) {
+            return Collections.max(rugScores.entrySet(), Map.Entry.comparingByValue()).getKey();
+        } else {
+            return sortedScores.get(3).getKey();
+        }
+
     }
 
 }
