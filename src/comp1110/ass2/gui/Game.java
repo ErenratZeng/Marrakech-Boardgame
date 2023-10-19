@@ -57,7 +57,7 @@ public class Game extends Application {
     private Button northButton;
     private Button rollButton;
     private final Point[] selectedRugPoints = new Point[2];
-    private final Rectangle currentPlayerColorRectangle = new Rectangle(0, 0, 20, 20);
+    private final Rectangle currentPlayerColorRectangle = new Rectangle(0, 0, 40, 40);
     private final ArrayList<Rectangle> hintSquares = new ArrayList<>();
     private int putTwoRugCounter = 0;
 
@@ -332,7 +332,9 @@ public class Game extends Application {
         currentPlayerColorRectangle.setFill(currentPlayerColor);
 
         currentPlayerColorRectangle.setX(360);
-        currentPlayerColorRectangle.setY(260);
+        currentPlayerColorRectangle.setY(265);
+        currentPlayerColorRectangle.setStroke(Color.BLACK); // 设置边框颜色
+        currentPlayerColorRectangle.setStrokeWidth(2);
         root.getChildren().add(currentPlayerColorRectangle);
     }
 
@@ -430,8 +432,10 @@ public class Game extends Application {
                 currentPlayerColorRectangle.setFill(currentPlayerColor);
                 // update square position
                 currentPlayerColorRectangle.setX(360);
-                currentPlayerColorRectangle.setY(260);
-// todo
+                currentPlayerColorRectangle.setY(265);
+                currentPlayerColorRectangle.setStroke(Color.BLACK);
+                currentPlayerColorRectangle.setStrokeWidth(2);
+
                 if (AIList.get(currentPlayer)) {
                     gameState = gameState.getPlayer(currentPlayer).actionAssam(gameState, levelList.get(currentPlayer));
                     rollDice();
