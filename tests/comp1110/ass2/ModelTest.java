@@ -80,12 +80,6 @@ public class ModelTest {
     }
 
     @Test
-    public void checkBoard() {
-        // TODO
-        Assertions.assertTrue(true);
-    }
-
-    @Test
     public void checkPlayer() {
         // Test constructor with Color
         Player playerCyan = new Player(Color.CYAN);
@@ -153,18 +147,6 @@ public class ModelTest {
     }
 
     @Test
-    public void checkState() {
-        // TODO
-        Assertions.assertTrue(true);
-    }
-
-    @Test
-    public void checkTwoRug() {
-        // TODO
-        Assertions.assertTrue(true);
-    }
-
-    @Test
     // In this test, the dice is rolled a large number of times (100,000 times in this example).
     // We then check if the results are as expected given the sides of the dice. Since the dice has non-uniform sides ({1, 2, 2, 3, 3, 4}),
     // we expect the frequency of 2 and 3 to be roughly double that of 1 and 4.
@@ -189,11 +171,4 @@ public class ModelTest {
         Assertions.assertTrue(Math.abs(frequencyMap.getOrDefault(3, 0) - (numberOfRolls / 3.0)) < 0.05 * numberOfRolls);
         Assertions.assertTrue(Math.abs(frequencyMap.getOrDefault(4, 0) - (numberOfRolls / 6.0)) < 0.05 * numberOfRolls);
     }
-
-    @Test
-    public void checkPoint() {
-        // TODO
-        Assertions.assertTrue(true);
-    }
-
 }
