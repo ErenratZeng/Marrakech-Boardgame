@@ -59,7 +59,6 @@ public class Game extends Application {
     private final Point[] selectedRugPoints = new Point[2];
     private final Rectangle currentPlayerColorRectangle = new Rectangle(0, 0, 20, 20);
     private final ArrayList<Rectangle> hintSquares = new ArrayList<>();
-    private ImageView boardBackgroundView;
     private int putTwoRugCounter = 0;
 
 
@@ -83,7 +82,8 @@ public class Game extends Application {
                     case "Disable" -> playerButton.setText("Human");
                     case "Human" -> playerButton.setText("Easy");
                     case "Easy" -> playerButton.setText("Normal");
-                    case "Normal" -> playerButton.setText("Disable");
+                    case "Normal" -> playerButton.setText("Hard");
+                    case "Hard" -> playerButton.setText("Disable");
                 }
             });
             root.getChildren().add(playerButton);
@@ -102,7 +102,7 @@ public class Game extends Application {
             ArrayList<Player> playersList = new ArrayList<>();
             for (Button playerButton : playerButtons) {
                 switch (playerButton.getText()) {
-                    case "Human", "Easy", "Normal" -> totalPlayer++;
+                    case "Human", "Easy", "Normal", "Hard" -> totalPlayer++;
                 }
             }
             if (totalPlayer > 1) {
@@ -128,6 +128,11 @@ public class Game extends Application {
                             playersList.add(new Player(colors.pop()));
                             AIList.add(true);
                             levelList.add(Player.Level.normal);
+                        }
+                        case "Hard" -> {
+                            playersList.add(new Player(colors.pop()));
+                            AIList.add(true);
+                            levelList.add(Player.Level.hard);
                         }
                     }
                 }
@@ -173,7 +178,7 @@ public class Game extends Application {
         square.setFill(Color.GREY);
 
         Image boardBackgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/BoardImage.png").toString());
-        boardBackgroundView = new ImageView(boardBackgroundImage);
+        ImageView boardBackgroundView = new ImageView(boardBackgroundImage);
 
         // Set board background size
         boardBackgroundView.setFitWidth(Board.BOARD_WIDTH * TILE_SIZE);
