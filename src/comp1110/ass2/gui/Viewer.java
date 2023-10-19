@@ -157,17 +157,17 @@ public class Viewer extends Application {
         Point assamPoint = assam.getPoint();
         Assam.Orientation assamOrientation = assam.getOrientation();
 
-        // Draw Assam on the viewer
-//        Circle assamCircle = new Circle((assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX, (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY, TILE_SIZE * 0.4);
-//        assamCircle.setFill(Color.ORANGE);
-//        root.getChildren().add(assamCircle);
-        Image assamImage = new Image("comp1110/ass2/gui/assets/Assam.png");  // Update with the actual path
-        ImageView assamImageView = new ImageView(assamImage);
-        assamImageView.setX((assamPoint.getX() * TILE_SIZE) + offsetX);
-        assamImageView.setY((assamPoint.getY() * TILE_SIZE) + offsetY);
-        assamImageView.setFitWidth(TILE_SIZE);
-        assamImageView.setFitHeight(TILE_SIZE);
-        root.getChildren().add(assamImageView);
+//        // Draw Assam on the viewer
+////        Circle assamCircle = new Circle((assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX, (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY, TILE_SIZE * 0.4);
+////        assamCircle.setFill(Color.ORANGE);
+////        root.getChildren().add(assamCircle);
+//        Image assamImage = new Image("comp1110/ass2/gui/assets/Assam.png");  // Update with the actual path
+//        ImageView assamImageView = new ImageView(assamImage);
+//        assamImageView.setX((assamPoint.getX() * TILE_SIZE) + offsetX);
+//        assamImageView.setY((assamPoint.getY() * TILE_SIZE) + offsetY);
+//        assamImageView.setFitWidth(TILE_SIZE);
+//        assamImageView.setFitHeight(TILE_SIZE);
+//        root.getChildren().add(assamImageView);
 
         // Draw an arrow for the direction of Assam
 //        Polygon arrow = new Polygon();

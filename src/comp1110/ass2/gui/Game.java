@@ -65,6 +65,7 @@ public class Game extends Application {
             Text playerText = playerTexts[i];
             playerText.setLayoutX(200 * i + 200);
             playerText.setLayoutY(300);
+            playerText.setStyle("-fx-font-size: 25;");
             root.getChildren().add(playerText);
 
             playerButtons[i] = new Button("Human");
@@ -89,7 +90,7 @@ public class Game extends Application {
         colors.push(Color.RED);
 
         Button start = new Button("start");
-        start.setLayoutX(1000);
+        start.setLayoutX(500);
         start.setLayoutY(500);
         start.setOnAction(event -> {
             ArrayList<Player> playersList = new ArrayList<>();
@@ -302,7 +303,7 @@ public class Game extends Application {
                     selectedRugPoints[0] = tuple.y.getPoints()[0];
                     selectedRugPoints[1] = tuple.y.getPoints()[1];
                     refreshGameView(gameState);
-                    addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
+                    drawRugOutline(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
                     updateCurrentPlayerLabel();
                 } else {
                     int x = gameState.getAssam().getPoint().getX();
@@ -563,7 +564,8 @@ public class Game extends Application {
                         hintSquares.clear();
                         gameState = new State(newGameState);
                         refreshGameView(gameState);
-                        addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
+//                        addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
+                        drawRugOutline(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
 
                         updateCurrentPlayerLabel();
                         root.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
@@ -575,30 +577,65 @@ public class Game extends Application {
         }
     };
 
-    private void addConnectingLine(Point p1, Point p2, Color color) {
-        double x1 = viewer.getOffsetX() + p1.getX() * TILE_SIZE + TILE_SIZE / 2;
-        double y1 = viewer.getOffsetY() + p1.getY() * TILE_SIZE + TILE_SIZE / 2;
-        double x2 = viewer.getOffsetX() + p2.getX() * TILE_SIZE + TILE_SIZE / 2;
-        double y2 = viewer.getOffsetY() + p2.getY() * TILE_SIZE + TILE_SIZE / 2;
+//    private void addConnectingLine(Point p1, Point p2, Color color) {
+//        double x1 = viewer.getOffsetX() + p1.getX() * TILE_SIZE + TILE_SIZE / 2;
+//        double y1 = viewer.getOffsetY() + p1.getY() * TILE_SIZE + TILE_SIZE / 2;
+//        double x2 = viewer.getOffsetX() + p2.getX() * TILE_SIZE + TILE_SIZE / 2;
+//        double y2 = viewer.getOffsetY() + p2.getY() * TILE_SIZE + TILE_SIZE / 2;
+//
+//
+//        Line line;
+//        int offset = 3;
+//        if (y1 == y2) { // If the rugs are placed horizontally
+//            double midX = (x1 + x2) / 2;
+//            line = new Line(midX, y1 - TILE_SIZE / 2 + offset, midX, y2 + TILE_SIZE / 2 - offset); // Adjusted the y coordinates
+//        } else if (x1 == x2) { // If the rugs are placed vertically
+//            double midY = (y1 + y2) / 2;
+//            line = new Line(x1 - TILE_SIZE / 2 + offset, midY, x2 + TILE_SIZE / 2 - offset, midY); // Adjusted the x coordinates
+//        } else {
+//            // In case the rugs are not aligned horizontally or vertically
+//            return;
+//        }
+//
+////        Line line = new Line(x1, y1, x2, y2);
+//        line.setStroke(color);
+//        line.setStrokeWidth(4);
+//        root.getChildren().add(line);
+//    }
 
+    private void drawRugOutline(Point p1, Point p2, Color color) {
+        double left, right, top, bottom;
 
-        Line line;
-        int offset = 3;
-        if (y1 == y2) { // If the rugs are placed horizontally
-            double midX = (x1 + x2) / 2;
-            line = new Line(midX, y1 - TILE_SIZE / 2 + offset, midX, y2 + TILE_SIZE / 2 - offset); // Adjusted the y coordinates
-        } else if (x1 == x2) { // If the rugs are placed vertically
-            double midY = (y1 + y2) / 2;
-            line = new Line(x1 - TILE_SIZE / 2 + offset, midY, x2 + TILE_SIZE / 2 - offset, midY); // Adjusted the x coordinates
-        } else {
-            // In case the rugs are not aligned horizontally or vertically
-            return;
+        // Find the border of rugs
+        if (p1.getX() == p2.getX()) {  // Vertical placement
+            left = Math.min(p1.getX(), p2.getX()) * TILE_SIZE + viewer.getOffsetX();
+            right = left + TILE_SIZE;
+            top = Math.min(p1.getY(), p2.getY()) * TILE_SIZE + viewer.getOffsetY();
+            bottom = top + 2 * TILE_SIZE;
+        } else {  // Horizontal placement
+            top = Math.min(p1.getY(), p2.getY()) * TILE_SIZE + viewer.getOffsetY();
+            bottom = top + TILE_SIZE;
+            left = Math.min(p1.getX(), p2.getX()) * TILE_SIZE + viewer.getOffsetX();
+            right = left + 2 * TILE_SIZE;
         }
 
-//        Line line = new Line(x1, y1, x2, y2);
-        line.setStroke(color);
-        line.setStrokeWidth(4);
-        root.getChildren().add(line);
+        // Creating 4 line around rugs
+        Line topLine = new Line(left, top, right, top);
+        Line bottomLine = new Line(left, bottom, right, bottom);
+        Line leftLine = new Line(left, top, left, bottom);
+        Line rightLine = new Line(right, top, right, bottom);
+
+        // set the color and width for lines
+        topLine.setStroke(color);
+        topLine.setStrokeWidth(4);
+        bottomLine.setStroke(color);
+        bottomLine.setStrokeWidth(4);
+        leftLine.setStroke(color);
+        leftLine.setStrokeWidth(4);
+        rightLine.setStroke(color);
+        rightLine.setStrokeWidth(4);
+
+        root.getChildren().addAll(topLine, bottomLine, leftLine, rightLine);
     }
 
 
