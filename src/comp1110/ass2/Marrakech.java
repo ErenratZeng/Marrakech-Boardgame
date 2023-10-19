@@ -173,8 +173,8 @@ public class Marrakech {
      *   1. A new rug must have one edge adjacent to Assam (not counting diagonals)
      *   2. A new rug must not completely cover another rug. It is legal to partially cover an already placed rug, but
      *      the new rug must not cover the entirety of another rug that's already on the board.
-     * //@param gameState A game string representing the current state of the game
-     * //@param rug A rug string representing the candidate rug which you must check the validity of.
+     * @param gameState A game string representing the current state of the game
+     * @param rug A rug string representing the candidate rug which you must check the validity of.
      * @return true if the placement is valid, and false otherwise.
      */
 
@@ -284,6 +284,7 @@ public class Marrakech {
         // Use BFS to explore all connected rugs of the same color as Assam landed on
         // Create a set to track visited rug positions.
         Set<List<Integer>> visited = new HashSet<>();
+
         // Create a queue for BFS
         Queue<List<Integer>> queue = new LinkedList<>();
         queue.add(assamPosition);
@@ -334,7 +335,7 @@ public class Marrakech {
      * board that are of their colour, and that a player who is out of the game cannot win. If multiple players have the
      * same total score, the player with the largest number of dirhams wins. If multiple players have the same total
      * score and number of dirhams, then the game is a tie.
-     * //@param gameState A String representation of the current state of the game
+     * @param gameState A String representation of the current state of the game
      * @return A char representing the winner of the game as described above.
      */
     public static char getWinner(String gameState) {
@@ -575,7 +576,7 @@ public class Marrakech {
             char player4 = playerArray.get(3).getString().charAt(1);
             //System.out.println(player1);
 
-            // 处理RugNumber
+            // Deal with RugNumber
             String currentPlayer1String = playerArray.get(0).getString();
             String currentPlayer2String = playerArray.get(1).getString();
             String currentPlayer3String = playerArray.get(2).getString();
@@ -615,11 +616,13 @@ public class Marrakech {
                 newPlayer4RugNumString = Integer.toString(newPlayer4RugNum);
             }
 
+            // Only change the number of rugs
             String newPlayer1String = currentPlayer1String.substring(0, 5) + newPlayer1RugNumString + currentPlayer1String.charAt(7);
             String newPlayer2String = currentPlayer2String.substring(0, 5) + newPlayer2RugNumString + currentPlayer2String.charAt(7);
             String newPlayer3String = currentPlayer3String.substring(0, 5) + newPlayer3RugNumString + currentPlayer3String.charAt(7);
             String newPlayer4String = currentPlayer4String.substring(0, 5) + newPlayer4RugNumString + currentPlayer4String.charAt(7);
 
+            // new string should only update the string of player who changed information
             String newPlayerArrayString = "";
             if (rug.charAt(0) == player1) {
                 newPlayerArrayString = newPlayer1String + currentPlayer2String + currentPlayer3String + currentPlayer4String;
@@ -647,6 +650,7 @@ public class Marrakech {
 
             Board currentBoard = currentState.getBoard();
             String currentBoardString = currentBoard.getString();
+
             // Use StringBuilder to modify the board string
             StringBuilder newBoardString = new StringBuilder(currentBoardString);
 
