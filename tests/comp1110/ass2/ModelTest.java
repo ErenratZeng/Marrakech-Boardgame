@@ -11,6 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Authorship:
+ * name: Ruize Luo
+ * uid: u7776709
+ */
+
 @Timeout(value = 500, unit = TimeUnit.MILLISECONDS)
 public class ModelTest {
     @Test
