@@ -259,8 +259,10 @@ public class Game extends Application {
         currentPlayerColorRectangle.setFill(currentPlayerColor);
 
         // 更新矩形的位置，使其出现在 currentPlayerLabel 旁边
-        currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
-        currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
+//        currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
+//        currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
+        currentPlayerColorRectangle.setX(360);
+        currentPlayerColorRectangle.setY(280);
         root.getChildren().add(currentPlayerColorRectangle);
     }
 
