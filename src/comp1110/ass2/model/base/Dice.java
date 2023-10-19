@@ -1,4 +1,5 @@
 package comp1110.ass2.model.base;
+
 import java.util.Random;
 
 public class Dice {
@@ -16,14 +17,18 @@ public class Dice {
         this.random = new Random();
     }
 
+    public int[] getSides() {
+        return sides;
+    }
+
     /**
-     * @return  Returns an integer representing the result of rolling the dice.
+     * @return Returns an integer representing the result of rolling the dice.
      * @description This method simulates rolling the dice.
      * It randomly selects a value from the sides array,
      * using the random object, and returns that value.
      * Determine the number of moving steps by generating random numbers.
      */
-    public int roll(){
+    public int roll() {
         return sides[random.nextInt(sides.length)];
     }
 

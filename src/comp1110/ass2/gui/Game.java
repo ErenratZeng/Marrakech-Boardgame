@@ -4,6 +4,7 @@ import comp1110.ass2.Marrakech;
 import comp1110.ass2.model.*;
 import comp1110.ass2.model.base.Dice;
 import comp1110.ass2.model.base.Point;
+import comp1110.ass2.model.base.Tuple;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -11,21 +12,29 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Stack;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.shape.Line;
 
 import static comp1110.ass2.Marrakech.*;
 import static comp1110.ass2.gui.Viewer.*;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ * name: Qiutong Zeng
+ * uid: u7724723
+ */
 public class Game extends Application {
 
     private final Group root = new Group();
@@ -39,8 +48,8 @@ public class Game extends Application {
     private int currentPlayer = 0;  // track current player
     private int currentPlayerNo = 1;  // track current player display
     private int totalPlayer = 0;
-    private ArrayList<Boolean> AIList = new ArrayList<>();
-    private ArrayList<Player.Level> levelList = new ArrayList<>();
+    private final ArrayList<Boolean> AIList = new ArrayList<>();
+    private final ArrayList<Player.Level> levelList = new ArrayList<>();
     private final Text currentPlayerLabel = new Text();
     private Button eastButton;
     private Button westButton;
@@ -48,7 +57,9 @@ public class Game extends Application {
     private Button northButton;
     private Button rollButton;
     private final Point[] selectedRugPoints = new Point[2];
-
+    private final Rectangle currentPlayerColorRectangle = new Rectangle(0, 0, 20, 20);
+    private final ArrayList<Rectangle> hintSquares = new ArrayList<>();
+    private ImageView boardBackgroundView;
     private int putTwoRugCounter = 0;
 
 
@@ -56,10 +67,11 @@ public class Game extends Application {
         Text[] playerTexts = new Text[4];
         Button[] playerButtons = new Button[4];
         for (int i = 0; i < 4; i++) {
-            playerTexts[i] = new Text("Player " + i);
+            playerTexts[i] = new Text("Player " + (i + 1));
             Text playerText = playerTexts[i];
             playerText.setLayoutX(200 * i + 200);
             playerText.setLayoutY(300);
+            playerText.setStyle("-fx-font-size: 25;");
             root.getChildren().add(playerText);
 
             playerButtons[i] = new Button("Human");
@@ -69,8 +81,9 @@ public class Game extends Application {
             playerButton.setOnAction(e -> {
                 switch (playerButton.getText()) {
                     case "Disable" -> playerButton.setText("Human");
-                    case "Human" -> playerButton.setText("AI");
-                    case "AI" -> playerButton.setText("Disable");
+                    case "Human" -> playerButton.setText("Easy");
+                    case "Easy" -> playerButton.setText("Normal");
+                    case "Normal" -> playerButton.setText("Disable");
                 }
             });
             root.getChildren().add(playerButton);
@@ -83,16 +96,17 @@ public class Game extends Application {
         colors.push(Color.RED);
 
         Button start = new Button("start");
-        start.setLayoutX(1000);
+        start.setLayoutX(500);
         start.setLayoutY(500);
         start.setOnAction(event -> {
             ArrayList<Player> playersList = new ArrayList<>();
             for (Button playerButton : playerButtons) {
                 switch (playerButton.getText()) {
-                    case "Human", "AI" -> totalPlayer++;
+                    case "Human", "Easy", "Normal" -> totalPlayer++;
                 }
             }
             if (totalPlayer > 1) {
+                while (Objects.equals(playerButtons[currentPlayer].getText(), "Disable")) currentPlayer++;
                 for (Button playerButton : playerButtons) {
                     switch (playerButton.getText()) {
                         case "Disable" -> {
@@ -105,10 +119,15 @@ public class Game extends Application {
                             AIList.add(false);
                             levelList.add(Player.Level.easy);
                         }
-                        case "AI" -> {
+                        case "Easy" -> {
                             playersList.add(new Player(colors.pop()));
                             AIList.add(true);
                             levelList.add(Player.Level.easy);
+                        }
+                        case "Normal" -> {
+                            playersList.add(new Player(colors.pop()));
+                            AIList.add(true);
+                            levelList.add(Player.Level.normal);
                         }
                     }
                 }
@@ -150,18 +169,33 @@ public class Game extends Application {
         viewer = new Viewer();
         root.getChildren().add(viewer.getViewerRoot()); //Add root to viewer
         refreshGameView(gameState);
-        Rectangle square = new Rectangle(965, 25, 110, 110);
+        Rectangle square = new Rectangle(65, 125, 110, 110);
         square.setFill(Color.GREY);
 
-        currentPlayerLabel.setX(365);
-        currentPlayerLabel.setY(60);
-        currentPlayerLabel.setStyle("-fx-font-size: 72;");
+        Image boardBackgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/BoardImage.png").toString());
+        boardBackgroundView = new ImageView(boardBackgroundImage);
+
+        // Set board background size
+        boardBackgroundView.setFitWidth(Board.BOARD_WIDTH * TILE_SIZE);
+        boardBackgroundView.setFitHeight(Board.BOARD_HEIGHT * TILE_SIZE);
+
+        // Set the board background
+        boardBackgroundView.setX(offsetX-100);
+        boardBackgroundView.setY(offsetY-103);
+        boardBackgroundView.setFitWidth(690);
+        boardBackgroundView.setFitHeight(690);
+
+        root.getChildren().add(boardBackgroundView);
+
+        currentPlayerLabel.setX(10);
+        currentPlayerLabel.setY(300);
+        currentPlayerLabel.setStyle("-fx-font-size: 50;");
         currentPlayerLabel.setText("Player " + 1 + "'s turn");
 
         // Create a button to roll the dice and set its position
         rollButton = new Button("Roll Dice");
-        rollButton.setLayoutX(720);
-        rollButton.setLayoutY(650);
+        rollButton.setLayoutX(230);
+        rollButton.setLayoutY(390);
         rollButton.setOnAction(e -> rollDice());
 
         eastButton = new Button("→");
@@ -170,8 +204,8 @@ public class Game extends Application {
         northButton = new Button("↑");
 
         // Rotate Assam 90 degrees to the Right when clicked
-        eastButton.setLayoutX(1000);
-        eastButton.setLayoutY(600);
+        eastButton.setLayoutX(130);
+        eastButton.setLayoutY(390);
         eastButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "E");
             if (!newAssamState.equals(gameState.getAssam().getString())) {
@@ -181,8 +215,8 @@ public class Game extends Application {
             }
         });
 
-        westButton.setLayoutX(900);
-        westButton.setLayoutY(600);
+        westButton.setLayoutX(55);
+        westButton.setLayoutY(390);
         westButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "W");
             if (!newAssamState.equals(gameState.getAssam().getString())) {
@@ -192,8 +226,8 @@ public class Game extends Application {
             }
         });
 
-        southButton.setLayoutX(950);
-        southButton.setLayoutY(650);
+        southButton.setLayoutX(95);
+        southButton.setLayoutY(430);
         southButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "S");
             if (!newAssamState.equals(gameState.getAssam().getString())) {
@@ -203,8 +237,8 @@ public class Game extends Application {
             }
         });
 
-        northButton.setLayoutX(950);
-        northButton.setLayoutY(550);
+        northButton.setLayoutX(95);
+        northButton.setLayoutY(350);
         northButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "N");
             if (!newAssamState.equals(gameState.getAssam().getString())) {
@@ -225,14 +259,23 @@ public class Game extends Application {
         backButton.setLayoutY(650);
         backButton.setOnAction(e -> resetGame());
         root.getChildren().add(backButton);
+        // Get current player color
+        Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
+
+        // update player color
+        currentPlayerColorRectangle.setFill(currentPlayerColor);
+
+        currentPlayerColorRectangle.setX(360);
+        currentPlayerColorRectangle.setY(280);
+        root.getChildren().add(currentPlayerColorRectangle);
     }
 
     private void rollDice() {
         rollButton.setDisable(true);
         disableDirectionButtons();
         Timeline timeline = new Timeline();
-        diceFace.setX(1000);
-        diceFace.setY(100);
+        diceFace.setX(100);
+        diceFace.setY(200);
         diceFace.setStyle("-fx-font-size: 72;");
 
         // Create a series of keyframes that change the face of the dice
@@ -256,16 +299,45 @@ public class Game extends Application {
                 }
             }
 
-            if (AIList.get(currentPlayer)) {
-                gameState = current.actionRug(gameState, levelList.get(currentPlayer));
-                refreshGameView(gameState);
-                updateCurrentPlayerLabel();
+            if (current.getAlive()) {
+                if (AIList.get(currentPlayer)) {
+                    Tuple<State, TwoRug> tuple = current.actionRug(gameState, levelList.get(currentPlayer));
+                    gameState = tuple.x;
+                    selectedRugPoints[0] = tuple.y.getPoints()[0];
+                    selectedRugPoints[1] = tuple.y.getPoints()[1];
+                    refreshGameView(gameState);
+                    updateCurrentPlayerLabel();
+                } else {
+                    int x = gameState.getAssam().getPoint().getX();
+                    int y = gameState.getAssam().getPoint().getY();
+                    if (x + 1 < BOARD_SIZE)
+                        hintSquares.add(new Rectangle((x + 1) * TILE_SIZE + offsetX, y * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+                    if (x - 1 >= 0)
+                        hintSquares.add(new Rectangle((x - 1) * TILE_SIZE + offsetX, y * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+                    if (y + 1 < BOARD_SIZE)
+                        hintSquares.add(new Rectangle(x * TILE_SIZE + offsetX, (y + 1) * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+                    if (y - 1 >= 0)
+                        hintSquares.add(new Rectangle(x * TILE_SIZE + offsetX, (y - 1) * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+                    for (Rectangle hintSquare : hintSquares) {
+                        hintSquare.setFill(gameState.getPlayer(currentPlayer).getColor());
+                        hintSquare.setOpacity(0.3);
+                        root.getChildren().add(hintSquare);
+                    }
+                    root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
+                }
             } else {
-                // TODO：增加放地毯的提示
-                root.addEventFilter(MouseEvent.MOUSE_CLICKED, handleMouseClick);
+                updateCurrentPlayerLabel();
             }
         });
         timeline.play(); //Play the dice
+    }
+
+    private void checkHint() {
+        String rugString = new TwoRug(gameState.getPlayer(currentPlayer).getColor(), gameState.getPlayer(currentPlayer).getRugNum(), selectedRugPoints).getString();
+        String newGameState = makePlacement(gameState.getString(), rugString);
+        if (newGameState != null && !newGameState.equals(gameState.getString())){
+            hintSquares.add(new Rectangle(selectedRugPoints[1].getX() * TILE_SIZE + offsetX, selectedRugPoints[1].getY() * TILE_SIZE + offsetY, TILE_SIZE, TILE_SIZE));
+        }
     }
 
     /**
@@ -275,7 +347,9 @@ public class Game extends Application {
         // Cycle through players after each turn
         updateDirectionButtons();
         rollButton.setDisable(false);
+
         currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
+
         // Determine the winner of a game of Marrakech.
         switch (getWinner(gameState.getString())) {
             case 'n' -> {
@@ -283,6 +357,15 @@ public class Game extends Application {
                     currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
                 }
                 currentPlayerLabel.setText("Player " + (currentPlayerNo++ % totalPlayer + 1) + "'s turn");
+                // Get current player color
+                Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
+
+                // update square color
+                currentPlayerColorRectangle.setFill(currentPlayerColor);
+
+                // update square position
+                currentPlayerColorRectangle.setX(360);
+                currentPlayerColorRectangle.setY(280);
                 if (AIList.get(currentPlayer)) {
                     gameState = gameState.getPlayer(currentPlayer).actionAssam(gameState, levelList.get(currentPlayer));
                     rollDice();
@@ -291,22 +374,27 @@ public class Game extends Application {
             case 't' -> {
                 currentPlayerLabel.setText("Game is a tie");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
             case 'c' -> {
                 currentPlayerLabel.setText("Winner is Cyan");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
             case 'y' -> {
                 currentPlayerLabel.setText("Winner is Yellow");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
             case 'r' -> {
                 currentPlayerLabel.setText("Winner is Red");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
             case 'p' -> {
                 currentPlayerLabel.setText("Winner is Purple");
                 rollButton.setDisable(true);
+                root.getChildren().remove(currentPlayerColorRectangle);
             }
         }
     }
@@ -433,7 +521,25 @@ public class Game extends Application {
                         (colRug == colAssam && rowRug == rowAssam - 1)
                 ) {
                     selectedRugPoints[0] = new Point(colRug, rowRug);
+                    for (Rectangle hintSquare : hintSquares) {
+                        root.getChildren().remove(hintSquare);
+                    }
+                    hintSquares.clear();
+                    viewer.putRug(colRug, rowRug, gameState.getPlayer(currentPlayer).getColor());
                     putTwoRugCounter++;
+                    selectedRugPoints[1] = new Point(selectedRugPoints[0].getX() + 1, selectedRugPoints[0].getY());
+                    checkHint();
+                    selectedRugPoints[1] = new Point(selectedRugPoints[0].getX() - 1, selectedRugPoints[0].getY());
+                    checkHint();
+                    selectedRugPoints[1] = new Point(selectedRugPoints[0].getX(), selectedRugPoints[0].getY() + 1);
+                    checkHint();
+                    selectedRugPoints[1] = new Point(selectedRugPoints[0].getX(), selectedRugPoints[0].getY() - 1);
+                    checkHint();
+                    for (Rectangle hintSquare : hintSquares) {
+                        hintSquare.setFill(gameState.getPlayer(currentPlayer).getColor());
+                        hintSquare.setOpacity(0.3);
+                        root.getChildren().add(hintSquare);
+                    }
                 }
 
 
@@ -454,9 +560,12 @@ public class Game extends Application {
 
                     // Update the game state and refresh the game view if the game state has changed
                     if (newGameState != null && !newGameState.equals(gameState.getString())) {
+                        for (Rectangle hintSquare : hintSquares) {
+                            root.getChildren().remove(hintSquare);
+                        }
+                        hintSquares.clear();
                         gameState = new State(newGameState);
                         refreshGameView(gameState);
-                        addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
 
                         updateCurrentPlayerLabel();
                         root.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
@@ -467,22 +576,6 @@ public class Game extends Application {
             }
         }
     };
-
-    private void addConnectingLine(Point p1, Point p2, Color color) {
-        // TODO
-        double x1 = viewer.getOffsetX() + p1.getX() * (TILE_SIZE + TILE_SIZE) / 2;
-        double y1 = viewer.getOffsetY() + p1.getY() * (TILE_SIZE + TILE_SIZE) / 2;
-        double x2 = viewer.getOffsetX() + p2.getX() * (TILE_SIZE + TILE_SIZE) / 2;
-        double y2 = viewer.getOffsetY() + p2.getY() * (TILE_SIZE + TILE_SIZE) / 2;
-
-
-        Line line = new Line(x1, y1, x2, y2);
-        line.setStroke(color);
-        line.setStrokeWidth(TILE_SIZE / 8);
-        root.getChildren().add(line);
-    }
-
-
 
     private void resetGame() {
 
@@ -504,7 +597,6 @@ public class Game extends Application {
     }
 
 
-
     @Override
     public void start(Stage stage) throws Exception {
         // FIXME Task 7 and 15
@@ -521,20 +613,4 @@ public class Game extends Application {
         stage.show();
     }
 }
-// TODO套转向边框 and 地毯连接到一起 提醒玩家放地毯的提示（显示可放范围） label显示玩家颜色
-/**
- * 逻辑：
- * 选择Player数量(2~4),以及是否加入AI
- * 若加入AI，选择ai难度
- * 游戏开始，第一个移动的玩家可以选择assam的任何方向，后续的玩家只能向左或者向右旋转90度（Finished）
- * 先选择Assam旋转的(Task 9)方向（Finished）
- * 然后投骰子(Task 6)（Finished）
- * 然后Assam移动(Task 13)（Finished）
- * 完成移动后判断玩家是否需要支付coins给其他玩家(Task 11)
- * 然后玩家选择放置一张地毯在Assam的W,E,N,S方向(Task 14)
- * 一张rug占据的格子数量是两格,判断放置是否合法(Task 10)
- * 当合法后地毯被放置，其他玩家依次移动assam放rug
- * 玩家当前回合结束后，判断玩家是否over(Task 8)
- * 以及每回合都判断游戏是否结束，以及胜者是谁(Task 12)
- */
 

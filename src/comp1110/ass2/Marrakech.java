@@ -254,6 +254,28 @@ public class Marrakech {
             return 0;
         }
 
+        // If the owner of rug is out, payment is 0
+        boolean isPlayer1Alive = state.getPlayers().get(0).getAlive();
+        boolean isPlayer2Alive = state.getPlayers().get(1).getAlive();
+        boolean isPlayer3Alive = state.getPlayers().get(2).getAlive();
+        boolean isPlayer4Alive = state.getPlayers().get(3).getAlive();
+
+        if (currentAssamRugColor == state.getPlayers().get(0).getColor() && !isPlayer1Alive){
+            return 0;
+        }
+
+        if (currentAssamRugColor == state.getPlayers().get(1).getColor() && !isPlayer2Alive){
+            return 0;
+        }
+
+        if (currentAssamRugColor == state.getPlayers().get(2).getColor() && !isPlayer3Alive){
+            return 0;
+        }
+
+        if (currentAssamRugColor == state.getPlayers().get(3).getColor() && !isPlayer4Alive){
+            return 0;
+        }
+
         // Use BFS to explore all connected rugs of the same color as Assam landed on
         // Create a set to track visited rug positions.
         Set<List<Integer>> visited = new HashSet<>();

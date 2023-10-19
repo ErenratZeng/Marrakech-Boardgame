@@ -12,15 +12,23 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-
+import javafx.scene.image.ImageView;
+import javafx.scene.image.Image;
 import java.util.ArrayList;
-
+import java.util.Objects;
 import static comp1110.ass2.model.Board.BOARD_HEIGHT;
+import static comp1110.ass2.model.Board.BOARD_WIDTH;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ * name: Qiutong Zeng
+ * uid: u7724723
+ */
 public class Viewer extends Application {
 
     private static final int VIEWER_WIDTH = 1200;
@@ -30,8 +38,8 @@ public class Viewer extends Application {
     public static final int TILE_SIZE = 71;
     public static final int BOARD_SIZE = 7;
     public static final int BOARD_PIXEL_SIZE = TILE_SIZE * BOARD_SIZE;
-    public static final int offsetX = (1200 - BOARD_PIXEL_SIZE) / 2;
-    public static final int offsetY = (700 - BOARD_PIXEL_SIZE) / 2;
+    public static final int offsetX = 600;
+    public static final int offsetY = 110;
 
     private final Group root = new Group();
     private final Group controls = new Group();
@@ -48,8 +56,6 @@ public class Viewer extends Application {
     public double getOffsetY() {
         return offsetY;
     }
-
-
 
     /**
      * Draw a placement in the window, removing any previously drawn placements
@@ -114,6 +120,7 @@ public class Viewer extends Application {
 
             scoreLabelY += 30;
             playerNumber++;
+
         }
 
         // Get the rug string from board string
@@ -128,66 +135,113 @@ public class Viewer extends Application {
             int row = i / 3 % 7;
 
             if (carpetColor != null) {
-                Rectangle carpet = new Rectangle((col * TILE_SIZE) + offsetX, (row * TILE_SIZE) + offsetY, TILE_SIZE, TILE_SIZE);
-                carpet.setFill(carpetColor);
-
-                carpet.setStroke(Color.BLACK);
-                carpet.setStrokeWidth(2);
-
-                root.getChildren().add(carpet);
+                // Replace rug with image by ImageView
+                putRug(col, row, carpetColor);
             }
         }
 
+        // Ensure that the borders will also display properly
+        for (int y = 0; y < BOARD_HEIGHT; y++) {
+            for (int x = 0; x < BOARD_WIDTH; x++) {
+                if (x == 0 && y == 0) continue;
+                AbbreviatedRug rug = board.getRug(x, y);
+                if (x > 0 && Objects.equals(rug.getString(), board.getRug(x - 1, y).getString())) {
+                    drawRugOutline(new Point(x, y), new Point(x - 1, y), rug.getColor());
+                }
+                if (y > 0 && Objects.equals(rug.getString(), board.getRug(x, y - 1).getString())) {
+                    drawRugOutline(new Point(x, y), new Point(x, y - 1), rug.getColor());
+                }
+            }
+        }
 
         // Get Assam's information
         Assam assam = gameState.getAssam();
         Point assamPoint = assam.getPoint();
         Assam.Orientation assamOrientation = assam.getOrientation();
 
-        // Draw Assam on the viewer
-        Circle assamCircle = new Circle((assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX, (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY, TILE_SIZE * 0.4);
-        assamCircle.setFill(Color.ORANGE);
-        root.getChildren().add(assamCircle);
+        // Use picture replace assam
+        Image arrowImage = new Image("comp1110/ass2/gui/assets/Assam.png");  // Update with the actual path
+        ImageView arrowImageView = new ImageView(arrowImage);
+        arrowImageView.setX((assamPoint.getX() * TILE_SIZE) + offsetX);
+        arrowImageView.setY((assamPoint.getY() * TILE_SIZE) + offsetY);
+        arrowImageView.setFitWidth(TILE_SIZE);
+        arrowImageView.setFitHeight(TILE_SIZE);
 
-        // Draw an arrow for the direction of Assam
-        Polygon arrow = new Polygon();
-        arrow.setFill(Color.BLACK);
-        double arrowLength = TILE_SIZE * 0.5;
-        double arrowWidth = TILE_SIZE * 0.2;
-        double centerX = (assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX;
-        double centerY = (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY;
 
         switch (assamOrientation) {
             case N:
-                arrow.getPoints().addAll(new Double[]{
-                        centerX - arrowWidth, centerY + arrowLength / 2,
-                        centerX, centerY - arrowLength / 2,
-                        centerX + arrowWidth, centerY + arrowLength / 2
-                });
+                arrowImageView.setRotate(0);
                 break;
             case E:
-                arrow.getPoints().addAll(new Double[]{
-                        centerX - arrowLength / 2, centerY - arrowWidth,
-                        centerX + arrowLength / 2, centerY,
-                        centerX - arrowLength / 2, centerY + arrowWidth
-                });
+                arrowImageView.setRotate(90);
                 break;
             case S:
-                arrow.getPoints().addAll(new Double[]{
-                        centerX - arrowWidth, centerY - arrowLength / 2,
-                        centerX, centerY + arrowLength / 2,
-                        centerX + arrowWidth, centerY - arrowLength / 2
-                });
+                arrowImageView.setRotate(180);
                 break;
             case W:
-                arrow.getPoints().addAll(new Double[]{
-                        centerX + arrowLength / 2, centerY - arrowWidth,
-                        centerX - arrowLength / 2, centerY,
-                        centerX + arrowLength / 2, centerY + arrowWidth
-                });
+                arrowImageView.setRotate(270);
                 break;
         }
-        root.getChildren().add(arrow);
+
+        root.getChildren().add(arrowImageView);
+    }
+
+    public void putRug(int col, int row, Color color) {
+        Image image = new Image(getImagePathBasedOnColor(color));
+        ImageView carpet = new ImageView(image);
+        carpet.setX((col * TILE_SIZE) + offsetX);
+        carpet.setY((row * TILE_SIZE) + offsetY);
+        carpet.setFitWidth(TILE_SIZE);
+        carpet.setFitHeight(TILE_SIZE);
+        root.getChildren().add(carpet);
+    }
+
+    public void drawRugOutline(Point p1, Point p2, Color color) {
+        double left, right, top, bottom;
+
+        // Find the border of rugs
+        if (p1.getX() == p2.getX()) {  // Vertical placement
+            left = Math.min(p1.getX(), p2.getX()) * TILE_SIZE + offsetX;
+            right = left + TILE_SIZE;
+            top = Math.min(p1.getY(), p2.getY()) * TILE_SIZE + offsetY;
+            bottom = top + 2 * TILE_SIZE;
+        } else {  // Horizontal placement
+            top = Math.min(p1.getY(), p2.getY()) * TILE_SIZE + offsetY;
+            bottom = top + TILE_SIZE;
+            left = Math.min(p1.getX(), p2.getX()) * TILE_SIZE + offsetX;
+            right = left + 2 * TILE_SIZE;
+        }
+
+        // Creating 4 line around rugs
+        Line topLine = new Line(left, top, right, top);
+        Line bottomLine = new Line(left, bottom, right, bottom);
+        Line leftLine = new Line(left, top, left, bottom);
+        Line rightLine = new Line(right, top, right, bottom);
+
+        // set the color and width for lines
+        topLine.setStroke(color);
+        topLine.setStrokeWidth(4);
+        bottomLine.setStroke(color);
+        bottomLine.setStrokeWidth(4);
+        leftLine.setStroke(color);
+        leftLine.setStrokeWidth(4);
+        rightLine.setStroke(color);
+        rightLine.setStrokeWidth(4);
+        root.getChildren().addAll(topLine, bottomLine, leftLine, rightLine);
+    }
+
+    private String getImagePathBasedOnColor(Color color) {
+        if (color == Color.RED) {
+            return "/comp1110/ass2/gui/assets/red_Rug.png";
+        } else if (color == Color.YELLOW) {
+            return "/comp1110/ass2/gui/assets/yellow_Rug.png";
+        } else if (color == Color.CYAN) {
+            return "/comp1110/ass2/gui/assets/cyan_Rug.png";
+        } else if (color == Color.PURPLE) {
+            return "/comp1110/ass2/gui/assets/purple_Rug.png";
+        } else {
+            throw new IllegalArgumentException("Unsupported color");
+        }
     }
 
 
