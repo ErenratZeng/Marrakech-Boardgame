@@ -12,17 +12,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 
 
-
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static comp1110.ass2.model.Board.BOARD_HEIGHT;
+import static comp1110.ass2.model.Board.BOARD_WIDTH;
 
 public class Viewer extends Application {
 
@@ -51,8 +55,6 @@ public class Viewer extends Application {
     public double getOffsetY() {
         return offsetY;
     }
-
-
 
     /**
      * Draw a placement in the window, removing any previously drawn placements
@@ -120,8 +122,6 @@ public class Viewer extends Application {
 
         }
 
-
-
         // Get the rug string from board string
         Board board = gameState.getBoard();
         String boardInfo = board.getString();
@@ -133,20 +133,24 @@ public class Viewer extends Application {
             int col = i / 3 / 7;
             int row = i / 3 % 7;
 
-//            if (carpetColor != null) {
-//                Rectangle carpet = new Rectangle((col * TILE_SIZE) + offsetX, (row * TILE_SIZE) + offsetY, TILE_SIZE, TILE_SIZE);
-//                carpet.setFill(carpetColor);
-//
-//                carpet.setStroke(Color.BLACK);
-//                carpet.setStrokeWidth(2);
-//
-//                root.getChildren().add(carpet);
-//            }
             if (carpetColor != null) {
                 // Replace rug with image by ImageView
                 putRug(col, row, carpetColor);
             }
+        }
 
+        // Ensure that the borders will also display properly
+        for (int y = 0; y < BOARD_HEIGHT; y++) {
+            for (int x = 0; x < BOARD_WIDTH; x++) {
+                if (x == 0 && y == 0) continue;
+                AbbreviatedRug rug = board.getRug(x, y);
+                if (x > 0 && Objects.equals(rug.getString(), board.getRug(x - 1, y).getString())) {
+                    drawRugOutline(new Point(x, y), new Point(x - 1, y), rug.getColor());
+                }
+                if (y > 0 && Objects.equals(rug.getString(), board.getRug(x, y - 1).getString())) {
+                    drawRugOutline(new Point(x, y), new Point(x, y - 1), rug.getColor());
+                }
+            }
         }
 
         // Get Assam's information
@@ -189,6 +193,40 @@ public class Viewer extends Application {
         carpet.setFitWidth(TILE_SIZE);
         carpet.setFitHeight(TILE_SIZE);
         root.getChildren().add(carpet);
+    }
+
+    public void drawRugOutline(Point p1, Point p2, Color color) {
+        double left, right, top, bottom;
+
+        // Find the border of rugs
+        if (p1.getX() == p2.getX()) {  // Vertical placement
+            left = Math.min(p1.getX(), p2.getX()) * TILE_SIZE + offsetX;
+            right = left + TILE_SIZE;
+            top = Math.min(p1.getY(), p2.getY()) * TILE_SIZE + offsetY;
+            bottom = top + 2 * TILE_SIZE;
+        } else {  // Horizontal placement
+            top = Math.min(p1.getY(), p2.getY()) * TILE_SIZE + offsetY;
+            bottom = top + TILE_SIZE;
+            left = Math.min(p1.getX(), p2.getX()) * TILE_SIZE + offsetX;
+            right = left + 2 * TILE_SIZE;
+        }
+
+        // Creating 4 line around rugs
+        Line topLine = new Line(left, top, right, top);
+        Line bottomLine = new Line(left, bottom, right, bottom);
+        Line leftLine = new Line(left, top, left, bottom);
+        Line rightLine = new Line(right, top, right, bottom);
+
+        // set the color and width for lines
+        topLine.setStroke(color);
+        topLine.setStrokeWidth(4);
+        bottomLine.setStroke(color);
+        bottomLine.setStrokeWidth(4);
+        leftLine.setStroke(color);
+        leftLine.setStrokeWidth(4);
+        rightLine.setStroke(color);
+        rightLine.setStrokeWidth(4);
+        root.getChildren().addAll(topLine, bottomLine, leftLine, rightLine);
     }
 
     private String getImagePathBasedOnColor(Color color) {

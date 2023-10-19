@@ -300,7 +300,6 @@ public class Game extends Application {
                     selectedRugPoints[0] = tuple.y.getPoints()[0];
                     selectedRugPoints[1] = tuple.y.getPoints()[1];
                     refreshGameView(gameState);
-                    drawRugOutline(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
                     updateCurrentPlayerLabel();
                 } else {
                     int x = gameState.getAssam().getPoint().getX();
@@ -561,8 +560,6 @@ public class Game extends Application {
                         hintSquares.clear();
                         gameState = new State(newGameState);
                         refreshGameView(gameState);
-//                        addConnectingLine(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
-                        drawRugOutline(selectedRugPoints[0], selectedRugPoints[1], current.getColor());
 
                         updateCurrentPlayerLabel();
                         root.removeEventFilter(MouseEvent.MOUSE_CLICKED, this);
@@ -573,42 +570,6 @@ public class Game extends Application {
             }
         }
     };
-
-    private void drawRugOutline(Point p1, Point p2, Color color) {
-        double left, right, top, bottom;
-
-        // Find the border of rugs
-        if (p1.getX() == p2.getX()) {  // Vertical placement
-            left = Math.min(p1.getX(), p2.getX()) * TILE_SIZE + viewer.getOffsetX();
-            right = left + TILE_SIZE;
-            top = Math.min(p1.getY(), p2.getY()) * TILE_SIZE + viewer.getOffsetY();
-            bottom = top + 2 * TILE_SIZE;
-        } else {  // Horizontal placement
-            top = Math.min(p1.getY(), p2.getY()) * TILE_SIZE + viewer.getOffsetY();
-            bottom = top + TILE_SIZE;
-            left = Math.min(p1.getX(), p2.getX()) * TILE_SIZE + viewer.getOffsetX();
-            right = left + 2 * TILE_SIZE;
-        }
-
-        // Creating 4 line around rugs
-        Line topLine = new Line(left, top, right, top);
-        Line bottomLine = new Line(left, bottom, right, bottom);
-        Line leftLine = new Line(left, top, left, bottom);
-        Line rightLine = new Line(right, top, right, bottom);
-
-        // set the color and width for lines
-        topLine.setStroke(color);
-        topLine.setStrokeWidth(4);
-        bottomLine.setStroke(color);
-        bottomLine.setStrokeWidth(4);
-        leftLine.setStroke(color);
-        leftLine.setStrokeWidth(4);
-        rightLine.setStroke(color);
-        rightLine.setStrokeWidth(4);
-
-        root.getChildren().addAll(topLine, bottomLine, leftLine, rightLine);
-    }
-
 
     private void resetGame() {
 
