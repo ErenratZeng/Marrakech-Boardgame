@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -20,7 +21,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Stack;
@@ -70,13 +70,17 @@ public class Game extends Application {
             Text playerText = playerTexts[i];
             playerText.setLayoutX(200 * i + 200);
             playerText.setLayoutY(300);
-            playerText.setStyle("-fx-font-size: 25;");
+            playerText.getStyleClass().add("playerText");
             root.getChildren().add(playerText);
 
             playerButtons[i] = new Button("Human");
             Button playerButton = playerButtons[i];
-            playerButton.setLayoutX(200 * i + 200);
+            playerButton.setLayoutX(200 * i + 200 + 20);
             playerButton.setLayoutY(400);
+            playerButton.getStyleClass().add("playerButton");
+            Tooltip tooltip = new Tooltip("Click it to change to AI or Human");
+            tooltip.setShowDelay(Duration.seconds(0.01));
+            Tooltip.install(playerButton, tooltip);
             playerButton.setOnAction(e -> {
                 switch (playerButton.getText()) {
                     case "Disable" -> playerButton.setText("Human");
@@ -95,9 +99,45 @@ public class Game extends Application {
         colors.push(Color.PURPLE);
         colors.push(Color.RED);
 
-        Button start = new Button("start");
-        start.setLayoutX(500);
+        Image player1_image = new Image("comp1110/ass2/gui/assets/player_red.png");  // Update with the actual path
+        ImageView player1_imageview = new ImageView(player1_image);
+        player1_imageview.setX(170);
+        player1_imageview.setY(150);
+        player1_imageview.setFitWidth(150);
+        player1_imageview.setFitHeight(150);
+        root.getChildren().add(player1_imageview);
+
+        Image player2_image = new Image("comp1110/ass2/gui/assets/player_purple.png");  // Update with the actual path
+        ImageView player2_imageview = new ImageView(player2_image);
+        player2_imageview.setX(370);
+        player2_imageview.setY(150);
+        player2_imageview.setFitWidth(150);
+        player2_imageview.setFitHeight(150);
+        root.getChildren().add(player2_imageview);
+
+        Image player3_image = new Image("comp1110/ass2/gui/assets/player_yellow.png");  // Update with the actual path
+        ImageView player3_imageview = new ImageView(player3_image);
+        player3_imageview.setX(570);
+        player3_imageview.setY(150);
+        player3_imageview.setFitWidth(150);
+        player3_imageview.setFitHeight(150);
+        root.getChildren().add(player3_imageview);
+
+        Image player4_image = new Image("comp1110/ass2/gui/assets/player_cyan.png");  // Update with the actual path
+        ImageView player4_imageview = new ImageView(player4_image);
+        player4_imageview.setX(770);
+        player4_imageview.setY(150);
+        player4_imageview.setFitWidth(150);
+        player4_imageview.setFitHeight(150);
+        root.getChildren().add(player4_imageview);
+
+        Button start = new Button("Start");
+        start.setLayoutX(520);
         start.setLayoutY(500);
+        start.getStyleClass().add("start");
+        Tooltip tooltip = new Tooltip("Are u sure u wanna start the game?");
+        tooltip.setShowDelay(Duration.seconds(0.01));
+        Tooltip.install(start, tooltip);
         start.setOnAction(event -> {
             ArrayList<Player> playersList = new ArrayList<>();
             for (Button playerButton : playerButtons) {
@@ -105,6 +145,7 @@ public class Game extends Application {
                     case "Human", "Easy", "Normal", "Hard" -> totalPlayer++;
                 }
             }
+
             if (totalPlayer > 1) {
                 while (Objects.equals(playerButtons[currentPlayer].getText(), "Disable")) currentPlayer++;
                 for (Button playerButton : playerButtons) {
@@ -143,11 +184,18 @@ public class Game extends Application {
                     root.getChildren().remove(playerText);
                 }
                 root.getChildren().remove(start);
+                root.getChildren().remove(player1_imageview);
+                root.getChildren().remove(player2_imageview);
+                root.getChildren().remove(player3_imageview);
+                root.getChildren().remove(player4_imageview);
+
                 gameState = new State(playersList);
                 makeControls();
             }
         });
         root.getChildren().add(start);
+
+
     }
 
     /**
@@ -174,7 +222,9 @@ public class Game extends Application {
         viewer = new Viewer();
         root.getChildren().add(viewer.getViewerRoot()); //Add root to viewer
         refreshGameView(gameState);
-        Rectangle square = new Rectangle(65, 125, 110, 110);
+        Rectangle square = new Rectangle(66, 123, 110, 110);
+        square.setArcWidth(60);
+        square.setArcHeight(60);
         square.setFill(Color.GREY);
 
         Image boardBackgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/BoardImage.png").toString());
@@ -189,27 +239,33 @@ public class Game extends Application {
         boardBackgroundView.setY(offsetY-103);
         boardBackgroundView.setFitWidth(690);
         boardBackgroundView.setFitHeight(690);
-
         root.getChildren().add(boardBackgroundView);
 
         currentPlayerLabel.setX(10);
         currentPlayerLabel.setY(300);
-        currentPlayerLabel.setStyle("-fx-font-size: 50;");
+        currentPlayerLabel.getStyleClass().add("currentPlayerLabel");
         currentPlayerLabel.setText("Player " + 1 + "'s turn");
 
         // Create a button to roll the dice and set its position
-        rollButton = new Button("Roll Dice");
+        rollButton = new Button("Roll dice");
+        rollButton.getStyleClass().add("rollButton");
+        Tooltip tooltip = new Tooltip("Click it");
+        Tooltip.install(rollButton, tooltip);
         rollButton.setLayoutX(230);
-        rollButton.setLayoutY(390);
+        rollButton.setLayoutY(392);
         rollButton.setOnAction(e -> rollDice());
 
         eastButton = new Button("→");
         westButton = new Button("←");
         southButton = new Button("↓");
         northButton = new Button("↑");
+        eastButton.getStyleClass().add("eastButton");
+        westButton.getStyleClass().add("westButton");
+        southButton.getStyleClass().add("southButton");
+        northButton.getStyleClass().add("northButton");
 
         // Rotate Assam 90 degrees to the Right when clicked
-        eastButton.setLayoutX(130);
+        eastButton.setLayoutX(136);
         eastButton.setLayoutY(390);
         eastButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "E");
@@ -261,8 +317,13 @@ public class Game extends Application {
 
         Button backButton = new Button("Back to Player Selection");
         backButton.setLayoutX(50);
-        backButton.setLayoutY(650);
+        backButton.setLayoutY(600);
+        backButton.getStyleClass().add("backButton");
+        Tooltip tooltip1 = new Tooltip("Are u sure u wanna leave the game?");
+        tooltip1.setShowDelay(Duration.seconds(0.01));
+        Tooltip.install(backButton, tooltip1);
         backButton.setOnAction(e -> resetGame());
+
         root.getChildren().add(backButton);
         // Get current player color
         Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
@@ -271,7 +332,7 @@ public class Game extends Application {
         currentPlayerColorRectangle.setFill(currentPlayerColor);
 
         currentPlayerColorRectangle.setX(360);
-        currentPlayerColorRectangle.setY(280);
+        currentPlayerColorRectangle.setY(260);
         root.getChildren().add(currentPlayerColorRectangle);
     }
 
@@ -367,10 +428,10 @@ public class Game extends Application {
 
                 // update square color
                 currentPlayerColorRectangle.setFill(currentPlayerColor);
-
                 // update square position
                 currentPlayerColorRectangle.setX(360);
-                currentPlayerColorRectangle.setY(280);
+                currentPlayerColorRectangle.setY(260);
+// todo
                 if (AIList.get(currentPlayer)) {
                     gameState = gameState.getPlayer(currentPlayer).actionAssam(gameState, levelList.get(currentPlayer));
                     rollDice();
@@ -583,9 +644,7 @@ public class Game extends Application {
     };
 
     private void resetGame() {
-
         root.getChildren().clear();
-
         currentPlayer = 0;
         totalPlayer = 0;
         AIList.clear();
@@ -614,6 +673,7 @@ public class Game extends Application {
         root.getChildren().add(backgroundView);
         newGame();
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
+        scene.getStylesheets().add(getClass().getResource("/comp1110/ass2/gui/marrakechStyle.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }

@@ -1,0 +1,129 @@
+.rollButton {
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+    -fx-background-radius: 20px;
+    -fx-min-width: 50px;
+    -fx-min-height: 40px;
+}
+.rollButton:hover {
+    -fx-background-color: black;
+    -fx-text-fill: white;
+}
+
+.playerText{
+    -fx-font-size: 25;
+}
+
+.currentPlayerLabel {
+    -fx-font-size: 50;
+}
+
+.playerButton {
+    -fx-background-radius: 50px;
+    -fx-min-width: 50px;
+    -fx-min-height: 40px;
+    -fx-background-color: cyan;
+    -fx-text-fill: black;
+}
+
+.playerButton:hover {
+    -fx-background-color: red;
+    -fx-text-fill: black;
+}
+
+.start {
+    -fx-min-width: 100px;
+    -fx-min-height: 40px;
+    -fx-background-radius: 20px;
+    -fx-background-color: #6495ED;
+    -fx-text-fill: black;
+    -fx-font-size: 30px;
+}
+
+.start:hover {
+    -fx-background-color: #FF8C00;
+    -fx-text-fill: blaCK;
+}
+
+.eastButton{
+    -fx-background-radius: 25px;
+    -fx-background-color: #B22222;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-font-size: 20px;
+}
+
+.eastButton:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+.westButton{
+    -fx-background-radius: 25px;
+    -fx-background-color: #1E90FF;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-font-size: 20px;
+}
+
+.westButton:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+.southButton{
+    -fx-background-radius: 25px;
+    -fx-background-color: #ADFF2F;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-font-size: 20px;
+}
+
+.southButton:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+.northButton{
+    -fx-background-radius: 25px;
+    -fx-background-color: #FFD700;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-font-size: 20px;
+}
+
+.northButton:hover {
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+.backButton{
+    -fx-background-radius: 5px;
+    -fx-background-color: #FF0000;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-font-size: 20px;
+}
+
+.backButton:hover{
+    -fx-background-color: #000000;
+    -fx-text-fill: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
