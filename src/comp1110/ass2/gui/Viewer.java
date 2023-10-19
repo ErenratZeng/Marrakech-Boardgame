@@ -12,12 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 
 
@@ -157,25 +154,7 @@ public class Viewer extends Application {
         Point assamPoint = assam.getPoint();
         Assam.Orientation assamOrientation = assam.getOrientation();
 
-//        // Draw Assam on the viewer
-////        Circle assamCircle = new Circle((assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX, (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY, TILE_SIZE * 0.4);
-////        assamCircle.setFill(Color.ORANGE);
-////        root.getChildren().add(assamCircle);
-//        Image assamImage = new Image("comp1110/ass2/gui/assets/Assam.png");  // Update with the actual path
-//        ImageView assamImageView = new ImageView(assamImage);
-//        assamImageView.setX((assamPoint.getX() * TILE_SIZE) + offsetX);
-//        assamImageView.setY((assamPoint.getY() * TILE_SIZE) + offsetY);
-//        assamImageView.setFitWidth(TILE_SIZE);
-//        assamImageView.setFitHeight(TILE_SIZE);
-//        root.getChildren().add(assamImageView);
-
-        // Draw an arrow for the direction of Assam
-//        Polygon arrow = new Polygon();
-//        arrow.setFill(Color.BLACK);
-//        double arrowLength = TILE_SIZE * 0.5;
-//        double arrowWidth = TILE_SIZE * 0.2;
-//        double centerX = (assamPoint.getX() * TILE_SIZE + TILE_SIZE / 2) + offsetX;
-//        double centerY = (assamPoint.getY() * TILE_SIZE + TILE_SIZE / 2) + offsetY;
+        // Use picture replace assam
         Image arrowImage = new Image("comp1110/ass2/gui/assets/Assam.png");  // Update with the actual path
         ImageView arrowImageView = new ImageView(arrowImage);
         arrowImageView.setX((assamPoint.getX() * TILE_SIZE) + offsetX);
@@ -183,37 +162,7 @@ public class Viewer extends Application {
         arrowImageView.setFitWidth(TILE_SIZE);
         arrowImageView.setFitHeight(TILE_SIZE);
 
-//        switch (assamOrientation) {
-//            case N:
-//                arrow.getPoints().addAll(new Double[]{
-//                        centerX - arrowWidth, centerY + arrowLength / 2,
-//                        centerX, centerY - arrowLength / 2,
-//                        centerX + arrowWidth, centerY + arrowLength / 2
-//                });
-//                break;
-//            case E:
-//                arrow.getPoints().addAll(new Double[]{
-//                        centerX - arrowLength / 2, centerY - arrowWidth,
-//                        centerX + arrowLength / 2, centerY,
-//                        centerX - arrowLength / 2, centerY + arrowWidth
-//                });
-//                break;
-//            case S:
-//                arrow.getPoints().addAll(new Double[]{
-//                        centerX - arrowWidth, centerY - arrowLength / 2,
-//                        centerX, centerY + arrowLength / 2,
-//                        centerX + arrowWidth, centerY - arrowLength / 2
-//                });
-//                break;
-//            case W:
-//                arrow.getPoints().addAll(new Double[]{
-//                        centerX + arrowLength / 2, centerY - arrowWidth,
-//                        centerX - arrowLength / 2, centerY,
-//                        centerX + arrowLength / 2, centerY + arrowWidth
-//                });
-//                break;
-//        }
-//        root.getChildren().add(arrow);
+
         switch (assamOrientation) {
             case N:
                 arrowImageView.setRotate(0);

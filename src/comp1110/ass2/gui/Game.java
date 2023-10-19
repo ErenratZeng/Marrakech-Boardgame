@@ -253,15 +253,12 @@ public class Game extends Application {
         backButton.setLayoutY(650);
         backButton.setOnAction(e -> resetGame());
         root.getChildren().add(backButton);
-        // 获取当前玩家的颜色
+        // Get current player color
         Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
 
-        // 更新表示玩家颜色的矩形的颜色
+        // update player color
         currentPlayerColorRectangle.setFill(currentPlayerColor);
 
-        // 更新矩形的位置，使其出现在 currentPlayerLabel 旁边
-//        currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
-//        currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
         currentPlayerColorRectangle.setX(360);
         currentPlayerColorRectangle.setY(280);
         root.getChildren().add(currentPlayerColorRectangle);
@@ -576,32 +573,6 @@ public class Game extends Application {
             }
         }
     };
-
-//    private void addConnectingLine(Point p1, Point p2, Color color) {
-//        double x1 = viewer.getOffsetX() + p1.getX() * TILE_SIZE + TILE_SIZE / 2;
-//        double y1 = viewer.getOffsetY() + p1.getY() * TILE_SIZE + TILE_SIZE / 2;
-//        double x2 = viewer.getOffsetX() + p2.getX() * TILE_SIZE + TILE_SIZE / 2;
-//        double y2 = viewer.getOffsetY() + p2.getY() * TILE_SIZE + TILE_SIZE / 2;
-//
-//
-//        Line line;
-//        int offset = 3;
-//        if (y1 == y2) { // If the rugs are placed horizontally
-//            double midX = (x1 + x2) / 2;
-//            line = new Line(midX, y1 - TILE_SIZE / 2 + offset, midX, y2 + TILE_SIZE / 2 - offset); // Adjusted the y coordinates
-//        } else if (x1 == x2) { // If the rugs are placed vertically
-//            double midY = (y1 + y2) / 2;
-//            line = new Line(x1 - TILE_SIZE / 2 + offset, midY, x2 + TILE_SIZE / 2 - offset, midY); // Adjusted the x coordinates
-//        } else {
-//            // In case the rugs are not aligned horizontally or vertically
-//            return;
-//        }
-//
-////        Line line = new Line(x1, y1, x2, y2);
-//        line.setStroke(color);
-//        line.setStrokeWidth(4);
-//        root.getChildren().add(line);
-//    }
 
     private void drawRugOutline(Point p1, Point p2, Color color) {
         double left, right, top, bottom;
