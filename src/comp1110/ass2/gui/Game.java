@@ -169,16 +169,16 @@ public class Game extends Application {
         Image boardBackgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/BoardImage.png").toString());
         boardBackgroundView = new ImageView(boardBackgroundImage);
 
-        // 设置ImageView的大小以匹配棋盘的大小
+        // Set board background size
         boardBackgroundView.setFitWidth(Board.BOARD_WIDTH * TILE_SIZE);
         boardBackgroundView.setFitHeight(Board.BOARD_HEIGHT * TILE_SIZE);
 
-        // 将ImageView的位置设置为棋盘的位置
+        // Set the board background
         boardBackgroundView.setX(offsetX-100);
         boardBackgroundView.setY(offsetY-103);
         boardBackgroundView.setFitWidth(690);
         boardBackgroundView.setFitHeight(690);
-        // 将ImageView添加到root中
+
         root.getChildren().add(boardBackgroundView);
 
         currentPlayerLabel.setX(10);
