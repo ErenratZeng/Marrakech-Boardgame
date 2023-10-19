@@ -9,6 +9,11 @@ import static comp1110.ass2.model.Board.BOARD_HEIGHT;
 import static comp1110.ass2.model.Board.BOARD_WIDTH;
 import static comp1110.ass2.model.base.utils.subStr2int;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ */
 public class Assam implements IBean {
 
     // Assam starts the game in the centre of the board (at position (3,3))

@@ -12,22 +12,23 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Objects;
-
 import static comp1110.ass2.model.Board.BOARD_HEIGHT;
 import static comp1110.ass2.model.Board.BOARD_WIDTH;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ * name: Qiutong Zeng
+ * uid: u7724723
+ */
 public class Viewer extends Application {
 
     private static final int VIEWER_WIDTH = 1200;

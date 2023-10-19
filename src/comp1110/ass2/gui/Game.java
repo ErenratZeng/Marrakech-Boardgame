@@ -16,7 +16,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -29,6 +28,13 @@ import java.util.Stack;
 import static comp1110.ass2.Marrakech.*;
 import static comp1110.ass2.gui.Viewer.*;
 
+/**
+ * Authorship:
+ * name: Zhuiqi Lin
+ * uid: u7733924
+ * name: Qiutong Zeng
+ * uid: u7724723
+ */
 public class Game extends Application {
 
     private final Group root = new Group();
