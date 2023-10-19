@@ -10,9 +10,8 @@
 #
 
 declaration: >-
-  Stage F represents the culmination of the entire assignment.  We declare that
-  everything we have submitted for for all stages of this assignment was
-  entirely our own work, with the following exceptions:
+  I submit the work below for assessment as my best work. I declare that this
+  is entirely my own work, with the following documented exceptions:
 
 # Use this to list names of people who you collaborated with, and a
 # comment about what you collaborated on.
@@ -21,9 +20,9 @@ declaration: >-
 # (or remove it altogether if you haven't collaborated with anyone)
 collaboration:
   - name: Haolin Li
-    comment: >- 
-    Haolin Li shared some thoughts on task13 moveAssam with group member Ruize Luo (u7776709), 
-    including thoughts on various out-of-bounds situations when Assam initially faces north. 
+    comment: >-
+    Haolin Li shared some thoughts on task13 moveAssam with group member Ruize Luo (u7776709),
+    including thoughts on various out-of-bounds situations when Assam initially faces north.
     However, all codes in this method were independently written by team member Ruize Luo (u7776709).
 
 # Use this to list any code that you used that you did not write,
@@ -38,24 +37,17 @@ collaboration:
 #    url:
 #    licence:
 
-# Use this to list any assets (artwork, sound, etc) that you used.
-# Provide a comment explaining your use of that asset and the URL
-# and license for the asset
-#
-# Add as many "url+licence+comment" entries as necessary
-# (or remove it altogether if you haven't used any external assets)
-assets:
-  - comment:
-    url:
-    licence:
+# I wish to submit the following classes as entirely my own (remove this if
+# you want to just submit methods):
+class:
+  - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/src/comp1110/ass2/Marrakech.java
 
+# I wish to submit the following methods as entirely my own (remove this if
+# you want to just submit classes):
+method:
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/tests/comp1110/ass2/ModelTest.java#L17-104
+   - https://gitlab.cecs.anu.edu.au/u7733924/comp1110-ass2/-/blob/main/tests/comp1110/ass2/ModelTest.java#L173-272
 
-# Sign *your* name and uids here. (Remove entries if you have fewer
-# than three members.)
-signatures:
-  - name: Zhuiqi Lin
-    uid: u7733924
-  - name: Qiutong Zeng
-    uid: u7724723
-  - name: Ruize Luo
-    uid: u7776709
+# sign *your* name and uid here
+name: Ruize Luo
+uid: u7776709
