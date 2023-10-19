@@ -613,7 +613,7 @@ public class Game extends Application {
         stage.show();
     }
 }
-// TODO 套转向边框 and 地毯连接到一起 提醒玩家放地毯的提示（显示可放范围） label显示玩家颜色
+
 /**
  * 逻辑：
  * 选择Player数量(2~4),以及是否加入AI
