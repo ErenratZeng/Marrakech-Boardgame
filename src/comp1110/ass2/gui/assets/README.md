@@ -1,1 +1,1 @@
-This folder is used to store the materials needed later
+# **This folder is used to store the materials used in game**
