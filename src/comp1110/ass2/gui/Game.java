@@ -61,8 +61,11 @@ public class Game extends Application {
     private final ArrayList<Rectangle> hintSquares = new ArrayList<>();
     private int putTwoRugCounter = 0;
 
-
+    /**
+     * Initializes a new game, setting up the player selection and starting state of the game board.
+     */
     private void newGame() {
+        // Creating player texts and buttons for selecting player types (human or AI)
         Text[] playerTexts = new Text[4];
         Button[] playerButtons = new Button[4];
         for (int i = 0; i < 4; i++) {
@@ -99,6 +102,7 @@ public class Game extends Application {
         colors.push(Color.PURPLE);
         colors.push(Color.RED);
 
+        // Creating images to represent different players
         Image player1_image = new Image("comp1110/ass2/gui/assets/player_red.png");  // Update with the actual path
         ImageView player1_imageview = new ImageView(player1_image);
         player1_imageview.setX(170);
@@ -131,6 +135,7 @@ public class Game extends Application {
         player4_imageview.setFitHeight(150);
         root.getChildren().add(player4_imageview);
 
+        // Create a start button
         Button start = new Button("Start");
         start.setLayoutX(520);
         start.setLayoutY(500);
@@ -146,6 +151,7 @@ public class Game extends Application {
                 }
             }
 
+            // Setting up the initial game state and player configurations based on selections
             if (totalPlayer > 1) {
                 while (Objects.equals(playerButtons[currentPlayer].getText(), "Disable")) currentPlayer++;
                 for (Button playerButton : playerButtons) {
@@ -215,10 +221,10 @@ public class Game extends Application {
     }
 
     /**
-     * Method that creates elements and game controls buttons for the game.
+     * Sets up the game controls and initializes the game board view.
      */
-
     public void makeControls() {
+        // Initializing the game viewer
         viewer = new Viewer();
         root.getChildren().add(viewer.getViewerRoot()); //Add root to viewer
         refreshGameView(gameState);
@@ -227,6 +233,7 @@ public class Game extends Application {
         square.setArcHeight(60);
         square.setFill(Color.GREY);
 
+        // setting up the game board background
         Image boardBackgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/BoardImage.png").toString());
         ImageView boardBackgroundView = new ImageView(boardBackgroundImage);
 
@@ -241,6 +248,7 @@ public class Game extends Application {
         boardBackgroundView.setFitHeight(690);
         root.getChildren().add(boardBackgroundView);
 
+        // Setting up the label to display the current player's turn
         currentPlayerLabel.setX(10);
         currentPlayerLabel.setY(300);
         currentPlayerLabel.getStyleClass().add("currentPlayerLabel");
@@ -255,6 +263,7 @@ public class Game extends Application {
         rollButton.setLayoutY(392);
         rollButton.setOnAction(e -> rollDice());
 
+        // Set up the direction buttons for assam
         eastButton = new Button("→");
         westButton = new Button("←");
         southButton = new Button("↓");
@@ -264,7 +273,6 @@ public class Game extends Application {
         southButton.getStyleClass().add("southButton");
         northButton.getStyleClass().add("northButton");
 
-        // Rotate Assam 90 degrees to the Right when clicked
         eastButton.setLayoutX(136);
         eastButton.setLayoutY(390);
         eastButton.setOnAction(e -> {
@@ -311,10 +319,12 @@ public class Game extends Application {
 
         root.getChildren().addAll(square, diceFace, rollButton, eastButton, westButton, southButton, northButton, currentPlayerLabel);
 
+        // Handling AI player's turn
         if (AIList.get(currentPlayer)) {
             rollDice();
         }
 
+        // Adding the return button to allow resetting the game
         Button backButton = new Button("Back to Player Selection");
         backButton.setLayoutX(50);
         backButton.setLayoutY(600);
@@ -323,23 +333,22 @@ public class Game extends Application {
         tooltip1.setShowDelay(Duration.seconds(0.01));
         Tooltip.install(backButton, tooltip1);
         backButton.setOnAction(e -> resetGame());
-
         root.getChildren().add(backButton);
-        // Get current player color
-        Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
 
+        // Displaying the current player's color
+        Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
         // update player color
         currentPlayerColorRectangle.setFill(currentPlayerColor);
-
         currentPlayerColorRectangle.setX(360);
         currentPlayerColorRectangle.setY(265);
-        currentPlayerColorRectangle.setStroke(Color.BLACK); // 设置边框颜色
+        currentPlayerColorRectangle.setStroke(Color.BLACK);
         currentPlayerColorRectangle.setStrokeWidth(2);
         root.getChildren().add(currentPlayerColorRectangle);
     }
 
     private void rollDice() {
         rollButton.setDisable(true);
+        // Disabling the roll button and direction buttons during the dice roll
         disableDirectionButtons();
         Timeline timeline = new Timeline();
         diceFace.setX(100);
@@ -354,10 +363,13 @@ public class Game extends Application {
             }));
         }
 
+        // Creating a timeline for animating the dice roll
         timeline.setOnFinished(e -> {
             disableDirectionButtons();
-            int dieResult = Integer.parseInt(diceFace.getText());  // Get the die result from the diceFace Text node
-            moveAssamAfterRoll(dieResult);  // Move Assam based on the die result
+            // Get the die result from the diceFace Text node
+            int dieResult = Integer.parseInt(diceFace.getText());
+            // Move Assam based on the die result
+            moveAssamAfterRoll(dieResult);
             Player current = gameState.getPlayer(currentPlayer);
             Color color = gameState.getBoard().getRug(gameState.getAssam().getPoint().getX(), gameState.getAssam().getPoint().getY()).getColor();
             for (Player player : gameState.getPlayers()) {
@@ -366,7 +378,6 @@ public class Game extends Application {
                     refreshGameView(gameState);
                 }
             }
-
             if (current.getAlive()) {
                 if (AIList.get(currentPlayer)) {
                     Tuple<State, TwoRug> tuple = current.actionRug(gameState, levelList.get(currentPlayer));
@@ -400,6 +411,9 @@ public class Game extends Application {
         timeline.play(); //Play the dice
     }
 
+    /**
+     * Checks if the selected rug placement is valid and provides hints for the second rug placement.
+     */
     private void checkHint() {
         String rugString = new TwoRug(gameState.getPlayer(currentPlayer).getColor(), gameState.getPlayer(currentPlayer).getRugNum(), selectedRugPoints).getString();
         String newGameState = makePlacement(gameState.getString(), rugString);
@@ -409,20 +423,20 @@ public class Game extends Application {
     }
 
     /**
-     * Update the current player's turn label.
+     * Updates the label displaying the current player's turn and handles game end conditions.
      */
     private void updateCurrentPlayerLabel() {
-        // Cycle through players after each turn
+        // Cycling through players and handling the game end conditions
         updateDirectionButtons();
         rollButton.setDisable(false);
-
-        currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
+        //totalPlayer = 4
+        currentPlayer = (currentPlayer + 1) % 4;
 
         // Determine the winner of a game of Marrakech.
         switch (getWinner(gameState.getString())) {
             case 'n' -> {
                 while (!gameState.getPlayer(currentPlayer).getAlive()) {
-                    currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
+                    currentPlayer = (currentPlayer + 1) % 4;
                 }
                 currentPlayerLabel.setText("Player " + (currentPlayerNo++ % totalPlayer + 1) + "'s turn");
                 // Get current player color
@@ -563,6 +577,9 @@ public class Game extends Application {
         }
     }
 
+    /**
+     * Handles mouse clicks for selecting rug placements.
+     */
     EventHandler<MouseEvent> handleMouseClick = new EventHandler<>() {
         @Override
         public void handle(MouseEvent e) {
@@ -647,7 +664,11 @@ public class Game extends Application {
         }
     };
 
+    /**
+     * Resets the game to the player selection screen.
+     */
     private void resetGame() {
+        // Clearing the game board and resetting to the player selection screen
         root.getChildren().clear();
         currentPlayer = 0;
         totalPlayer = 0;
