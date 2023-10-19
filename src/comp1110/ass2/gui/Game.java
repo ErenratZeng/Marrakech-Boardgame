@@ -361,8 +361,8 @@ public class Game extends Application {
                 currentPlayerColorRectangle.setFill(currentPlayerColor);
 
                 // update square position
-                currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
-                currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
+                currentPlayerColorRectangle.setX(360);
+                currentPlayerColorRectangle.setY(280);
                 if (AIList.get(currentPlayer)) {
                     gameState = gameState.getPlayer(currentPlayer).actionAssam(gameState, levelList.get(currentPlayer));
                     rollDice();
