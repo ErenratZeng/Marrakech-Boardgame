@@ -36,8 +36,8 @@ public class Viewer extends Application {
     public static final int TILE_SIZE = 71;
     public static final int BOARD_SIZE = 7;
     public static final int BOARD_PIXEL_SIZE = TILE_SIZE * BOARD_SIZE;
-    public static final int offsetX = (1200 - BOARD_PIXEL_SIZE) / 2;
-    public static final int offsetY = (700 - BOARD_PIXEL_SIZE) / 2;
+    public static final int offsetX = 600;
+    public static final int offsetY = 110;
 
     private final Group root = new Group();
     private final Group controls = new Group();

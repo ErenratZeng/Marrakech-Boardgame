@@ -53,7 +53,7 @@ public class Game extends Application {
     private final Point[] selectedRugPoints = new Point[2];
     private final Rectangle currentPlayerColorRectangle = new Rectangle(0, 0, 20, 20);
     private final ArrayList<Rectangle> hintSquares = new ArrayList<>();
-
+    private ImageView boardBackgroundView;
     private int putTwoRugCounter = 0;
 
 
@@ -162,18 +162,33 @@ public class Game extends Application {
         viewer = new Viewer();
         root.getChildren().add(viewer.getViewerRoot()); //Add root to viewer
         refreshGameView(gameState);
-        Rectangle square = new Rectangle(965, 25, 110, 110);
+        Rectangle square = new Rectangle(65, 125, 110, 110);
         square.setFill(Color.GREY);
 
-        currentPlayerLabel.setX(365);
-        currentPlayerLabel.setY(60);
-        currentPlayerLabel.setStyle("-fx-font-size: 72;");
+        Image boardBackgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/BoardImage.png").toString());
+        boardBackgroundView = new ImageView(boardBackgroundImage);
+
+        // 设置ImageView的大小以匹配棋盘的大小
+        boardBackgroundView.setFitWidth(Board.BOARD_WIDTH * TILE_SIZE);
+        boardBackgroundView.setFitHeight(Board.BOARD_HEIGHT * TILE_SIZE);
+
+        // 将ImageView的位置设置为棋盘的位置
+        boardBackgroundView.setX(offsetX-100);
+        boardBackgroundView.setY(offsetY-103);
+        boardBackgroundView.setFitWidth(690);
+        boardBackgroundView.setFitHeight(690);
+        // 将ImageView添加到root中
+        root.getChildren().add(boardBackgroundView);
+
+        currentPlayerLabel.setX(10);
+        currentPlayerLabel.setY(300);
+        currentPlayerLabel.setStyle("-fx-font-size: 50;");
         currentPlayerLabel.setText("Player " + 1 + "'s turn");
 
         // Create a button to roll the dice and set its position
         rollButton = new Button("Roll Dice");
-        rollButton.setLayoutX(720);
-        rollButton.setLayoutY(650);
+        rollButton.setLayoutX(230);
+        rollButton.setLayoutY(390);
         rollButton.setOnAction(e -> rollDice());
 
         eastButton = new Button("→");
@@ -182,8 +197,8 @@ public class Game extends Application {
         northButton = new Button("↑");
 
         // Rotate Assam 90 degrees to the Right when clicked
-        eastButton.setLayoutX(1000);
-        eastButton.setLayoutY(600);
+        eastButton.setLayoutX(130);
+        eastButton.setLayoutY(390);
         eastButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "E");
             if (!newAssamState.equals(gameState.getAssam().getString())) {
@@ -193,8 +208,8 @@ public class Game extends Application {
             }
         });
 
-        westButton.setLayoutX(900);
-        westButton.setLayoutY(600);
+        westButton.setLayoutX(55);
+        westButton.setLayoutY(390);
         westButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "W");
             if (!newAssamState.equals(gameState.getAssam().getString())) {
@@ -204,8 +219,8 @@ public class Game extends Application {
             }
         });
 
-        southButton.setLayoutX(950);
-        southButton.setLayoutY(650);
+        southButton.setLayoutX(95);
+        southButton.setLayoutY(430);
         southButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "S");
             if (!newAssamState.equals(gameState.getAssam().getString())) {
@@ -215,8 +230,8 @@ public class Game extends Application {
             }
         });
 
-        northButton.setLayoutX(950);
-        northButton.setLayoutY(550);
+        northButton.setLayoutX(95);
+        northButton.setLayoutY(350);
         northButton.setOnAction(e -> {
             String newAssamState = rotateAssamToDirection(gameState.getAssam().getString(), "N");
             if (!newAssamState.equals(gameState.getAssam().getString())) {
@@ -253,8 +268,8 @@ public class Game extends Application {
         rollButton.setDisable(true);
         disableDirectionButtons();
         Timeline timeline = new Timeline();
-        diceFace.setX(1000);
-        diceFace.setY(100);
+        diceFace.setX(100);
+        diceFace.setY(200);
         diceFace.setStyle("-fx-font-size: 72;");
 
         // Create a series of keyframes that change the face of the dice
@@ -615,6 +630,21 @@ public class Game extends Application {
         backgroundView.setFitHeight(WINDOW_HEIGHT);
         backgroundView.setOpacity(0.5);
         root.getChildren().add(backgroundView);
+
+//        // 在Game类的某个方法中（例如start()或makeControls()）添加以下代码
+//        Image boardBackgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/BoardImage.png").toString());
+//        boardBackgroundView = new ImageView(boardBackgroundImage);
+//
+//// 设置ImageView的大小以匹配棋盘的大小
+//        boardBackgroundView.setFitWidth(Board.BOARD_WIDTH * TILE_SIZE);
+//        boardBackgroundView.setFitHeight(Board.BOARD_HEIGHT * TILE_SIZE);
+//
+//// 将ImageView的位置设置为棋盘的位置
+//        boardBackgroundView.setX(offsetX); // offsetX是棋盘在窗口中的X偏移量
+//        boardBackgroundView.setY(offsetY); // offsetY是棋盘在窗口中的Y偏移量
+//
+//// 将ImageView添加到root中
+//        root.getChildren().add(boardBackgroundView);
         newGame();
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
