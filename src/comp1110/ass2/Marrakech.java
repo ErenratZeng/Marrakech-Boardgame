@@ -8,8 +8,13 @@ import comp1110.ass2.model.State;
 import javafx.scene.paint.Color;
 import comp1110.ass2.model.base.Point;
 import comp1110.ass2.model.base.Dice;
-
 import java.util.*;
+
+/**
+ * Authorship:
+ * name: Ruize Luo
+ * uid: u7776709
+ */
 
 
 public class Marrakech {
