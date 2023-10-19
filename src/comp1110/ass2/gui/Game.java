@@ -354,13 +354,13 @@ public class Game extends Application {
                     currentPlayer = (currentPlayer + 1) % 4; //totalPlayer = 4
                 }
                 currentPlayerLabel.setText("Player " + (currentPlayerNo++ % totalPlayer + 1) + "'s turn");
-                // 获取当前玩家的颜色
+                // Get current player color
                 Color currentPlayerColor = gameState.getPlayer(currentPlayer).getColor();
 
-                // 更新表示玩家颜色的矩形的颜色
+                // update square color
                 currentPlayerColorRectangle.setFill(currentPlayerColor);
 
-                // 更新矩形的位置，使其出现在 currentPlayerLabel 旁边
+                // update square position
                 currentPlayerColorRectangle.setX(currentPlayerLabel.getX() + currentPlayerLabel.getLayoutBounds().getWidth() + 10);
                 currentPlayerColorRectangle.setY(currentPlayerLabel.getY() - currentPlayerColorRectangle.getHeight());
                 if (AIList.get(currentPlayer)) {
@@ -632,21 +632,6 @@ public class Game extends Application {
         backgroundView.setFitHeight(WINDOW_HEIGHT);
         backgroundView.setOpacity(0.5);
         root.getChildren().add(backgroundView);
-
-//        // 在Game类的某个方法中（例如start()或makeControls()）添加以下代码
-//        Image boardBackgroundImage = new Image(getClass().getResource("/comp1110/ass2/gui/assets/BoardImage.png").toString());
-//        boardBackgroundView = new ImageView(boardBackgroundImage);
-//
-//// 设置ImageView的大小以匹配棋盘的大小
-//        boardBackgroundView.setFitWidth(Board.BOARD_WIDTH * TILE_SIZE);
-//        boardBackgroundView.setFitHeight(Board.BOARD_HEIGHT * TILE_SIZE);
-//
-//// 将ImageView的位置设置为棋盘的位置
-//        boardBackgroundView.setX(offsetX); // offsetX是棋盘在窗口中的X偏移量
-//        boardBackgroundView.setY(offsetY); // offsetY是棋盘在窗口中的Y偏移量
-//
-//// 将ImageView添加到root中
-//        root.getChildren().add(boardBackgroundView);
         newGame();
         Scene scene = new Scene(this.root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
